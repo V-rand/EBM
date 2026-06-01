@@ -47,8 +47,8 @@ O: [关键临床结局]
 
 | 研究 | 设计 | 样本量 | 干预 vs 对照 | 主要结局 | 效应量 | GRADE |
 |------|------|--------|-------------|---------|--------|-------|
-| Smith 2023 | RCT, 双盲 | n=1,200 | Drug A vs Placebo | 死亡率 | RR 0.72 (0.58-0.90) | ⊕⊕⊕⊕ High |
-| Jones 2022 | RCT, 开放 | n=800 | Drug A vs Standard | 死亡率 | RR 0.85 (0.68-1.06) | ⊕⊕⊕○ Moderate |
+| Smith 2023 | RCT, 双盲 | n=1,200 | Drug A vs Placebo | 死亡率 | RR 0.72 (0.58-0.90) | High High |
+| Jones 2022 | RCT, 开放 | n=800 | Drug A vs Standard | 死亡率 | RR 0.85 (0.68-1.06) | Moderate Moderate |
 
 ### 4. 批判性评价 (Critical Appraisal)
 
