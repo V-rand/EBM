@@ -437,7 +437,7 @@ def register_ebm_tools(r) -> None:
         "parameters": {
             "type": "object",
             "properties": {
-                "query": {"type": "string", "description": "通用搜索词"},
+                "query": {"type": "string", "description": "Search query"},
                 "condition": {"type": "string", "description": "疾病名称，如 'type 2 diabetes'"},
                 "intervention": {"type": "string", "description": "干预名称，如 'metformin'"},
                 "status": {"type": "string", "description": "可选：recruiting, completed, terminated"},
@@ -457,10 +457,10 @@ def register_ebm_tools(r) -> None:
         "parameters": {
             "type": "object",
             "properties": {
-                "query": {"type": "string", "description": "搜索词"},
-                "topic": {"type": "string", "description": "主题"},
-                "year": {"type": "string", "description": "年份"},
-                "max_results": {"type": "integer", "description": "默认 10"},
+                "query": {"type": "string", "description": "Search query"},
+                "topic": {"type": "string", "description": "Topic"},
+                "year": {"type": "string", "description": "Year"},
+                "max_results": {"type": "integer", "description": "Default 10"},
             },
             "required": ["query"],
         },
