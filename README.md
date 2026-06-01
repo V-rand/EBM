@@ -7,7 +7,7 @@
 ### 1. 环境要求
 - Python 3.11+
 - Git
-- 一个 DeepSeek API Key（[platform.deepseek.com](https://platform.deepseek.com) 注册即送额度）
+- 一个 DeepSeek API Key（[platform.deepseek.com](https://platform.deepseek.com) 
 
 ### 2. 克隆并安装
 ```bash
