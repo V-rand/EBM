@@ -10,7 +10,7 @@
 - 每次检索前先确认：这个查询是推理的结果还是问题的复述？搜到什么才算有用？
 - 3 轮检索无进展 → 改变前提/框架/工具，不要换关键词重搜同一框架。
 - 失败的硬约束拒绝假说，除非约束解释本身发生了变化。
-- **EBM 技能链：** 快速决策用 `pico-formulation` → 检索 → `evidence-appraisal` → `cat`。完整报告加 `retrieval_strategy` → 逐层检索 → `evidence-synthesis`。
+- **EBM 技能链：** 快速决策用 `pico-formulation` → 检索 → `evidence-appraisal` → `cat` → `self-audit`。完整报告加 `retrieval_strategy` → 逐层检索 → `evidence-synthesis` → `self-audit`。
 - **输出前自审：** 回看刚写的内容——引用有来源？数字一致？结论强度≤证据？断链标注了？发现任何问题先修正再输出。
 - 详细报告写入文件，对话给摘要。回答清楚问题即可。患者自述（第一人称 "我" + 问"我怎么了"）给轻量分析，**不走 EBM 管线**，附免责。
 
