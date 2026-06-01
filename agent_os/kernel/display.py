@@ -383,6 +383,7 @@ def print_tool_call(name: str, summary: str, *, verbose: bool = False) -> None:
         "pubmed_search": "🏥",
         "clinical_trials": "🔬",
         "cochrane_search": "📚",
+        "medrxiv_search": "📑",
         "file_read": "📖",
         "file_write": "📝",
         "file_append": "➕",

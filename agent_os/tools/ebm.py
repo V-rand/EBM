@@ -272,6 +272,148 @@ async def handle_cochrane_search(
         return ToolResult.fail(f"Cochrane search error: {e}")
 
 
+# ============================================================================
+# medRxiv search — health sciences preprint server
+# ============================================================================
+
+MEDRXIV_API = "https://api.medrxiv.org/details/medrxiv"
+_medrxiv_lock = asyncio.Lock()
+
+# medRxiv subject categories relevant to EBM
+_MEDRXIV_CATEGORIES = {
+    "cardiovascular": "cardiovascular medicine",
+    "oncology": "oncology",
+    "neurology": "neurology",
+    "psychiatry": "psychiatry and clinical psychology",
+    "epidemiology": "epidemiology",
+    "infectious": "infectious diseases",
+    "public_health": "public and global health",
+    "endocrine": "endocrinology",
+    "respiratory": "respiratory medicine",
+    "surgery": "surgery",
+    "anesthesia": "anesthesia",
+    "dermatology": "dermatology",
+    "gastroenterology": "gastroenterology",
+    "rheumatology": "rheumatology",
+    "nephrology": "nephrology",
+    "urology": "urology",
+    "ophthalmology": "ophthalmology",
+    "pediatrics": "pediatrics",
+    "geriatrics": "geriatric medicine",
+    "emergency": "emergency medicine",
+    "radiology": "radiology and imaging",
+    "nutrition": "nutrition",
+    "pharmacology": "pharmacology and therapeutics",
+    "genetics": "genetic and genomic medicine",
+    "immunology": "allergy and immunology",
+    "pain": "pain management",
+    "rehabilitation": "rehabilitation medicine and physical therapy",
+    "sports": "sports medicine",
+    "nursing": "nursing",
+    "health_economics": "health economics",
+    "health_informatics": "health informatics",
+    "health_policy": "health systems and quality improvement",
+    "medical_education": "medical education",
+    "palliative": "palliative and end-of-life care",
+    "addiction": "addiction medicine",
+}
+
+
+async def handle_medrxiv_search(
+    date_from: str = "",
+    date_to: str = "",
+    query: str = "",
+    category: str = "",
+    max_results: int = 15,
+    **kw,
+) -> ToolResult:
+    """Search medRxiv for health sciences preprints.
+
+    medRxiv is the primary preprint server for clinical/health research.
+    Uses the official medRxiv content API (no API key needed).
+    """
+    try:
+        # Default date range: last 30 days
+        if not date_to:
+            date_to = time.strftime("%Y-%m-%d")
+        if not date_from:
+            # ~30 days ago
+            date_from = time.strftime("%Y-%m-%d", time.localtime(time.time() - 30 * 86400))
+
+        all_results: list[dict[str, Any]] = []
+        cursor = 0
+        seen_dois: set[str] = set()
+
+        async with _medrxiv_lock:
+            while len(all_results) < max_results:
+                loop = asyncio.get_running_loop()
+                api_url = f"{MEDRXIV_API}/{date_from}/{date_to}/{cursor}"
+                r = await loop.run_in_executor(
+                    None,
+                    lambda: _ebm_session.get(api_url, timeout=20, headers={"User-Agent": "EBMAgentOS/1.0"}),
+                )
+                r.raise_for_status()
+                data = r.json()
+
+                collection = data.get("collection", [])
+                msg = (data.get("messages") or [{}])[0]
+                total = msg.get("total", 0)
+                if not collection:
+                    break
+
+                query_lower = query.strip().lower() if query else ""
+                category_key = category.strip().lower() if category else ""
+                cat_full = _MEDRXIV_CATEGORIES.get(category_key, category_key)
+
+                for paper in collection:
+                    doi = paper.get("doi", "")
+                    if doi in seen_dois:
+                        continue
+                    seen_dois.add(doi)
+
+                    # Client-side text/category filter
+                    if cat_full:
+                        paper_cat = (paper.get("category") or "").lower()
+                        if cat_full not in paper_cat:
+                            continue
+                    if query_lower:
+                        title = (paper.get("title") or "").lower()
+                        abstract = (paper.get("abstract") or "").lower()
+                        if query_lower not in title and query_lower not in abstract:
+                            continue
+
+                    published = paper.get("published", "")
+                    all_results.append({
+                        "title": paper.get("title", ""),
+                        "doi": paper.get("doi", ""),
+                        "authors": paper.get("authors", ""),
+                        "category": paper.get("category", ""),
+                        "date": paper.get("date", ""),
+                        "abstract": (paper.get("abstract") or "")[:1000],
+                        "published_in": f"https://doi.org/{published}" if published else "",
+                        "pub_status": "published" if published else "preprint",
+                        "version": paper.get("version", ""),
+                        "url": f"https://medrxiv.org/content/{doi}v{paper.get('version', '1')}" if doi else "",
+                    })
+
+                    if len(all_results) >= max_results:
+                        break
+
+                # Next page
+                if cursor + len(collection) >= total:
+                    break
+                cursor += len(collection)
+
+        return ToolResult.ok(data={
+            "date_range": f"{date_from} to {date_to}",
+            "total_in_range": total,
+            "results": all_results,
+            "count": len(all_results),
+        })
+    except Exception as e:
+        return ToolResult.fail(f"medRxiv API error: {e}")
+
+
 def _url_encode(s: str) -> str:
     import urllib.parse
     return urllib.parse.quote(s)
@@ -323,3 +465,19 @@ def register_ebm_tools(r) -> None:
             "required": ["query"],
         },
     }, handle_cochrane_search, concurrency_safe=True, read_only=True)
+
+    r.register("medrxiv_search", "retrieval", {
+        "name": "medrxiv_search",
+        "description": "搜索 medRxiv 健康科学预印本。medRxiv 是临床/公卫/流行病学预印本的主要平台。用于查找最新临床研究（尚未经同行评议）。",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "搜索关键词（在标题和摘要中查找）"},
+                "date_from": {"type": "string", "description": "起始日期 YYYY-MM-DD（默认 30 天前）"},
+                "date_to": {"type": "string", "description": "截止日期 YYYY-MM-DD（默认今天）"},
+                "category": {"type": "string", "description": "学科分类: cardiovascular, oncology, epidemiology, infectious, public_health, neurology, psychiatry, endocrine, respiratory, surgery, pediatrics, geriatrics, genetics, immunology, pharmacology 等"},
+                "max_results": {"type": "integer", "description": "最大结果数（默认 15）"},
+            },
+            "required": [],
+        },
+    }, handle_medrxiv_search, concurrency_safe=True, read_only=True)
