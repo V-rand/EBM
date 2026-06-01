@@ -433,7 +433,7 @@ def register_ebm_tools(r) -> None:
     """
     r.register("clinical_trials", "retrieval", {
         "name": "clinical_trials",
-        "description": "搜索 ClinicalTrials.gov 临床试验注册库。常用：condition + intervention 做 PICO 检索，status=completed 只看已完成试验。",
+        "description": "搜索 ClinicalTrials.gov 临床试验。如 clinical_trials(condition="type 2 diabetes", intervention="empagliflozin")、clinical_trials(query="CAR-T", status="recruiting", phase="2")。",
         "parameters": {
             "type": "object",
             "properties": {
@@ -468,15 +468,15 @@ def register_ebm_tools(r) -> None:
 
     r.register("medrxiv_search", "retrieval", {
         "name": "medrxiv_search",
-        "description": "搜索 medRxiv 预印本——临床/公卫/流行病学最新研究。比 PubMed 早 3-6 个月，查最新证据时优先用（注意：未经同行评议）。只需 query 即可，其余参数可选。",
+        "description": "搜索 medRxiv 预印本（临床/公卫/流行病学最新研究）。未同行评议。如 medrxiv_search(query="SGLT-2 inhibitor cardiovascular")、medrxiv_search(query="long COVID", category="epidemiology")。",
         "parameters": {
             "type": "object",
             "properties": {
-                "query": {"type": "string", "description": "搜索词，在标题和摘要中查找"},
-                "category": {"type": "string", "description": "可选，学科过滤。如 cardiovascular, oncology, epidemiology, infectious, public_health"},
-                "date_from": {"type": "string", "description": "可选，起始日期 YYYY-MM-DD"},
-                "date_to": {"type": "string", "description": "可选，截止日期 YYYY-MM-DD"},
-                "max_results": {"type": "integer", "description": "可选，默认 15"},
+                "query": {"type": "string", "description": "搜索词，如 "COVID vaccine efficacy""},
+                "category": {"type": "string", "description": "学科: cardiovascular, oncology, epidemiology, infectious, public_health"},
+                "date_from": {"type": "string", "description": "起始日期，如 "2026-01-01""},
+                "date_to": {"type": "string", "description": "截止日期，如 "2026-06-01""},
+                "max_results": {"type": "integer", "description": "结果数，默认 15"},
             },
             "required": [],
         },

@@ -1,14 +1,13 @@
-搜索 PubMed 生物医学文献。EBM 研究的核心检索工具。
+搜索 PubMed 生物医学文献（MEDLINE + PubMed Central）。
 
-### 最常用（只需一个参数）
-- `pubmed_search(query="metformin diabetes cardiovascular", article_type="systematic_review")` — 系统评价
-- `pubmed_search(query="SGLT-2 inhibitor MACE", article_type="rct")` — 随机对照试验
-- `pubmed_search(query="COVID vaccine efficacy", clinical_query="therapy")` — 治疗类临床查询
-- `pubmed_search(pmid="34101387")` — PMID 精确查找，返回完整元数据 + grade_readiness
+示例用法：
+- `pubmed_search(query="metformin diabetes cardiovascular", article_type="systematic_review")`
+- `pubmed_search(query="SGLT-2 inhibitor MACE", article_type="rct")`
+- `pubmed_search(query="COVID vaccine efficacy", clinical_query="therapy")`
+- `pubmed_search(pmid="34101387")` — 查看完整元数据 + grade_readiness
+- `pubmed_search(pmids="34101387 37937763")` — 批量查看
+- `pubmed_search(author="Fauci AS", year="2020")`
+- `pubmed_search(query="breast cancer", article_type="guideline", year="2023")`
+- `pubmed_search(mesh="Diabetes Mellitus, Type 2", article_type="meta_analysis")`
 
-### EBM 专用参数
-- `article_type`：systematic_review | rct | meta_analysis | guideline
-- `clinical_query`：therapy | diagnosis | prognosis | etiology（PubMed 验证的检索策略）
-- `pmid` / `pmids`：精确/批量查找 PMID
-
-返回 `{total_count, results:[{pmid, title, authors, journal, pubdate, doi, url}], count}`。
+参数: query(搜索词), article_type(systematic_review|rct|meta_analysis|guideline|review|observational|case_report), clinical_query(therapy|diagnosis|prognosis|etiology), pmid, pmids, author, title, journal, year, mesh, max_results, clinical_query_sensitivity(broad|narrow)
