@@ -433,7 +433,7 @@ def register_ebm_tools(r) -> None:
     """
     r.register("clinical_trials", "retrieval", {
         "name": "clinical_trials",
-        "description": "搜索 ClinicalTrials.gov 临床试验注册库",
+        "description": "Search ClinicalTrials.gov for interventional and observational studies. Filter by condition, intervention, status (recruiting|completed|terminated), and phase. Use with PICO framework to find trial evidence.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -453,7 +453,7 @@ def register_ebm_tools(r) -> None:
 
     r.register("cochrane_search", "retrieval", {
         "name": "cochrane_search",
-        "description": "搜索 Cochrane 系统评价数据库，PubMed 回退",
+        "description": "Search Cochrane Database of Systematic Reviews (CDSR) — the gold standard for systematic reviews. Falls back to PubMed when Cochrane API is unavailable.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -468,7 +468,7 @@ def register_ebm_tools(r) -> None:
 
     r.register("medrxiv_search", "retrieval", {
         "name": "medrxiv_search",
-        "description": "搜索 medRxiv 健康科学预印本（未经同行评议）",
+        "description": "Search medRxiv preprints for the latest clinical/epidemiological research not yet indexed in PubMed. NOT peer-reviewed — check for subsequent journal publication before citing as strong evidence.",
         "parameters": {
             "type": "object",
             "properties": {

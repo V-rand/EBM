@@ -480,7 +480,7 @@ async def handle_pubmed_search(
 def register_pubmed_tools(r) -> None:
     r.register("pubmed_search", "retrieval", {
         "name": "pubmed_search",
-        "description": _load_desc("pubmed_search"),
+        "description": "Search PubMed biomedical literature. Filter by article_type (systematic_review|rct|meta_analysis|guideline) to target evidence level, or clinical_query (therapy|diagnosis|prognosis|etiology) for validated EBM search strategies. Use pmid for direct article lookup returning full metadata + grade_readiness.",
         "parameters": {
             "type": "object",
             "properties": {

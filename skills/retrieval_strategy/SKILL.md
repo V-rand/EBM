@@ -61,53 +61,9 @@ opencitations_search(doi="10.1000/xxx", mode="references")
     → 这篇引用了什么（后向追踪）
 ```
 
-## 第一阶段：选择正确的工具
+## 域名锁定
 
-| 需要什么 | 工具 | 原因 |
-|---|---|---|
-| 按作者/会议/年份查找论文 | `arxiv_search` | 结构化字段（author/venue/year/title/category）。arXiv 有 comment/journal_ref 包含会议信息。 |
-| 跨所有来源按作者/机构/主题查找论文 | `openalex_works` | 2.7 亿+篇论文。自动名称→ID 解析。参考文献指纹搜索。 |
-| 按精确参考文献指纹查找论文 | `openalex_works(references="paper1,paper2")` | 查找引用了特定论文的论文。通过引用列表唯一标识一篇论文。 |
-| 实体查找（作者/机构 ID） | `openalex_entity` | 获取 OpenAlex ID 用于过滤。 |
-| 实体事实（出生、演员阵容、年份） | `wikipedia_lookup` | 结构化信息框数据。精确标题匹配。 |
-| 论文 DOI/出版商 | `crossref_search` | CrossRef 元数据。 |
-| 通用网络（新闻、博客、发现） | `web_search` | 最后手段。配合 site: 和 "精确短语" 操作符使用。 |
-| 已保存的资料 | `workspace_search` | 始终**首先**检查。 |
-
-## 第二阶段：域名锁定发现
-
-使用 `web_search` 时，永远不要搜索整个网络来查找学术内容。锁定到权威域名：
-
-```
-# 而不是："conference-2022 paper countryX countryY"
-# 使用：site:authoritative-proceedings-domain "countryX" "universityY"
-
-# 而不是："what is the capital of France"
-# 使用：site:en.wikipedia.org "capital" "France"
-```
-
-对于 `arxiv_search`，结构化字段就是你的域名锁定：
-```
-arxiv_search(author="known_author", venue="venue_name", year="2022")
-```
-
-对于 `openalex_works`，组合过滤器来收窄：
-```
-openalex_works(institution="Stanford", topic="Graph Neural Networks", year="2022-2024", source_type="conference")
-```
-
-如果你还不知道权威域名，运行一个紧凑的发现查询，然后深入最佳结果域名：
-
-```
-# 发现：2-5 个高信息熵术语，而非每个线索
-web_search(query="\"42,137 households\" \"ordinal probit\"")
-
-# 深入：以发现的来源为边界
-web_search(query="\"42,137 households\" \"survey wave\"  site:candidate-journal.org")
-web_search(query="\"synthetic title phrase\" filetype:pdf site:candidate-journal.org")
-```
-
-不要通过添加更多宽泛关键词来回应有希望的结果。下一步通常是 `web_read`、`site:domain/path`、`intitle:`、`inurl:` 或 `filetype:pdf`。
+已知权威来源时，用 site: 锁定域名而非搜全网。web_search 配合 `site:domain`、`intitle:`、`filetype:pdf` 操作符。发现查询要精简（2-5 个高信息熵词），不要堆砌关键词。有希望的来源出现后，下一步是 `web_read` 读全文，而不是继续换关键词搜。
 
 ## 第二阶段半：指纹查询构建
 
@@ -190,66 +146,6 @@ survey sample model paper journal country population
 
 如果结果只重复宽泛主题词，不算进展。
 
-## 第三阶段：逐步深入（类人检索）
-
-不要停在第一次搜索。利用结果来指导下一步：
-
-1. **从广泛开始**：找到候选池。锁定域名 + 1-2 个约束。
-2. **阅读结果**：不是所有结果。选择 2-3 个最有希望的。`web_read` 实际页面内容。
-3. **识别关键实体**：从阅读内容中提取具体作者姓名、机构名称、DOI、参考文献标题。
-4. **用结构化工具验证**：将这些实体带到 arxiv_search 或 openalex_works 进行精确验证。
-5. **交叉验证**：用第二个权威来源确认。
-
-查找特定会议论文的通用链：
-```
-Step 1: arxiv_search(author="known_author", venue="venue_name", year="2022") → 返回候选
-Step 2: web_read 最有希望的结果 → 提取完整作者列表、参考文献信息
-Step 3: openalex_works(references="ref_paper1,ref_paper2", year="2022") → 通过参考文献指纹验证
-Step 4: openalex_works(doi="extracted DOI") → 最终确认
-```
-
-## 第四阶段：参考文献指纹（最强大）
-
-一篇论文的参考文献列表就是它的 DNA。如果你知道具体的参考文献：
-```
-openalex_works(
-    references="known reference title 1, known reference title 2",
-    year="target year"
-)
-```
-这会找到同时引用了这两篇论文的所有论文——通常只有少数几篇。结合作者/会议/年份过滤器，可以在不需要标题的情况下唯一识别目标论文。
-
-## Google 操作符（用于 web_search）
-
-Tavily 和 Serper 均支持：
-- `site:domain/path` — 域名锁定
-- `"exact phrase"` — 精确匹配
-- `-word` — 排除
-- `OR` — 替代项（大写）
-- `intitle:keyword` — 页面标题必须包含关键词
-- `inurl:keyword` — URL 必须包含关键词
-- `filetype:pdf` — 仅查找 PDF
-- `AROUND(N)` — 邻近：`word1 AROUND(3) word2`（附近的词语）
-
-## OpenAlex 布尔和邻近搜索
-
-使用 `openalex_works(title=...)` 时，title 参数支持：
-- `AND, OR, NOT`（大写）— 布尔逻辑：`(graph AND contrastive) NOT supervised`
-- `"exact phrase"` — 短语匹配：`"graph contrastive learning"`
-- `"phrase"~N` — N 词内邻近：`"graph learning"~5`
-- `word*` — 通配符：`contrast*` 匹配 contrastive, contrasting
-- `wom?n` — 单字符通配符
-- `word~N` — 模糊（编辑距离）：`transformar~1` 匹配 transformer
-
-## Tavily 高级特性
-
-`web_search` 支持以下 Tavily 专用参数：
-- `exact_match=true` — 要求精确短语匹配（用于名称、实体；返回较少结果）
-- `time_range` — "day"、"week"、"month"、"year" 用于时效性过滤
-- `source="scholar"` — 通过 Serper 访问 Google Scholar（学术论文）
-- `source="news"` — 仅新闻搜索
-- `search_depth` — "advanced" 为最高质量（已为默认值）
-
 ## 当遇到困难时
 
 如果 3 次以上搜索没有产生进展：
@@ -259,11 +155,3 @@ Tavily 和 Serper 均支持：
 4. **尝试域名锁定** — 如果广泛搜索，用 site: 锁定到权威域名
 5. **停止搜索** — 如果 2 次转向失败，以不确定性回答，而非无限搜索
 
-## 反模式（绝对不要这样做）
-
-- ❌ `web_search("conference2022 countryX countryY N authors M references")` — 关键词汤
-- ❌ `web_search("what paper has 6 authors from China and Singapore")` — 自然语言问题作为查询
-- ❌ 用稍微不同的关键词重复同一 web_search 10 次以上
-- ❌ 在 arxiv_search 或 openalex_works 明显更合适时使用 web_search
-- ❌ 阅读全部 10 条搜索结果而不是选取 2-3 条最相关的
-- ❌ 不先推理约束意味着什么就进行搜索
