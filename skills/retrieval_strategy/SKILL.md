@@ -1,6 +1,6 @@
 ---
 name: retrieval-strategy
-description: Use when the task requires multi-step retrieval (finding specific papers, entities, or facts across multiple sources). Teaches staged search recipes, domain-locking, reference fingerprinting, and progressive drill-down — avoiding broad keyword soup.
+description: "**PICO 构建后、开始检索前必加载。** 教你怎么按证据层级选工具（guideline 用 pubmed article_type=guideline, SR 用 cochrane+pubmed, RCT 用 clinical_query=therapy），自上而下逐层检索，域名锁定，引用追踪。"
 ---
 
 # 检索策略

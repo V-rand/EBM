@@ -1,6 +1,6 @@
 ---
 name: systematic-review-methodology
-description: Use when the task requires conducting a systematic literature review or meta-analysis in the biomedical domain — building a complete evidence chain from primary studies through to clinical recommendations. Load after pico-formulation has defined the question scope.
+description: "正式 PRISMA 系统评价/Meta分析全流程：方案注册→检索策略→文献筛选→质量评估→数据提取→Meta分析→证据综合。需要发表级严谨性时使用。加载前需已完成 evidence-synthesis 基础报告。"
 ---
 
 # Systematic Review Methodology — 系统评价方法学

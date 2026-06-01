@@ -1,6 +1,6 @@
 ---
 name: cat
-description: "Use when answering a focused clinical question that needs a rapid, structured evidence review — typically 1-2 pages with PICO, critical appraisal, and Clinical Bottom Line. This is the EBM 'Critically Appraised Topic' format (CAT), used for bedside clinical decisions. Faster than a full evidence synthesis; more rigorous than a single PubMed search."
+description: "**证据评估完成后、输出结论前必加载。** 快速临床决策格式：PICO→检索策略→证据概要→批判性评价→Clinical Bottom Line。1-2页，床旁决策用。比 evidence-synthesis 轻量，比裸搜严谨。"
 ---
 
 # Critically Appraised Topic (CAT) — 临床证据快评

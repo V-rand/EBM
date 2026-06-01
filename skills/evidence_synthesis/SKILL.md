@@ -1,6 +1,6 @@
 ---
 name: evidence-synthesis
-description: "Use when the user needs a clinical evidence synthesis report — systematic review, guideline appraisal, treatment comparison, or clinical decision support. Follows EBM standards (Cochrane/JBI/AHRQ). Core differentiator from generic deep research: every clinical claim must trace up the evidence hierarchy (RCT > SR > Guideline > Recommendation) with GRADE-rated evidence chains."
+description: "完整临床证据综合报告：IMRaD结构+Cochrane/JBI/AHRQ标准+GRADE证据概览表+证据链路。适合需要正式报告的深度研究。比 CAT 更全面，包含 PRISMA 流程图、SoF 表、讨论与推荐。"
 ---
 
 # 临床证据综合 (Clinical Evidence Synthesis)

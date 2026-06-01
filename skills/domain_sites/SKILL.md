@@ -1,6 +1,6 @@
 ---
 name: domain-sites
-description: 'Use when the research domain is known and authoritative source domains would materially improve web_search. Provides site operator patterns for web_search. Skip for quick open discovery, simple lookups, or when structured tools are better.'
+description: "医学/EBM 域名已在会话启动时自动注入。仅在需要额外领域（如药理学、罕见病、特定监管机构）时手动加载。"
 ---
 
 # 权威站点目录

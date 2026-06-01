@@ -1,6 +1,6 @@
 ---
 name: pico-formulation
-description: Use when the research requires building a structured PICO framework for a clinical question. This is the FIRST step in the EBM evidence chain — PICO defines the question, then each hop (RCT→SR→Guideline) retrieves and verifies evidence at its level. Load this skill before any search.
+description: "EBM 第一步：将临床问题分解为 PICO 框架（患者/干预/对照/结局），确定问题类型和最佳研究设计。**检索前必加载。**"
 ---
 
 # PICO Framework — 循证医学临床问题构建

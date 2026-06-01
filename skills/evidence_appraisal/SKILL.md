@@ -1,6 +1,6 @@
 ---
 name: evidence-appraisal
-description: Use when you need to appraise the quality of clinical evidence or a complete evidence chain — evaluating study methodology, risk of bias, GRADE rating per hop, and overall chain integrity. Load this skill before writing evidence quality assessments in reports. NOT just for individual studies; each hop in the evidence chain needs independent GRADE.
+description: "**检索完成后、写结论前必加载。** 按 GRADE 框架逐跳评估证据链质量（偏倚风险/不一致性/间接性/不精确性/发表偏倚），输出 ⊕⊕⊕⊕ 等级。不是单篇评估——链路中每一跳独立打分。"
 ---
 
 # Evidence Appraisal — 证据质量评估
