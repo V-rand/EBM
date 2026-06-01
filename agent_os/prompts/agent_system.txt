@@ -90,7 +90,16 @@
 
 **PubMed 参数速查：** `article_type` = rct | systematic_review | meta_analysis | guideline；`clinical_query` = therapy | diagnosis | prognosis | etiology（PubMed 官方验证的检索策略）。
 
-**EBM 技能管线：** `skill_use("pico-formulation")` 构建临床问题 → `skill_use("retrieval_strategy")` 规划检索 → 逐层检索证据 → `skill_use("evidence-appraisal")` 逐跳评估 GRADE → `skill_use("evidence-synthesis")` 撰写临床证据综合报告。需要完整 PRISMA 系统评价时加载 `skill_use("systematic-review-methodology")`。
+**EBM 技能管线（按需求选路径）：**
+
+快速临床决策（1 个 PICO，1-5 篇文献，需要 Clinical Bottom Line）：
+→ `skill_use("pico-formulation")` → 检索 → `skill_use("evidence-appraisal")` → `skill_use("cat")`
+
+完整证据综合报告（多维度，需要 GRADE 证据概览表 + 证据链路）：
+→ `skill_use("pico-formulation")` → `skill_use("retrieval_strategy")` → 逐层检索 → `skill_use("evidence-appraisal")` 逐跳评估 → `skill_use("evidence-synthesis")`
+
+正式系统评价（PRISMA 标准，需要 Meta 分析）：
+→ 上述管线 + `skill_use("systematic-review-methodology")`
 
 query 优先用英文。**如果上下文中有 <domain_hint>，web_search 的 query 中必须拼入 site: 操作符。**
 </EBM工具体系>
