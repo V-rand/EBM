@@ -380,8 +380,11 @@ def print_tool_call(name: str, summary: str, *, verbose: bool = False) -> None:
     emoji_map = {
         "web_search": "🔍",
         "web_read": "📄",
-        "law_retrieve": "⚖️",
-        "case_retrieve": "🏛️",
+        "pubmed_search": "🏥",
+        "clinical_trials": "🔬",
+        "cochrane_search": "📚",
+        "evidence_level": "📊",
+        "pico_analysis": "🩺",
         "file_read": "📖",
         "file_write": "📝",
         "file_append": "➕",

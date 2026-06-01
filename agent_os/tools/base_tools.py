@@ -34,15 +34,6 @@ def _invalidate_read_cache(path: str) -> None:
         del _read_cache[k]
 
 
-try:
-    from .retrieval_untils import retrieve as _law_retrieve
-except ImportError:
-    _law_retrieve = None
-
-try:
-    from .untils_case import get_case_results as _case_retrieve
-except ImportError:
-    _case_retrieve = None
 
 
 def _fs() -> FileSystem:
@@ -232,45 +223,6 @@ async def bash(command, timeout=60, **kw) -> ToolResult:
 
 
 # ---------------------------------------------------------------------------
-# External retrieval
-# ---------------------------------------------------------------------------
-
-async def law_retrieve(query, top_k=5, **kw) -> ToolResult:
-    if _law_retrieve is None:
-        return ToolResult.fail("law_retrieve not available")
-    try:
-        results = await asyncio.wait_for(asyncio.to_thread(_law_retrieve, query, top_k_rerank=top_k, size=top_k), timeout=30)
-        return ToolResult.ok(data={"query": query, "results": [{
-            "title": f"{item.get('laws_name') or item.get('lawsName', '')} {item.get('article_tag') or item.get('articleTag', '')}".strip(),
-            "content": item.get("article_content") or item.get("articleContent", ""),
-            "laws_name": item.get("laws_name") or item.get("lawsName", ""),
-            "article_tag": item.get("article_tag") or item.get("articleTag", ""),
-            "timeliness_name": item.get("timeliness_name") or item.get("timelinessName", ""),
-            "active_date": item.get("active_date") or item.get("activeDate", ""),
-        } for item in results], "count": len(results)})
-    except asyncio.TimeoutError:
-        return ToolResult.fail("law_retrieve timed out")
-    except Exception as e:
-        return ToolResult.fail(str(e))
-
-
-async def case_retrieve(query, top_k=5, **kw) -> ToolResult:
-    if _case_retrieve is None:
-        return ToolResult.fail("case_retrieve not available")
-    try:
-        results = await asyncio.wait_for(asyncio.to_thread(_case_retrieve, query, top_k, False), timeout=30)
-        return ToolResult.ok(data={"query": query, "results": [{
-            "title": item.get("title", ""), "content": item.get("content", ""),
-            "source": item.get("source", ""), "case_no": item.get("caseNo", ""),
-            "court": item.get("court", ""),
-        } for item in results], "count": len(results)})
-    except asyncio.TimeoutError:
-        return ToolResult.fail("case_retrieve timed out")
-    except Exception as e:
-        return ToolResult.fail(str(e))
-
-
-# ---------------------------------------------------------------------------
 # Workspace search
 # ---------------------------------------------------------------------------
 
@@ -399,8 +351,7 @@ async def spawn(task, tools=None, subagent_type="general", **kw) -> ToolResult:
     _TYPE_TOOLS = {
         "general": None,
         "explore": {"file_read", "file_list", "file_grep", "file_tree",
-                    "workspace_search", "web_search", "web_read",
-                    "law_retrieve", "case_retrieve"},
+                    "workspace_search", "web_search", "web_read", "pubmed_search"},
     }
     if subagent_type in _TYPE_TOOLS and _TYPE_TOOLS[subagent_type] is not None:
         allowed = set(_TYPE_TOOLS[subagent_type])
@@ -618,25 +569,7 @@ def register_base_tools(r) -> None:
         }, "required": ["command"]},
     }, bash)
 
-    if _law_retrieve is not None:
-        r.register("law_retrieve", "retrieval", {
-            "name": "law_retrieve",
-            "description": _load_desc("law_retrieve"),
-            "parameters": {"type": "object", "properties": {
-                "query": {"type": "string", "description": "法律问题、主题或关键词"},
-                "top_k": {"type": "integer", "description": "返回结果数量"},
-            }, "required": ["query"]},
-        }, law_retrieve, concurrency_safe=True, read_only=True)
-
-    if _case_retrieve is not None:
-        r.register("case_retrieve", "retrieval", {
-            "name": "case_retrieve",
-            "description": _load_desc("case_retrieve"),
-            "parameters": {"type": "object", "properties": {
-                "query": {"type": "string", "description": "案例检索问题或关键词"},
-                "top_k": {"type": "integer", "description": "返回结果数量"},
-            }, "required": ["query"]},
-        }, case_retrieve, concurrency_safe=True, read_only=True)
+    # EBM-specific tools are registered in tools/ebm.py
 
     r.register("workspace_search", "retrieval", {
         "name": "workspace_search",

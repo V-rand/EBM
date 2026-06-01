@@ -1,5 +1,5 @@
 """
-AgentOS Deep Research CLI — 命令行界面 (Rich-enhanced)
+EBM Agent OS — 循证医学深度研究命令行界面 (Rich-enhanced)
 """
 
 import os
@@ -49,8 +49,8 @@ from agent_os.kernel.display import (
     RunDashboard,
 )
 
-class AgentOSCLI:
-    """Agent OS 命令行界面"""
+class EBMCLI:
+    """EBM Agent OS 命令行界面"""
 
     def __init__(self):
         self.os: Optional[AgentOS] = None
@@ -90,7 +90,7 @@ class AgentOSCLI:
             console.print(f"[red]{error}[/]")
             sys.exit(1)
 
-        # 初始化 AgentOS
+        # 初始化 EBM Agent OS
         self.os = AgentOS(data_dir="./data")
         await self.os.start()
 
@@ -136,7 +136,7 @@ class AgentOSCLI:
             fd = sys.stdin.fileno()
             attrs = termios.tcgetattr(fd)
             if not (attrs[3] & termios.ECHO):
-                AgentOSCLI._restore_tty()
+                EBMCLI._restore_tty()
         except Exception:
             pass
 
@@ -893,13 +893,13 @@ class AgentOSCLI:
 
     async def _prompt_injection_no_patch(self) -> str:
         assert self.prompt_session is not None
-        return await self.prompt_session.prompt_async("AgentOS 运行中> ")
+        return await self.prompt_session.prompt_async("EBM 运行中> ")
 
     async def _prompt_injection(self) -> str:
         if self._use_prompt_toolkit:
             assert self.prompt_session is not None
-            return await self.prompt_session.prompt_async("AgentOS 运行中> ")
-        return await self._async_stdin_input("AgentOS 运行中> ")
+            return await self.prompt_session.prompt_async("EBM 运行中> ")
+        return await self._async_stdin_input("EBM 运行中> ")
 
     async def _main_stdin_input(self, prompt: str) -> str:
         """Main prompt input via readline-friendly blocking input in a worker thread."""
@@ -1320,7 +1320,7 @@ class AgentOSCLI:
                 cmd = raw.rstrip("\n")
                 if not cmd.strip():
                     continue
-                console.print(f"AgentOS {self._get_session_display()}> {cmd}")
+                console.print(f"EBM {self._get_session_display()}> {cmd}")
                 should_continue = await self._handle_command(cmd)
                 if not should_continue:
                     break
@@ -1331,7 +1331,7 @@ class AgentOSCLI:
             try:
                 # 显示提示符
                 session_info = self._get_session_display()
-                prompt_text = f"AgentOS {session_info}> "
+                prompt_text = f"EBM {session_info}> "
 
                 # 获取输入
                 if self._use_prompt_toolkit:
@@ -1361,7 +1361,7 @@ class AgentOSCLI:
 
 async def main():
     """主函数"""
-    cli = AgentOSCLI()
+    cli = EBMCLI()
 
     try:
         await cli.init()

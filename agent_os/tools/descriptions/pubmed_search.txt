@@ -1,11 +1,22 @@
-搜索 PubMed 生物医学文献。用于医学、生物学、公共卫生、临床试验/疗法研究、MeSH 词表、PMID/DOI 发现。
+搜索 PubMed 生物医学文献（MEDLINE + PubMed Central）。作为 EBM 研究的核心工具，支持 Clinical Queries 和文章类型过滤。
 
-快速模板：
-- `pubmed_search(query="physical therapy stroke randomized trial", year="2015")`
+### EBM 专用参数
+- `article_type="rct"` — 仅随机对照试验
+- `article_type="systematic_review"` — 仅系统评价
+- `article_type="meta_analysis"` — 仅荟萃分析
+- `article_type="guideline"` — 仅临床指南
+- `clinical_query="therapy"` — 治疗类临床查询（采用 PubMed 验证的检索策略）
+- `clinical_query="diagnosis"` — 诊断类
+- `clinical_query="prognosis"` — 预后类
+- `clinical_query="etiology"` — 病因/危害类
+
+### 快速模板
+- `pubmed_search(query="metformin diabetes cardiovascular", article_type="rct", year="2020")`
+- `pubmed_search(query="breast cancer screening", clinical_query="diagnosis")`
+- `pubmed_search(query="COVID-19 vaccine", article_type="systematic_review")`
 - `pubmed_search(author="Fauci AS", year="2020")`
-- `pubmed_search(title="精确论文标题")`
-- `pubmed_search(mesh="Diabetes Mellitus", year="2023")`
+- `pubmed_search(mesh="Diabetes Mellitus, Type 2", article_type="meta_analysis")`
 
-对于生物医学论文，优先于 `web_search`。需要更广泛的元数据或作者/期刊过滤时，用 `openalex_works(indexed_in="pubmed", query=...)`。
+对于生物医学论文，优先于 `web_search`。需要更广泛的元数据或作者/期刊过滤时，用 `openalex_works(indexed_in="pubmed", query=...)`。查找临床试验时结合 `clinical_trials` 工具。
 
-返回 `{total_count, results:[{pmid,title,authors,journal,pubdate,doi,url}], count}`。最多 20 条。
+返回 `{total_count, results:[{pmid,title,authors,journal,pubdate,doi,url}], count, filters_applied}`。最多 20 条。

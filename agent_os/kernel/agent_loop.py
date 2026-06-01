@@ -66,8 +66,6 @@ _DEFAULT_EXTERNAL_RETRIEVAL_TOOLS = frozenset({
     "wikipedia_lookup",
     "pubmed_search",
     "opencitations_search",
-    "law_retrieve",
-    "case_retrieve",
 })
 
 def _parse_tool_arguments(arguments: Any) -> tuple[dict[str, Any] | None, str | None]:
@@ -1969,26 +1967,6 @@ class AgentLoop:
             path = f"raw_search/web_read/{now}_{slug(url or tool_name)}.md"
             metadata = {"url": url, "parser": data.get("parser"), "generated_by": "tool_archive",
                         "lineage": {"generated_by": "tool_archive", "source_urls": [url] if url else []}}
-        elif tool_name == "law_retrieve":
-            query = str(arguments.get("query", "")).strip()
-            results = data.get("results", []) or []
-            if not results:
-                return None
-            content = self._render_law_archive(query, results)
-            path = f"raw_search/law/{now}_{slug(query or tool_name)}.md"
-            metadata = {"query": query, "results": results, "generated_by": "tool_archive",
-                        "lineage": {"generated_by": "tool_archive",
-                                    "source_paths": [f"{item.get('laws_name', '')} {item.get('article_tag', '')}".strip() for item in results if item.get("laws_name") or item.get("article_tag")]}}
-        elif tool_name == "case_retrieve":
-            query = str(arguments.get("query", "")).strip()
-            results = data.get("results", []) or []
-            if not results:
-                return None
-            content = self._render_case_archive(query, results)
-            path = f"raw_search/case/{now}_{slug(query or tool_name)}.md"
-            metadata = {"query": query, "results": results, "generated_by": "tool_archive",
-                        "lineage": {"generated_by": "tool_archive",
-                                    "source_paths": [item.get("case_no") or item.get("title") for item in results if item.get("case_no") or item.get("title")]}}
         elif self._is_external_retrieval_tool(tool_name):
             label = self._retrieval_archive_label(arguments, data, tool_name)
             if not self._has_archivable_retrieval_data(data):
@@ -2140,20 +2118,6 @@ class AgentLoop:
         return "\n".join(lines) + "\n\n---\n\n" + str(data.get("content", "")).strip()
 
     @staticmethod
-    def _render_law_archive(query: str, results: list[dict[str, Any]]) -> str:
-        lines = [f"# Law Retrieval Archive", "", f"- Query: {query}", ""]
-        for index, item in enumerate(results, start=1):
-            lines.extend([f"## Result {index}", f"- Title: {item.get('title', '')}", f"- Law: {item.get('laws_name', '')}", f"- Article: {item.get('article_tag', '')}", "", str(item.get("content", "")).strip(), ""])
-        return "\n".join(lines).strip()
-
-    @staticmethod
-    def _render_case_archive(query: str, results: list[dict[str, Any]]) -> str:
-        lines = [f"# Case Retrieval Archive", "", f"- Query: {query}", ""]
-        for index, item in enumerate(results, start=1):
-            lines.extend([f"## Result {index}", f"- Title: {item.get('title', '')}", f"- Case No: {item.get('case_no', '')}", f"- Court: {item.get('court', '')}", f"- Source: {item.get('source', '')}", "", str(item.get("content", "")).strip(), ""])
-        return "\n".join(lines).strip()
-
-    @staticmethod
     def _retrieval_archive_label(arguments: dict[str, Any], data: dict[str, Any], tool_name: str) -> str:
         for key in ("query", "title", "doi", "openalex_id", "pmid", "identifier", "author", "venue", "topic"):
             value = str(arguments.get(key) or data.get(key) or "").strip()
@@ -2240,21 +2204,6 @@ class AgentLoop:
                 f"URL: [{data.get('url', '')}]({data.get('url', '')}) | Parser: {data.get('parser', 'jina-reader')} | 内容长度: {len(str(data.get('content', '')))} 字符",
                 data,
             )
-        if tool_name in {"law_retrieve", "case_retrieve"}:
-            results = data.get("results", []) or []
-            if not results:
-                return AgentLoop._append_archive_path_to_summary("无结果", data)
-            lines = []
-            for i, item in enumerate(results[:5], 1):
-                short = (item.get("title", "")[:50])
-                if tool_name == "law_retrieve" and item.get("timeliness_name"):
-                    short += f" [{item.get('timeliness_name')}]"
-                if tool_name == "case_retrieve" and item.get("case_no"):
-                    short += f" ({item.get('case_no')})"
-                lines.append(f"{i}. {short}")
-            if len(results) > 5:
-                lines.append(f"... 共 {len(results)} 条结果")
-            return AgentLoop._append_archive_path_to_summary("\n".join(lines), data)
         if tool_name == "file_read":
             return f"Path: `{data.get('path', '')}` | 内容长度: {len(str(data.get('content', '')))} 字符"
         if tool_name in {"file_write", "file_append"}:
@@ -2338,43 +2287,22 @@ class AgentLoop:
 
     _sites_yaml: dict[str, list[str]] | None = None
     _domain_descriptions: dict[str, str] = {
-        "legal_cn_judicial": "法院裁判 检察 公安 案件判决",
-        "legal_cn_legislative": "法律法规 全国人大 国务院行政法规",
-        "legal_cn_business": "公司企业 市场监管 金融证券 税务 知识产权",
-        "legal_cn_labor": "劳动社保 土地房产 婚姻继承 退役军人 公务员",
-        "legal_cn_professional": "律师 公证 仲裁 法律数据库 法学会",
-        "legal_cn_admin": "司法部 信访 档案 审计 应急管理",
-        "legal_cn_regulatory": "教育 环保 出入境 网络数据 新闻出版 广电 港澳台 外汇 宗教",
-        "legal_en": "英美法系 US UK EU AU CA law",
-        "legal_historical": "历史法律 古代法",
-        "medical": "国际医学 WHO NIH PubMed FDA clinical",
-        "medical_cn": "中国临床 医院 卫健委 医保 药监 医师 医学会 临床指南",
-        "biomedical": "生物医学科研 基因 蛋白质 临床试验 NCBI 基金",
-        "cs_conferences": "计算机 人工智能 AI 机器学习 深度学习 NLP CV",
-        "finance": "国际金融 IMF WorldBank market economic",
-        "finance_cn": "中国金融 银行 证券 期货 交易所 外汇 债券",
-        "gov_cn_economic": "经济数据 统计 财政 商务 海关 发改 市场监管 税务",
-        "gov_cn_health": "卫生健康 疾控 医保 药监 中医药",
-        "gov_cn_science": "工业 信息化 科技 自然科学基金",
-        "gov_cn_infra": "交通 民航 铁路 邮政 能源 水利",
-        "gov_cn_rural": "农业农村 林业 草原",
-        "gov_cn_culture": "文化 旅游 文物 民族 体育",
-        "government_en": "US UK EU government data census",
+        "medical": "国际医学 WHO NIH PubMed FDA Cochrane BMJ Lancet NEJM JAMA clinical medicine",
+        "medical_cn": "中国临床 医院 卫健委 医保 药监 医师 医学会 临床指南 知网 万方",
+        "ebm": "循证医学 EBM Cochrane GRADE systematie review meta-analysis clinical guideline PICO",
+        "ebm_chinese": "中国循证医学中心 临床实践指南 GRADE 系统评价 meta分析",
+        "clinical_trials": "临床试验 ClinicalTrials.gov WHO ICTRP EU CTR clinical trial registry",
+        "biomedical": "生物医学科研 基因 蛋白质 临床试验 NCBI UniProt 基金",
+        "pharmacology": "药品 药物 药理学 药品监管 FDA NMPA EMA drug",
+        "gov_cn_health": "卫生健康 疾控 医保 药监 公共卫生 医院",
+        "gov_cn_science": "科技 自然科学基金 医学科研",
+        "government_en": "US UK EU government health statistics data census",
         "biology": "基因 蛋白 物种 通路 genome protein species",
-        "materials": "材料科学 materials computational",
-        "chemistry": "化学 化合物 反应 PubChem chem",
-        "environment": "环境 气候 生态 IPCC EPA climate",
-        "mathematics": "数学 math AMS arXiv",
-        "physics": "物理 physics APS CERN arXiv",
-        "elite_multidisciplinary": "顶刊 Nature Science Cell Lancet PNAS",
-        "academic": "学术论文 arXiv GoogleScholar SemanticScholar",
-        "patents": "专利 patent 知识产权 invention",
-        "standards": "标准 ISO IEEE 国标",
-        "film_media": "电影 电视 影视 演员 cast IMDB",
-        "geography": "地理 地图 位置 location map",
-        "historical": "历史 history 档案 archive",
-        "encyclopedia": "百科 Wikipedia BaiduBaike Britannica 常识",
-        "common_knowledge": "生活常识 百科 howto 一般知识",
+        "chemistry": "化学 化合物 反应 PubChem drug discovery",
+        "elite_multidisciplinary": "顶刊 Nature Science Cell Lancet BMJ JAMA NEJM PNAS",
+        "academic": "学术论文 GoogleScholar SemanticScholar PubMed PubMedCentral OpenAlex",
+        "common_knowledge": "百科 Wikipedia BaiduBaike 常识",
+        "encyclopedia": "百科 Wikipedia BaiduBaike Britannica",
     }
 
     @classmethod

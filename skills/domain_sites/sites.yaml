@@ -243,6 +243,35 @@ medical:
   - thelancet.com
   - nejm.org
   - bmj.com
+  - annals.org            # Annals of Internal Medicine
+  - jamnetwork.com        # JAMA Network
+  - nice.org.uk           # NICE guidelines
+  - guidelines.gov        # NGC guideline clearinghouse
+  - ebm.bmj.com           # BMJ Evidence-Based Medicine
+  - ebmh.bmj.com          # BMJ Evidence-Based Mental Health
+  - ebn.bmj.com           # BMJ Evidence-Based Nursing
+  - ebp.bmj.com           # BMJ Evidence-Based Practice
+
+# --- EBM Clinical Guideline / 循证医学临床指南 ---
+ebm_chinese:
+  - cebm.bjmu.edu.cn       # 中国循证医学中心
+  - cma.org.cn             # 中华医学会
+  - csco.org.cn            # 中国临床肿瘤学会
+  - cn-ebm.com             # 中国循证医学杂志
+  - medlive.cn             # 医脉通（指南）
+  - yigle.com              # 医格（临床指南）
+  - nhc.gov.cn             # 国家卫健委（诊疗方案）
+  - nmpa.gov.cn            # 国家药监局（药品说明书）
+
+# --- Clinical Trials / 临床试验 ---
+clinical_trials:
+  - clinicaltrials.gov             # US clinical trials
+  - who.int/ictrp                  # WHO ICTRP
+  - clinicaltrialsregister.eu      # EU Clinical Trials Register
+  - chinaclinicaltrials.org.cn     # 中国临床试验注册中心
+  - anzctr.org.au                  # Australian New Zealand Clinical Trials
+  - isrctn.com                     # ISRCTN registry
+  - umin.ac.jp/ctr                 # Japan clinical trials
 
 # --- Medicine (China) / 中国医疗临床 ---
 medical_cn:

@@ -93,8 +93,7 @@ class Settings:
     _tt = _y("tool_timeouts", {}) or {}
     _tl = _y("tool_output_limits", {}) or {}
     tool_timeout_bash: int = _tt.get("bash_default", 60)
-    tool_timeout_law_retrieve: int = _tt.get("law_retrieve", 30)
-    tool_timeout_case_retrieve: int = _tt.get("case_retrieve", 30)
+
     tool_timeout_web_search: int = _tt.get("web_search", 20)
     tool_timeout_web_read: int = _tt.get("web_read", 20)
     bash_stdout_max_chars: int = _tl.get("bash_stdout_max_chars", 100_000)

@@ -1,11 +1,15 @@
 """
-PubMed E-utilities API — biomedical literature search.
+PubMed E-utilities API — biomedical literature search with EBM filters.
 
 PubMed is the U.S. National Library of Medicine's database of biomedical literature:
 - ~37 million citations (MEDLINE + PubMed Central + Bookshelf)
 - Free, no API key required for moderate use
 - NCBI E-utilities: esearch (search) + efetch (retrieve) + esummary (summaries)
 - Rate limit: 3 requests/sec without key, 10/sec with API key (NCBI_API_KEY env var)
+
+EBM enhancements:
+- article_type: built-in PubMed filters for RCT, systematic review, meta-analysis, guideline
+- clinical_query: PubMed Clinical Queries (therapy, diagnosis, prognosis, etiology)
 """
 
 from __future__ import annotations
@@ -46,6 +50,44 @@ def _pubmed_api(url: str, params: dict[str, Any]) -> _requests.Response:
     return r
 
 
+# EBM Clinical Queries filters (PubMed Clinical Queries categories)
+# These are validated PubMed search strategies for evidence-based medicine
+_CLINICAL_QUERY_FILTERS = {
+    "therapy": {
+        "broad": "(clinical[Title/Abstract] AND trial[Title/Abstract]) OR clinical trials[MeSH Terms] OR clinical trial[Publication Type] OR random*[Title/Abstract] OR random allocation[MeSH Terms] OR therapeutic use[MeSH Subheading]",
+        "narrow": "(randomized controlled trial[Publication Type] OR (randomized[Title/Abstract] AND controlled[Title/Abstract] AND trial[Title/Abstract]))",
+    },
+    "diagnosis": {
+        "broad": "sensitivity[Title/Abstract] OR specificity[Title/Abstract] OR diagnostic[Title/Abstract] OR diagnosis[MeSH Subheading] OR diagnostic use[MeSH Subheading] OR predictive value[Title/Abstract] OR ROC curve[MeSH Terms]",
+        "narrow": "(sensitivity[Title/Abstract] AND specificity[Title/Abstract]) OR (predictive value*[Title/Abstract]) OR (ROC curve[MeSH Terms])",
+    },
+    "prognosis": {
+        "broad": "incidence[MeSH Terms] OR mortality[MeSH Terms] OR follow-up studies[MeSH Terms] OR prognosis[MeSH Subheading] OR predict*[Title/Abstract] OR course[Title/Abstract]",
+        "narrow": "(prognosis[MeSH Subheading] OR survival analysis[MeSH Terms]) OR (cohort studies[MeSH Terms]) OR (follow-up studies[MeSH Terms])",
+    },
+    "etiology": {
+        "broad": "risk[Title/Abstract] OR cohort studies[MeSH Terms] OR case-control studies[MeSH Terms] OR odds ratio*[Title/Abstract] OR relative risk[Title/Abstract] OR etiology[MeSH Subheading]",
+        "narrow": "(cohort studies[MeSH Terms] OR case-control studies[MeSH Terms]) OR (risk[Title/Abstract] AND (odds ratio*[Title/Abstract] OR relative risk[Title/Abstract]))",
+    },
+}
+
+# PubMed article type filters (standard PubMed publication type filters)
+_ARTICLE_TYPE_FILTERS = {
+    "rct": "randomized controlled trial[Publication Type]",
+    "controlled_clinical_trial": "controlled clinical trial[Publication Type]",
+    "clinical_trial": "clinical trial[Publication Type] OR clinical trial, phase i[Publication Type] OR clinical trial, phase ii[Publication Type] OR clinical trial, phase iii[Publication Type] OR clinical trial, phase iv[Publication Type]",
+    "systematic_review": "systematic review[Publication Type] OR systematic reviews as topic[MeSH Terms]",
+    "meta_analysis": "meta-analysis[Publication Type] OR meta-analysis as topic[MeSH Terms]",
+    "guideline": "practice guideline[Publication Type] OR guideline[Publication Type] OR guidelines as topic[MeSH Terms]",
+    "review": "review[Publication Type] OR literature review[Publication Type] OR narrative review[Publication Type]",
+    "observational": "observational study[Publication Type] OR cohort studies[MeSH Terms] OR case-control studies[MeSH Terms]",
+    "case_report": "case reports[Publication Type]",
+    "editorial": "editorial[Publication Type]",
+    "letter": "letter[Publication Type]",
+    "comment": "comment[Publication Type]",
+}
+
+
 async def handle_pubmed_search(
     query: str = "",
     author: str = "",
@@ -53,10 +95,19 @@ async def handle_pubmed_search(
     journal: str = "",
     year: str = "",
     mesh: str = "",
+    article_type: str = "",
+    clinical_query: str = "",
+    clinical_query_sensitivity: str = "broad",
     max_results: int = 10,
     **kw,
 ) -> ToolResult:
-    """Search PubMed for biomedical literature."""
+    """Search PubMed for biomedical literature with EBM-specific filters.
+
+    Supports:
+    - article_type: rct, systematic_review, meta_analysis, guideline, etc.
+    - clinical_query: therapy, diagnosis, prognosis, etiology (PubMed Clinical Queries)
+    - clinical_query_sensitivity: broad (more results) or narrow (higher precision)
+    """
     global _last_pubmed_call
 
     # Build query using PubMed field tags
@@ -77,6 +128,31 @@ async def handle_pubmed_search(
     full_query = " AND ".join(parts) if parts else query
     if not full_query:
         return ToolResult.fail("At least one of query, author, title, journal, mesh, or year is required.")
+
+    # Apply article_type filter (PubMed built-in publication type)
+    applied_filters: list[str] = []
+    if article_type:
+        at_key = article_type.strip().lower().replace("-", "_")
+        at_filter = _ARTICLE_TYPE_FILTERS.get(at_key)
+        if at_filter:
+            full_query = f"({full_query}) AND ({at_filter})"
+            applied_filters.append(f"article_type={article_type}")
+        else:
+            # Try as raw PubMed filter string
+            full_query = f"({full_query}) AND ({article_type}[Publication Type])"
+            applied_filters.append(f"article_type={article_type}")
+
+    # Apply Clinical Queries filter
+    if clinical_query:
+        cq_key = clinical_query.strip().lower()
+        cq_filters = _CLINICAL_QUERY_FILTERS.get(cq_key)
+        if cq_filters:
+            sensitivity = clinical_query_sensitivity.strip().lower()
+            if sensitivity not in ("broad", "narrow"):
+                sensitivity = "broad"
+            cq_string = cq_filters[sensitivity]
+            full_query = f"({full_query}) AND ({cq_string})"
+            applied_filters.append(f"clinical_query={clinical_query}({sensitivity})")
 
     # Step 1: search for IDs
     retmax = min(max_results, 20)
@@ -102,6 +178,7 @@ async def handle_pubmed_search(
         if not id_list:
             return ToolResult.ok(data={
                 "query": full_query, "total_count": 0, "results": [], "count": 0,
+                "filters_applied": applied_filters,
             })
 
         # Step 2: fetch summaries
@@ -134,6 +211,7 @@ async def handle_pubmed_search(
             "total_count": total,
             "results": results,
             "count": len(results),
+            "filters_applied": applied_filters,
         })
     except Exception as e:
         return ToolResult.fail(f"PubMed API error: {e}")
@@ -149,9 +227,21 @@ def register_pubmed_tools(r) -> None:
                 "query": {"type": "string", "description": "通用搜索查询（关键词）"},
                 "author": {"type": "string", "description": "作者名（如 \"Fauci AS\"）"},
                 "title": {"type": "string", "description": "标题关键词"},
-                "journal": {"type": "string", "description": "期刊名（如 \"Nature\"）"},
+                "journal": {"type": "string", "description": "期刊名（如 \"Nature\"、\"Lancet\"、\"BMJ\"）"},
                 "year": {"type": "string", "description": "发表年份（如 \"2023\"）"},
                 "mesh": {"type": "string", "description": "MeSH 主题词（如 \"Diabetes Mellitus\"）"},
+                "article_type": {
+                    "type": "string",
+                    "description": "文章类型过滤: rct（随机对照试验）, systematic_review（系统评价）, meta_analysis（荟萃分析）, guideline（临床指南）, controlled_clinical_trial（对照临床试验）, review（综述）, observational（观察性研究）, case_report（病例报告）",
+                },
+                "clinical_query": {
+                    "type": "string",
+                    "description": "EBM Clinical Queries 分类: therapy（治疗）, diagnosis（诊断）, prognosis（预后）, etiology（病因）。使用经验证的 PubMed 检索策略过滤",
+                },
+                "clinical_query_sensitivity": {
+                    "type": "string",
+                    "description": "Clinical Queries 灵敏度: broad（宽泛-更多结果）或 narrow（精确-更少但更相关），默认 broad",
+                },
                 "max_results": {"type": "integer", "description": "最大结果数（默认 10，最大 20）"},
             },
             "required": [],

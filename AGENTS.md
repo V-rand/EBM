@@ -1,4 +1,6 @@
-# Repository Guidelines
+# EBM Agent OS — Repository Guidelines
+
+EBM Agent OS is a **general-purpose deep research agent running on Agent OS**, adapted from Niuma-deepsearch for **Evidence-Based Medicine (EBM)** research.
 
 ## Project Structure & Module Organization
 `agent_os/` is the core runtime code:
@@ -13,7 +15,7 @@
 | `scheduler/` | `agent_os/scheduler/` | InterruptScheduler, reminder firing, Feishu notifications |
 | `skills/` | `skills/` | SKILL.md files (auto-discovered, zero-code workflows) |
 
-Documentation: `docs/` (architecture, REQUIRE.md).
+Documentation: `docs/`.
 
 ## Build, Test, and Development Commands
 Use `uv` only. Run from workspace root.

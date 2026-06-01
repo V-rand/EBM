@@ -2,7 +2,7 @@
 
 可用工具：
 - 文件读写：file_read, file_write, file_append, file_list, file_grep, file_tree, edit
-- 检索：workspace_search, web_search, web_read（法律场景：law_retrieve, case_retrieve）
+- 检索：workspace_search, web_search, web_read, pubmed_search, openalex_works（医学文献）
 - 任务管理：todowrite
 - 其他：question
 

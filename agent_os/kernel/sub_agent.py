@@ -41,8 +41,6 @@ _DEFAULT_EXTERNAL_RETRIEVAL_TOOLS = frozenset({
     "wikipedia_lookup",
     "pubmed_search",
     "opencitations_search",
-    "law_retrieve",
-    "case_retrieve",
 })
 
 
@@ -384,22 +382,6 @@ class SubAgent:
             content = self._render_web_read_archive(url, data)
             path = f"{sub_prefix}/web_read/{now}_{slug(url or tool_name)}.md"
             metadata = {"url": url, "parser": data.get("parser"), "generated_by": self.sub_agent_id}
-        elif tool_name == "law_retrieve":
-            query = str(arguments.get("query", "")).strip()
-            results = data.get("results", []) or []
-            if not results:
-                return None
-            content = self._render_law_archive(query, results)
-            path = f"{sub_prefix}/law/{now}_{slug(query or tool_name)}.md"
-            metadata = {"query": query, "results": results, "generated_by": self.sub_agent_id}
-        elif tool_name == "case_retrieve":
-            query = str(arguments.get("query", "")).strip()
-            results = data.get("results", []) or []
-            if not results:
-                return None
-            content = self._render_case_archive(query, results)
-            path = f"{sub_prefix}/case/{now}_{slug(query or tool_name)}.md"
-            metadata = {"query": query, "results": results, "generated_by": self.sub_agent_id}
         elif self._is_external_retrieval_tool(tool_name):
             label = self._retrieval_archive_label(arguments, data, tool_name)
             if not self._has_archivable_retrieval_data(data):
@@ -469,19 +451,6 @@ class SubAgent:
         lines = ["# Web Read Archive", "", f"- URL: {url}", f"- Parser: {data.get('parser', 'jina-reader')}"]
         return "\n".join(lines) + "\n\n---\n\n" + str(data.get("content", "")).strip()
 
-    @staticmethod
-    def _render_law_archive(query: str, results: list[dict[str, Any]]) -> str:
-        lines = ["# Law Retrieval Archive", "", f"- Query: {query}", ""]
-        for index, item in enumerate(results, start=1):
-            lines.extend([f"## Result {index}", f"- Title: {item.get('title', '')}", f"- Law: {item.get('laws_name', '')}", f"- Article: {item.get('article_tag', '')}", "", str(item.get("content", "")).strip(), ""])
-        return "\n".join(lines).strip()
-
-    @staticmethod
-    def _render_case_archive(query: str, results: list[dict[str, Any]]) -> str:
-        lines = ["# Case Retrieval Archive", "", f"- Query: {query}", ""]
-        for index, item in enumerate(results, start=1):
-            lines.extend([f"## Result {index}", f"- Title: {item.get('title', '')}", f"- Case No: {item.get('case_no', '')}", f"- Court: {item.get('court', '')}", "", str(item.get("content", "")).strip(), ""])
-        return "\n".join(lines).strip()
 
     @staticmethod
     def _retrieval_archive_label(arguments: dict[str, Any], data: dict[str, Any], tool_name: str) -> str:
