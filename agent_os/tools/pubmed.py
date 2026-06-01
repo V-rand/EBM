@@ -484,7 +484,7 @@ def register_pubmed_tools(r) -> None:
         "parameters": {
             "type": "object",
             "properties": {
-                "query": {"type": "string", "description": "搜索词，如 "metformin diabetes cardiovascular""},
+                "query": {"type": "string", "description": '搜索词，如 metformin diabetes cardiovascular'},
                 "article_type": {
                     "type": "string",
                     "description": "文章类型: systematic_review, rct, meta_analysis, guideline, review, observational, case_report",
@@ -493,13 +493,13 @@ def register_pubmed_tools(r) -> None:
                     "type": "string",
                     "description": "临床查询: therapy, diagnosis, prognosis, etiology。自动应用 PubMed 验证的检索策略",
                 },
-                "pmid": {"type": "string", "description": "PMID 精确查找，如 pmid="34101387""},
-                "pmids": {"type": "string", "description": "批量 PMID，如 pmids="34101387 37937763""},
-                "author": {"type": "string", "description": "作者，如 author="Fauci AS""},
+                "pmid": {"type": "string", "description": 'PMID 精确查找，如 pmid=34101387'},
+                "pmids": {"type": "string", "description": '批量 PMID，如 pmids=34101387 37937763'},
+                "author": {"type": "string", "description": '作者，如 author=Fauci AS'},
                 "title": {"type": "string", "description": "标题词"},
-                "journal": {"type": "string", "description": "期刊，如 journal="Lancet""},
-                "year": {"type": "string", "description": "年份，如 year="2023""},
-                "mesh": {"type": "string", "description": "MeSH 词，如 mesh="Diabetes Mellitus""},
+                "journal": {"type": "string", "description": '期刊，如 journal=Lancet'},
+                "year": {"type": "string", "description": '年份，如 year=2023'},
+                "mesh": {"type": "string", "description": 'MeSH 词，如 mesh=Diabetes Mellitus'},
                 "clinical_query_sensitivity": {"type": "string", "description": "broad 或 narrow，默认 broad"},
                 "max_results": {"type": "integer", "description": "结果数，默认 10"},
             },

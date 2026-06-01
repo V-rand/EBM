@@ -474,8 +474,8 @@ def register_ebm_tools(r) -> None:
             "properties": {
                 "query": {"type": "string", "description": "搜索词，如 "COVID vaccine efficacy""},
                 "category": {"type": "string", "description": "学科: cardiovascular, oncology, epidemiology, infectious, public_health"},
-                "date_from": {"type": "string", "description": "起始日期，如 "2026-01-01""},
-                "date_to": {"type": "string", "description": "截止日期，如 "2026-06-01""},
+                "date_from": {"type": "string", "description": '起始日期，如 2026-01-01'},
+                "date_to": {"type": "string", "description": '截止日期，如 2026-06-01'},
                 "max_results": {"type": "integer", "description": "结果数，默认 15"},
             },
             "required": [],
