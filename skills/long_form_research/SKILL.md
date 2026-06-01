@@ -1,11 +1,13 @@
 ---
 name: long-form-research
-description: Use when the answer_contract mode is long_form_report — the user needs analysis, comparison, synthesis, a structured report, roadmap, or decision support. Load this skill BEFORE any search for long-form tasks.
+description: Use when the user needs a comprehensive clinical evidence synthesis, systematic review report, structured analysis, comparison, guideline appraisal, or decision support document. Load this skill BEFORE any search for long-form EBM tasks.
 ---
 
-# Long-Form Research Discipline
+# 临床证据综合报告规范
 
-The goal is a structured, verifiable report with sufficient coverage, coherent argumentation, faithful citations, and reader utility. The method is the same constraint-driven reasoning cycle as short-answer work (PARSE → VERIFY_PREMISES → REASON → SEARCH → UPDATE → PIVOT_OR_ANSWER), organized over multiple dimensions. Long-form does NOT mean "search broadly first and reason later" — it means synthesizing more dimensions, each requiring the same reasoning discipline.
+目标是生成一份结构化、可验证、引用忠实、对临床决策有用的循证医学报告。方法论与问题研究一致（推理→检索→验证→综合），但需要在多个维度上组织证据、评估质量、区分强度。
+
+The goal is a structured, verifiable clinical evidence synthesis with sufficient coverage, coherent argumentation, faithful citations, and clinical utility. The method is constraint-driven reasoning and evidence verification organized over multiple dimensions. Long-form does NOT mean "search broadly first and reason later" — it means synthesizing more dimensions, each requiring the same reasoning discipline.
 
 ## Research Lifecycle
 
