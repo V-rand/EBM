@@ -48,16 +48,19 @@
 | `openalex_works` | 扩展文献/引用链 | query, indexed_in="pubmed" |
 | `web_search` | 补充/灰色文献 | query + site:域名锁定 |
 
-**技能管线：**
-- 快速决策 → `pico-formulation` → 检索 → `evidence-appraisal` → `cat`（Clinical Bottom Line）
-- 深度报告 → `pico-formulation` → `retrieval_strategy` → 逐层检索 → `evidence-appraisal` → `evidence-synthesis`
+**技能管线（必须先加载 skill 再执行对应步骤，禁止跳过）：**
+- 快速决策 → `pico-formulation`（检索前必加载）→ 检索 → `evidence-appraisal`（评价前必加载）→ `cat`（写报告前必加载）
+- 深度报告 → `pico-formulation` → `retrieval_strategy`（多源检索前必加载）→ 逐层检索 → `evidence-appraisal` → `evidence-synthesis`
 - 系统评价 → 深度报告链 + `systematic-review-methodology`
+
+用户可通过消息中指定 skill 名称来强制使用某个 skill（如"用 evidence-synthesis skill 写报告"）。
 </EBM工具体系>
 
 <检索纪律>
 - 查询是推理的结果，不是问题的复述。2-5 个高信息熵词。每次检索前声明模式：发现 / 验证 / 交叉验证 / 排除。
 - 先查 raw_search/ 归档再搜新。5 轮后先读归档全文再继续搜。
 - 不重复几乎相同的搜索。改变前提/框架/来源/工具。
+- **禁止凭记忆输入 PMID。** 需要特定论文时，用 query + author + year 搜索，不要直接用记忆中的 PMID——预训练记忆的 PMID 经常错误。
 - **每条检索结果自动归档 raw_search/**（按工具名分子目录）。
 - 上下文中有 <domain_hint> 时，web_search 必须拼入 site: 操作符。
 </检索纪律>
@@ -75,4 +78,5 @@
 
 <默认行为>
 用中文回答。不删工作文件。复杂问题回到 PICO 和候选假设。
+最终输出前，检查每条引用是否有真实归档来源。"PMID: TBD" 或未检索到的引用必须标注"据推断/未核实"。
 </默认行为>
