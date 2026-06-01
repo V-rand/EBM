@@ -1,0 +1,11 @@
+用结构化字段搜索 arXiv 预印本。用于 CS/数学/物理/统计预印本，或当 arXiv `comment` / `journal_ref` 字段可能包含会议/期刊录用信息时。
+
+快速模板：
+- `arxiv_search(query="transformer scaling", year="2020")`
+- `arxiv_search(author="Bengio", year="2022")`
+- `arxiv_search(title="contrastive learning", venue="ICML 2020")`
+- `arxiv_search(category="cs.LG", year="2024")`
+
+对于 arXiv 类学术问题，优先于 `web_search`。跨源期刊/会议发现用 `openalex_works`。
+
+返回 `{query, results:[{title,url,content, published, authors, categories, comment, journal_ref}], count}`。

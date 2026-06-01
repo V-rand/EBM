@@ -1,0 +1,11 @@
+Search arXiv papers with structured fields. Use for CS/math/physics/stat preprints or when arXiv `comment` / `journal_ref` may reveal venue acceptance.
+
+Low-burden presets:
+- `arxiv_search(query="transformer scaling", year="2020")`
+- `arxiv_search(author="Bengio", year="2022")`
+- `arxiv_search(title="contrastive learning", venue="ICML 2020")`
+- `arxiv_search(category="cs.LG", year="2024")`
+
+Use this before `web_search` for arXiv-like academic questions. Use `openalex_works` instead for cross-source journal/conference discovery.
+
+Returns `{query, results:[{title,url,content, published, authors, categories, comment, journal_ref}], count}`.

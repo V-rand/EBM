@@ -1,0 +1,11 @@
+Search PubMed biomedical literature. Use for medicine, biology, public health, clinical/therapy studies, MeSH terms, PMID/DOI discovery.
+
+Low-burden presets:
+- `pubmed_search(query="physical therapy stroke randomized trial", year="2015")`
+- `pubmed_search(author="Fauci AS", year="2020")`
+- `pubmed_search(title="exact title words")`
+- `pubmed_search(mesh="Diabetes Mellitus", year="2023")`
+
+Use this before `web_search` for biomedical papers. Use `openalex_works(indexed_in="pubmed", query=...)` when you need broader metadata or author/venue filtering.
+
+Returns `{total_count, results:[{pmid,title,authors,journal,pubdate,doi,url}], count}`. Max 20 results.

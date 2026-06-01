@@ -1,0 +1,29 @@
+搜索 GitHub 上的仓库、代码、Issues、Commits 和用户。
+
+参数：
+- query: GitHub 搜索查询语法（必需）。支持限定符：language:python、stars:>1000、org:facebook、path:src/、created:>2024-01-01
+- search_type: repositories | code | issues | commits | topics | users。默认 repositories。注意：code 搜索要求搜索词中至少包含一个不含通配符的字面词。
+- sort: stars | forks | updated | ""。默认按 best match。issues 用 comments/created/updated；commits 用 committer-date。
+- order: desc | asc。默认 desc。
+- per_page: 每页结果数（最大 100，默认 20）。
+
+返回：
+- total_count: 匹配总数
+- results: [{full_name, description, url, stars, language, topics, updated_at, ...}]
+
+速率限制：
+- 认证：30 req/min（设置 GITHUB_TOKEN 环境变量）
+- 未认证：10 req/min
+- 搜索 API 限制比核心 API 更严格
+
+何时使用：
+- 查找特定开源项目或框架的最新代码实现
+- 搜索特定技术栈的项目（如 "topic:mcp-server language:python"）
+- 验证某个开源库的 API 签名或配置方式
+- 查找某领域的热门开源工具
+- 搜索 Issues 了解某个库的常见问题和解决方案
+
+何时不使用：
+- 需要浏览仓库文件内容 → 用 web_read + GitHub URL（raw.githubusercontent.com）
+- API 文档查询 → 用 web_search/web_read
+- 学术论文 → 用 openalex_works / arxiv_search

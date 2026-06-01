@@ -1,0 +1,9 @@
+Resolve OpenAlex entities before filtering works.
+
+Use when an author, institution, source/venue, or topic name may be ambiguous:
+- `openalex_entity(entity_type="author", search="Yoshua Bengio")`
+- `openalex_entity(entity_type="source", search="Nature")`
+
+Then use the resolved name/ID context in `openalex_works(...)`.
+
+Returns `{results:[{id, display_name, works_count, cited_by_count, country_code, type}], count}`.

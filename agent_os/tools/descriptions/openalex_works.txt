@@ -1,0 +1,14 @@
+搜索 OpenAlex 论文数据库（2.7 亿+ 论文、期刊、会议、预印本、PubMed 收录记录）。
+
+快速模板：
+- 方法/数据线索检索论文 → `openalex_works(query="42,137 households ordinal probit", year="2010-2019")`
+- 已知作者 → `openalex_works(author="作者名", year="2015")`
+- 已知期刊/源 → `openalex_works(venue="期刊名", year="2015")`
+- 已知 DOI/OpenAlex ID → `openalex_works(doi="...")` 或 `openalex_works(openalex_id="W...")`
+- 引用指纹检索 → `openalex_works(references="论文标题1,论文标题2")`
+
+`query` 参数支持布尔搜索：`AND, OR, NOT`（大写）、`"exact phrase"`（精确匹配）、`word*`（通配符）、`"phrase"~N`（N 词内邻近）。不确定用哪个结构化字段时用 `query` 搜索标题和摘要。`year`、`author`、`venue`、`source_type`、`indexed_in`、`is_oa` 仅在确为约束条件时添加。
+
+最适合：文献发现、作者论文列表、期刊过滤、DOI 验证、引用/参考文献指纹。对于学术论文优先于 `web_search`，除非所需线索仅存在出版方网页上。
+
+返回 `{total_count, results:[{title, doi, id, authors, institutions, venue, source_type, cited_by_count, topics, abstract}], resolution, filters_applied}`。

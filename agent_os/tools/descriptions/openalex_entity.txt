@@ -1,0 +1,10 @@
+解析 OpenAlex 实体（作者、机构、来源/期刊、主题），用于在过滤论文前消歧义。
+
+用法：
+- `openalex_entity(entity_type="author", search="Yoshua Bengio")` — 查找作者 ID
+- `openalex_entity(entity_type="source", search="Nature")` — 查找期刊 ID
+- `openalex_entity(entity_type="institution", search="Stanford University")` — 查找机构 ID
+
+获取实体 ID 后，在 `openalex_works(...)` 中使用解析后的名称或 ID 进行精确过滤。
+
+返回 `{results:[{id, display_name, works_count, cited_by_count, country_code, type}], count}`。

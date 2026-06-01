@@ -1,0 +1,14 @@
+Search OpenAlex works across papers, journals, conferences, repositories, and PubMed-indexed records.
+
+Low-burden presets:
+- Unknown paper from method/numeric clues → `openalex_works(query="42,137 households ordinal probit", year="2010-2019")`
+- Known author → `openalex_works(author="Author Name", year="2015")`
+- Known venue/source → `openalex_works(venue="Journal Name", year="2015")`
+- DOI/OpenAlex ID known → `openalex_works(doi="...")` or `openalex_works(openalex_id="W...")`
+- Citation fingerprint known → `openalex_works(references="paper title 1,paper title 2")`
+
+Use `query` when you are unsure which structured field to use; it searches title/abstract text. Add `year`, `author`, `venue`, `source_type`, `indexed_in`, or `is_oa` only when they are real constraints.
+
+Best for: literature discovery, author paper lists, venue filtering, DOI verification, citation/reference fingerprints. Prefer this over `web_search` for academic papers unless the needed clue is only on a publisher/web page.
+
+Returns `{total_count, results:[{title, doi, id, authors, institutions, venue, source_type, cited_by_count, topics, abstract}], resolution, filters_applied}`.

@@ -1,0 +1,11 @@
+搜索 PubMed 生物医学文献。用于医学、生物学、公共卫生、临床试验/疗法研究、MeSH 词表、PMID/DOI 发现。
+
+快速模板：
+- `pubmed_search(query="physical therapy stroke randomized trial", year="2015")`
+- `pubmed_search(author="Fauci AS", year="2020")`
+- `pubmed_search(title="精确论文标题")`
+- `pubmed_search(mesh="Diabetes Mellitus", year="2023")`
+
+对于生物医学论文，优先于 `web_search`。需要更广泛的元数据或作者/期刊过滤时，用 `openalex_works(indexed_in="pubmed", query=...)`。
+
+返回 `{total_count, results:[{pmid,title,authors,journal,pubdate,doi,url}], count}`。最多 20 条。

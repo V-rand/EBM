@@ -1,0 +1,23 @@
+通用网页搜索。用于开放网络发现、新闻/时效性来源，或没有结构化工具可覆盖的任务。
+
+使用前先确认以下工具是否更合适：
+- 学术论文 → `openalex_works(query=...)`、`arxiv_search(...)`、`pubmed_search(...)`
+- 已知实体事实 → `wikipedia_lookup(...)`
+- 已知权威域名 → `domain_sites(...)` 然后 `web_search(query="关键词 site:xxx.org")`
+- 已有会话资料 → `workspace_search(...)`
+
+优质 web_search 调用特征：
+- 精确短语：`"42,137 households" "ordinal probit"`
+- 域锁定：`query="关键词 site:candidate-journal.org OR site:metadata-index.org"`
+- 来源限定：`source="news"` 仅新闻；`source="scholar"` 仅当结构化学术工具不适用时
+- filetype 限定：`query="关键词 filetype:pdf site:xxx.org"`
+
+搜索策略：
+- 发现查询：2-5 个高熵词项。不要把每条线索都拼进一个查询。
+- 域深挖：发现好的结果后，用 `site:domain.com/path` 在该域内锁定搜索。
+- 页面深挖：用 `intitle:`、`inurl:`、`filetype:pdf`、精确短语找到同一站点的相关页面/PDF。
+- 排除噪音：查询末尾加 `-reddit -quora` 过滤低质内容。
+
+避免重复宽泛查询。如果 2-3 次 web_search 没有推进候选或约束，换工具/框架/来源/域，不要换关键词。
+
+返回 `{query, results:[{title,url,content}], count, provider}` 并自动归档到 `raw_search/web_search/`。
