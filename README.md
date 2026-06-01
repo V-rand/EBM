@@ -2,35 +2,58 @@
 
 基于 Agent OS 内核的循证医学 AI 研究助手。自动构建 PICO 框架、按证据层级检索（指南→系统评价→RCT）、逐跳 GRADE 评级、输出 Clinical Bottom Line。
 
-## 快速开始
+## 环境准备
 
-### 1. 环境要求
-- Python 3.11+
-- Git
-- DeepSeek API Key（[platform.deepseek.com](https://platform.deepseek.com) 注册即送额度）
+### 你需要什么
 
-### 2. 克隆并安装
+| 项目 | 是否必需 | 说明 |
+|------|---------|------|
+| Python 3.11+ | ✅ 必需 | `python --version` 确认。没有的话 [python.org](https://python.org) 下载 |
+| Git | ✅ 必需 | `git --version` 确认 |
+| uv（包管理器） | ✅ 必需 | 安装：`curl -LsSf https://astral.sh/uv/install.sh \| sh`（Linux/Mac）或 `pip install uv` |
+| DeepSeek API Key | ✅ 必需 | [platform.deepseek.com](https://platform.deepseek.com) 注册，在「API Keys」页面创建，新用户有免费额度 |
+| NCBI API Key | 可选 | [NCBI 注册](https://www.ncbi.nlm.nih.gov/account/)，填后 PubMed 从 3次/秒 → 10次/秒 |
+| Tavily API Key | 可选 | [tavily.com](https://tavily.com) 注册，提升网页搜索质量。不填也能用（走 Serper 回退） |
+| Jina API Key | 可选 | [jina.ai](https://jina.ai) 注册，用于网页全文读取。不填也能用（走 Firecrawl/Trafilatura 回退） |
+| MinerU Token | 可选 | PDF/Office 文档解析。不填则用本地 pymupdf4llm 解析 |
+
+### 安装步骤
+
 ```bash
+# 1. 克隆项目
 git clone git@github.com:V-rand/EBM.git
 cd EBM
-uv sync
-```
 
-### 3. 配置 API Key
-```bash
+# 2. 安装依赖（uv 自动创建虚拟环境）
+uv sync
+
+# 3. 配置 API Key
 cp .env.example .env
 ```
-编辑 `.env`，填入你的 DeepSeek API Key：
-```
-DEEPSEEK_API_KEY=sk-your-deepseek-key-here
-```
 
-可选：申请 [NCBI API Key](https://www.ncbi.nlm.nih.gov/account/) 填入 `NCBI_API_KEY=xxx`，提升 PubMed 速率限制（无 key 时 3 次/秒，有 key 时 10 次/秒）。
-
-### 4. 启动
+编辑 `.env`，填入 DeepSeek API Key（其他可选）：
 ```bash
+# 必需
+DEEPSEEK_API_KEY=sk-your-deepseek-key
+
+# 可选：提升 PubMed 速率
+NCBI_API_KEY=your-ncbi-key
+
+# 可选：提升网页搜索质量
+TAVILY_API_KEY=tvly-your-key
+JINA_API_KEY=jina-your-key
+```
+
+### 验证安装
+
+```bash
+# 启动 CLI
 uv run python cli.py
 ```
+
+看到 `EBM Agent OS — 循证医学深度研究助手` 标题和 `EBM 未选择>` 提示符即为成功。
+
+输入 `SGLT-2抑制剂在T2DM中能否降低MACE风险？` 测试是否正常回答问题。
 
 ## CLI 操作
 
