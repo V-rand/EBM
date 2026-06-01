@@ -301,7 +301,7 @@ class AgentLoop:
 
     async def process(
         self, session_id: str, message: str, stream: bool = False,
-        context_mode: str = "default", request_timeout_seconds: int | None = None,
+        request_timeout_seconds: int | None = None,
         max_iterations: int | None = None,
     ) -> AsyncGenerator[dict[str, Any], None]:
         lock = self._get_session_lock(session_id)
@@ -343,7 +343,7 @@ class AgentLoop:
             effective_max_iterations = max_iterations or self.max_iterations
 
             messages.append({"role": "user", "content": message})
-            domain_hint = await self._route_domain_sites(message)
+            domain_hint = self._get_ebm_domain_hint()
             if domain_hint:
                 messages.append({"role": "user", "content": domain_hint})
             chat_tools = convert_tools_for_model(self.tools.get_available_schemas())
@@ -1232,7 +1232,7 @@ class AgentLoop:
     # Context compilation
     # ------------------------------------------------------------------
 
-    async def _compile_context(self, session_id: str, message: str, context_mode: str = "default"):
+    async def _compile_context(self, session_id: str, message: str):
         session = await self.sessions.get(session_id)
         if session is None:
             return None, None
@@ -2282,82 +2282,39 @@ class AgentLoop:
         return sub_agent._session_id, result
 
     # ------------------------------------------------------------------
-    # Domain routing — auto-inject authoritative site hints
+    # EBM domain injection — load authoritative medical sites at startup
     # ------------------------------------------------------------------
 
-    _sites_yaml: dict[str, list[str]] | None = None
-    _domain_descriptions: dict[str, str] = {
-        "medical": "国际医学 WHO NIH PubMed FDA Cochrane BMJ Lancet NEJM JAMA clinical medicine",
-        "medical_cn": "中国临床 医院 卫健委 医保 药监 医师 医学会 临床指南 知网 万方",
-        "ebm": "循证医学 EBM Cochrane GRADE systematie review meta-analysis clinical guideline PICO",
-        "ebm_chinese": "中国循证医学中心 临床实践指南 GRADE 系统评价 meta分析",
-        "clinical_trials": "临床试验 ClinicalTrials.gov WHO ICTRP EU CTR clinical trial registry",
-        "biomedical": "生物医学科研 基因 蛋白质 临床试验 NCBI UniProt 基金",
-        "pharmacology": "药品 药物 药理学 药品监管 FDA NMPA EMA drug",
-        "gov_cn_health": "卫生健康 疾控 医保 药监 公共卫生 医院",
-        "gov_cn_science": "科技 自然科学基金 医学科研",
-        "government_en": "US UK EU government health statistics data census",
-        "biology": "基因 蛋白 物种 通路 genome protein species",
-        "chemistry": "化学 化合物 反应 PubChem drug discovery",
-        "elite_multidisciplinary": "顶刊 Nature Science Cell Lancet BMJ JAMA NEJM PNAS",
-        "academic": "学术论文 GoogleScholar SemanticScholar PubMed PubMedCentral OpenAlex",
-        "common_knowledge": "百科 Wikipedia BaiduBaike 常识",
-        "encyclopedia": "百科 Wikipedia BaiduBaike Britannica",
-    }
+    # Keys in sites.yaml to inject as default domain hints for all sessions.
+    _EBM_DOMAIN_KEYS = (
+        "medical", "medical_cn", "clinical_trials", "biomedical",
+        "elite_multidisciplinary", "ebm_chinese", "gov_cn_health", "academic",
+    )
 
-    @classmethod
-    def _load_sites(cls) -> dict[str, list[str]]:
-        if cls._sites_yaml is not None:
-            return cls._sites_yaml
+    _ebm_domain_hint: str | None = None
+
+    def _get_ebm_domain_hint(self) -> str | None:
+        """Build a static domain_hint for all EBM-relevant domains from sites.yaml.
+        Cached after first call — no model routing needed."""
+        if self._ebm_domain_hint is not None:
+            return self._ebm_domain_hint
         try:
             import yaml
             path = Path(__file__).resolve().parent.parent.parent / "skills" / "domain_sites" / "sites.yaml"
-            cls._sites_yaml = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+            all_sites: dict[str, list[str]] = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
         except Exception:
-            cls._sites_yaml = {}
-        return cls._sites_yaml
-
-    async def _route_domain_sites(self, message: str) -> str | None:
-        sites = self._load_sites()
-        if not sites:
             return None
-        desc_lines = [f"- {k} ({self._domain_descriptions.get(k, '')})" for k in sorted(sites)]
-        try:
-            response = await self.client.chat.completions.create(
-                model=getattr(self.settings, "domain_router_model", self.model),
-                messages=[{
-                    "role": "system",
-                    "content": "You are a domain router. Return JSON only: {\"domains\": [\"key1\",\"key2\"]} or {\"domains\":[]}.",
-                }, {
-                    "role": "user",
-                    "content": (
-                        f"Select ALL domains relevant to this question. Return JSON.\n\n"
-                        f"{chr(10).join(desc_lines)}\n\n"
-                        f"Question: {message}"
-                    ),
-                }],
-                max_tokens=200,
-                extra_body={"thinking": {"type": "disabled"}},
-            )
-            content = response.choices[0].message.content or ""
-            data = json.loads(content)
-            keys = data.get("domains", data if isinstance(data, list) else [])
-            if not isinstance(keys, list):
-                return None
-            keys = [k.strip() for k in keys if isinstance(k, str)]
-        except Exception as e:
-            logger.debug("domain_router failed: %s", e)
-            return None
-        found = [k for k in keys if k in sites and sites[k]]
-        if not found:
-            return None
-        lines = [(
+        lines = [
             "\n<domain_hint>\n"
-            "权威域名已确定。调用 web_search 时必须在 query 中用 site: 操作符硬性锁源，例如：\n"
-        )]
-        for key in found:
-            dom_list = sites[key]
-            site_parts = [f"site:{d}" for d in dom_list]
-            lines.append(f"- {key}: {' OR '.join(site_parts)}")
-        lines.append("将 site: 操作符拼入 query 参数中，不要单独传域名参数。</domain_hint>\n")
-        return "\n".join(lines)
+            "调用 web_search 时必须在 query 中用 site: 操作符锁源到以下权威域名：\n"
+        ]
+        for key in self._EBM_DOMAIN_KEYS:
+            dom_list = all_sites.get(key, [])
+            if dom_list:
+                site_parts = [f"site:{d}" for d in dom_list[:12]]  # top 12 per category
+                lines.append(f"- {key}: {' OR '.join(site_parts)}")
+        if len(lines) == 2:
+            return None  # no domains loaded
+        lines.append("将 site: 操作符直接拼入 query 参数。</domain_hint>\n")
+        self._ebm_domain_hint = "\n".join(lines)
+        return self._ebm_domain_hint

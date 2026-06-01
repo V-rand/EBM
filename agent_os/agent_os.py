@@ -241,7 +241,6 @@ class AgentOS:
         session_id: str,
         message: str,
         *,
-        context_mode: str = "default",
         request_timeout_seconds: int | None = None,
         max_iterations: int | None = None,
     ):
@@ -251,7 +250,6 @@ class AgentOS:
         async for event in self.agent_loop.process(
             session_id,
             message,
-            context_mode=context_mode,
             request_timeout_seconds=request_timeout_seconds,
             max_iterations=max_iterations,
         ):
