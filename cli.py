@@ -283,7 +283,7 @@ class EBMCLI:
                     print_success(f"已恢复工作区: {session.name or session.id}")
                 await self._show_history("", title="恢复的最近对话", empty_ok=True)
         else:
-            console.print("[dim]暂无工作区，输入 /new 创建新的研究空间[/]")
+            console.print("[dim]暂无工作区。直接输入问题自动创建，或用 /new 手动创建。[/]")
 
         console.print()
         console.print("[dim]提示：直接输入自然语言对话；输入 /help 查看命令；运行中可输入 /status 或 /interrupt。[/]")
