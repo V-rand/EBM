@@ -110,9 +110,90 @@ For key claims, extract as ECRI (Evidence, Claim, Reasoning, Impact), plus count
 - How the evidence leads to the claim (reasoning chain)
 - Why this claim matters for the overall judgment (impact)
 
+## Evidence Chain Construction (EBM Multi-Hop Reasoning)
+
+This is the core difference between an EBM report and generic deep research. An EBM report is not a collection of facts — it is a **vertically verified evidence chain** where each clinical claim traces up through the evidence hierarchy.
+
+### The Evidence Chain Model
+
+```
+Clinical Recommendation
+     ↑ must be supported by
+Clinical Practice Guideline (guideline)
+     ↑ must cite
+Systematic Review / Meta-analysis (systematic_review / meta_analysis)
+     ↑ must include
+Multiple RCTs (rct)
+     ↑ primary evidence source
+Individual RCT / Observational Study
+```
+
+**Each arrow (hop) must be verified with an independent search.** Do not assume the chain exists — find each link explicitly.
+
+### Multi-Hop Verification Protocol
+
+For each clinical claim in the report:
+
+1. **Top-down search** — Start at the highest evidence level:
+   ```
+   pubmed_search(query="...", article_type="guideline")
+   pubmed_search(query="...", article_type="systematic_review")
+   ```
+
+2. **Cross-level verification** — When a guideline makes a recommendation, trace down:
+   - What systematic reviews does it cite? → `search for those reviews`
+   - What RCTs do those reviews include? → `check against original RCTs`
+   - Are the RCT results consistent with the review conclusions? → `verify`
+
+3. **Gap identification** — Explicitly check for broken links:
+   - No guideline found → "No recent clinical guideline covers this question"
+   - Guideline found but >5 years old → "Guideline may be outdated; latest evidence not incorporated"
+   - Systematic review exists but only 2 small RCTs → "Evidence base is thin (2 RCTs, n=total)"
+   - Only observational studies → "No RCT evidence available; causal inference not possible"
+
+4. **Grade each link independently** — A guideline's recommendation strength does NOT automatically equal evidence quality. Use `skill_use("evidence-appraisal")` on the underlying studies.
+
+### Writing Evidence Chains in the Report
+
+Every major clinical claim must include an evidence chain statement:
+
+```
+Good:
+「推荐 SGLT-2 抑制剂用于 T2DM 心血管风险降低 (证据链完整)：
+  - ESC/ADA 2024 指南 Ⅰ 类推荐 [1]
+  - ← 基于 3 项系统评价 [2-4]
+  - ← 共纳入 6 项 RCT，总 n=46,969 [5-10]
+  - GRADE 高质量。各 RCT 结果方向一致，无显著异质性。」
+
+Weak:
+「多个研究表明 SGLT-2 抑制剂有益 [1-10]」
+```
+
+When the chain is broken, downgrade explicitly:
+
+```
+「该结论基于有限的证据链：
+  - 仅 1 项观察性研究 (n=1,200) [6] 支持该关联
+  - 缺少 RCT 验证 ← 链路在此断开
+  - GRADE 低质量。结论为"可能有效"，需 RCT 确认。」
+```
+
+### Chain Integrity Rules
+
+| Rule | Action |
+|------|--------|
+| Guideline + matching SR + multiple RCTs | Full chain. Highest confidence. |
+| SR + RCTs but no guideline | Chain strong at review level. Label "未纳入现行指南". |
+| RCTs but no SR | No evidence synthesis. Label "单项RCT证据，需系统评价整合". |
+| Only observational studies | Chain breaks at primary level. Label "仅关联证据，缺乏因果验证". |
+| Guideline outdated (>5yr) | Check if new evidence changes recommendations. Label accordingly. |
+| Any link has serious risk of bias | Downgrade the entire chain below that point. |
+
 ## Argument Structure
 
-Each section must have: a central claim → supporting evidence → limitations → contribution to overall judgment. Sections must form an inference chain, not a parallel material library. If evidence is mixed, state what is established, what is plausible, and what remains unresolved. Distinguish facts, interpretations, inferences, and recommendations. Distinguish correlation from causation. Conclusion strength must not exceed evidence strength.
+Each section must have: a central claim → supporting evidence → limitations → contribution to overall judgment. Sections must form an inference chain, not a parallel material library. For EBM reports, the inference chain includes the **vertical evidence chain** (see above) plus the **horizontal argument structure** (how claims relate to each other).
+
+If evidence is mixed, state what is established, what is plausible, and what remains unresolved. Distinguish facts, interpretations, inferences, and recommendations. Distinguish correlation from causation. Conclusion strength must not exceed evidence strength.
 
 ## Citation Verification Protocol
 
