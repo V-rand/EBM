@@ -34,22 +34,58 @@ uv run python cli.py
 
 ## CLI 操作
 
-进入后看到的提示符是 `EBM>`。常用命令：
+进入后看到 `EBM 未选择>` 提示符。**不需要先 `/new`——直接输入问题就会自动创建工作区**。
 
 | 命令 | 作用 |
 |------|------|
-| `/new` | 创建新的研究工作区 |
 | `/sessions` | 列出所有工作区 |
-| `/use <编号>` | 切换到指定工作区 |
+| `/use <编号>` | 切换工作区（不同研究主题分开） |
+| `/new <名称>` | 手动创建命名工作区 |
 | `/close` | 关闭当前工作区 |
-| `/delete` | 删除当前工作区 |
+| `/delete` | 删除当前工作区及数据 |
 | `/status` | 查看当前运行状态 |
 | `/interrupt` | 中断正在运行的任务 |
-| `/help` | 查看完整命令列表 |
-
-**直接输入自然语言即可开始研究。** 系统会自动判断问题类型、加载技能、检索证据、输出结论。
+| `/help` | 完整命令列表 |
 
 输入 `exit` 或 Ctrl+C 退出。
+
+## 自定义 Skill
+
+Skills 是纯 Markdown 文件，放在 `skills/` 下即可被自动发现，**不需要改任何代码**。
+
+### 创建一个 Skill
+```bash
+mkdir -p skills/my_skill
+```
+
+写 `skills/my_skill/SKILL.md`：
+```markdown
+---
+name: my-skill
+description: 简短描述——模型看到这个来决定是否加载
+---
+
+# 你的 Skill 标题
+
+这里写 skill 内容。可以是方法论指导、领域知识、报告模板等。
+模型通过 `skill_use("my-skill")` 加载后，会读到这里的全部内容。
+```
+
+重启 CLI 生效。Skill 还支持附件：
+```
+skills/my_skill/
+├── SKILL.md          # 必需
+├── references/       # 可选：参考资料
+├── templates/        # 可选：模板文件
+└── assets/           # 可选：其他资源
+```
+
+### 放在项目外
+在 `config.yaml` 中：
+```yaml
+extra_skill_dirs:
+  - /path/to/your/skills
+```
 
 ## 它是什么
 
@@ -90,20 +126,6 @@ EBM Agent OS 是一个**自主研究 Agent**，不是聊天机器人：
 | `systematic-review` | 系统评价 | PRISMA 标准全流程 |
 | `self-audit` | 输出前 | 自审引用真实性 / 数字一致性 / 结论强度 |
 | `domain_sites` | 额外领域 | 补充特定领域权威网站（医学域名已自动注入） |
-
-## 评估系统表现
-
-测试时关注以下几点：
-
-| 维度 | 检查项 |
-|------|--------|
-| **证据层级** | 是否先搜 guideline/SR，再搜 RCT？ |
-| **引用真实性** | 是否有 "PMID: TBD" 或记忆编造的引用？ |
-| **效应量完整性** | 是否附带 95% CI？是否标注 GRADE？ |
-| **证据链** | 是否标注了从指南到 RCT 的追溯路径？ |
-| **断链标注** | 证据不足时是否诚实标注而非硬编？ |
-| **Clinical Bottom Line** | 结论是否可直接用于临床决策？ |
-| **自审** | 报告写入后是否加载 self-audit 检查？ |
 
 ## 注意
 
