@@ -15,6 +15,9 @@ import requests as _requests
 
 from .registry import ToolResult, get_tool_registry
 
+_media_session = _requests.Session()
+_media_session.trust_env = False  # bypass proxy
+
 _DESC_DIR = Path(__file__).resolve().parent / "descriptions"
 UA = "AgentOS/1.0"
 API_TIMEOUT = 3.0
@@ -56,7 +59,7 @@ def _wikipedia_lookup_sync(query: str, lang: str = "") -> dict[str, Any] | None:
         rest_base = f"https://{code}.wikipedia.org/api/rest_v1"
         safe_title = query.strip().replace(" ", "_")
         rest_url = f"{rest_base}/page/summary/{safe_title}"
-        rr = _requests.get(rest_url, headers={"User-Agent": UA}, timeout=API_TIMEOUT)
+        rr = _media_session.get(rest_url, headers={"User-Agent": UA}, timeout=API_TIMEOUT)
 
         if rr.status_code == 200:
             d = rr.json()
@@ -72,7 +75,7 @@ def _wikipedia_lookup_sync(query: str, lang: str = "") -> dict[str, Any] | None:
 
         # Fallback: search API (text search + redirect info)
         api = _wiki_query_api(code)
-        sr = _requests.get(api, params={
+        sr = _media_session.get(api, params={
             "action": "query", "format": "json",
             "list": "search", "srsearch": query, "srlimit": 3,
             "srwhat": "text",
@@ -101,7 +104,7 @@ def _wikipedia_lookup_sync(query: str, lang: str = "") -> dict[str, Any] | None:
         # Fetch via REST API using the search-discovered title
         safe_t = title.replace(" ", "_")
         rest_url2 = f"https://{code}.wikipedia.org/api/rest_v1/page/summary/{safe_t}"
-        rr2 = _requests.get(rest_url2, headers={"User-Agent": UA}, timeout=API_TIMEOUT)
+        rr2 = _media_session.get(rest_url2, headers={"User-Agent": UA}, timeout=API_TIMEOUT)
         if rr2.status_code == 200:
             d2 = rr2.json()
             return {

@@ -81,7 +81,7 @@ async def handle_github_search(
             _last_github_call = time.time()
 
         loop = asyncio.get_running_loop()
-        r = await loop.run_in_executor(None, lambda: _requests.get(
+        r = await loop.run_in_executor(None, lambda: _github_session.get(
             url,
             headers={
                 "Accept": _ACCEPT_MAP.get(st, "application/vnd.github.v3+json"),

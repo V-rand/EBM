@@ -184,7 +184,7 @@ async def handle_arxiv_search(
             ss_params["year"] = year
         ss_response = await loop.run_in_executor(
             None,
-            lambda: _requests.get(
+            lambda: _academic_session.get(
                 "https://api.semanticscholar.org/graph/v1/paper/search",
                 params=ss_params, headers={"User-Agent": "AgentOS/1.0"}, timeout=15
             )
