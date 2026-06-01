@@ -25,6 +25,9 @@ import requests as _requests
 
 from .registry import ToolResult
 
+_pubmed_session = _requests.Session()
+_pubmed_session.trust_env = False  # bypass proxy — academic APIs faster direct from China
+
 NCBI_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 NCBI_KEY = os.getenv("NCBI_API_KEY", "")
 _DESC_DIR = Path(__file__).resolve().parent / "descriptions"
@@ -44,7 +47,7 @@ def _pubmed_api(url: str, params: dict[str, Any]) -> _requests.Response:
     p.setdefault("email", "agentos@example.com")
     if NCBI_KEY:
         p["api_key"] = NCBI_KEY
-    r = _requests.get(url, params=p, timeout=20,
+    r = _pubmed_session.get(url, params=p, timeout=20,
                       headers={"User-Agent": "AgentOS/1.0"})
     r.raise_for_status()
     return r

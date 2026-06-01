@@ -24,6 +24,9 @@ import requests as _requests
 
 from .registry import ToolResult
 
+_ebm_session = _requests.Session()
+_ebm_session.trust_env = False  # bypass proxy — academic APIs faster direct from China
+
 _DESC_DIR = Path(__file__).resolve().parent / "descriptions"
 
 # ============================================================================
@@ -53,7 +56,7 @@ async def _ctgov_api(params: dict[str, Any]) -> dict[str, Any] | None:
         loop = asyncio.get_running_loop()
         r = await loop.run_in_executor(
             None,
-            lambda: _requests.get(
+            lambda: _ebm_session.get(
                 f"{CTGOV_BASE}/studies",
                 params=params,
                 timeout=20,
@@ -201,7 +204,7 @@ async def handle_cochrane_search(
             loop = asyncio.get_running_loop()
             r = await loop.run_in_executor(
                 None,
-                lambda: _requests.get(
+                lambda: _ebm_session.get(
                     search_url,
                     timeout=15,
                     headers={"User-Agent": "EBMAgentOS/1.0", "Accept": "application/json"},

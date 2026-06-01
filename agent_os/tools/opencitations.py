@@ -29,6 +29,9 @@ import requests as _requests
 
 from .registry import ToolResult
 
+_opencit_session = _requests.Session()
+_opencit_session.trust_env = False  # bypass proxy — academic APIs faster direct from China
+
 COCI_BASE = "https://api.opencitations.net/index/v2"
 COCI_KEY = None  # optional: set OPEN_CITATIONS_TOKEN env var
 if COCI_KEY is None:
@@ -68,7 +71,7 @@ def _coci_api_get(url: str, headers: dict | None = None, timeout: float = 20.0) 
         h["authorization"] = COCI_KEY
     if headers:
         h.update(headers)
-    r = _requests.get(url, headers=h, timeout=timeout)
+    r = _opencit_session.get(url, headers=h, timeout=timeout)
     if r.status_code == 404:
         return r
     r.raise_for_status()

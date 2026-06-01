@@ -70,6 +70,7 @@ def _summarize_error(exc: Exception) -> str:
     return f"{type(exc).__name__}: {exc}"
 
 
+
 def _coerce_markdown_output(value: object) -> str:
     if isinstance(value, str):
         return value

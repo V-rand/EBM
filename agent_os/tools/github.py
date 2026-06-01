@@ -14,6 +14,9 @@ import requests as _requests
 
 from .registry import ToolResult
 
+_github_session = _requests.Session()
+_github_session.trust_env = False  # bypass proxy — academic APIs faster direct from China
+
 GITHUB_API = "https://api.github.com"
 _GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
 _DESC_DIR = Path(__file__).resolve().parent / "descriptions"
@@ -31,7 +34,7 @@ def _github_api_get(url: str) -> _requests.Response:
     headers = {"Accept": "application/vnd.github.v3+json", "User-Agent": "AgentOS-github-search"}
     if _GITHUB_TOKEN:
         headers["Authorization"] = f"token {_GITHUB_TOKEN}"
-    return _requests.get(url, headers=headers, timeout=15)
+    return _github_session.get(url, headers=headers, timeout=15)
 
 
 _ACCEPT_MAP = {

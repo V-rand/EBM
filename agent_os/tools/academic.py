@@ -14,6 +14,9 @@ import requests as _requests
 
 from .registry import ToolResult, get_tool_registry
 
+_academic_session = _requests.Session()
+_academic_session.trust_env = False  # bypass proxy — academic APIs faster direct from China
+
 
 ARXIV_API = "https://export.arxiv.org/api/query"
 CROSSREF_API = "https://api.crossref.org/works"
@@ -37,7 +40,7 @@ ARXIV_NS = {
 
 def _arxiv_request(params: dict) -> str:
     """Sync arXiv API request via requests. Reliable from China."""
-    r = _requests.get(ARXIV_API, params=params, headers={"User-Agent": "AgentOS/1.0"}, timeout=20)
+    r = _academic_session.get(ARXIV_API, params=params, headers={"User-Agent": "AgentOS/1.0"}, timeout=20)
     r.raise_for_status()
     return r.text
 
@@ -217,7 +220,7 @@ async def handle_crossref_search(query: str, max_results: int = 5, **kw) -> Tool
         params = {"query": query, "rows": max_results}
         r = await loop.run_in_executor(
             None,
-            lambda: _requests.get(CROSSREF_API, params=params, timeout=20)
+            lambda: _academic_session.get(CROSSREF_API, params=params, timeout=20)
         )
         r.raise_for_status()
         data = r.json()

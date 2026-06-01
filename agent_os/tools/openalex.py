@@ -22,6 +22,9 @@ import requests as _requests
 
 from .registry import ToolResult
 
+_openalex_session = _requests.Session()
+_openalex_session.trust_env = False  # bypass proxy — academic APIs faster direct from China
+
 OPENALEX_BASE = "https://api.openalex.org"
 OPENALEX_KEY = os.getenv("OPENALEX_API_KEY")
 OPENALEX_REQUEST_TIMEOUT = 20.0
@@ -31,7 +34,7 @@ _DESC_DIR = Path(__file__).resolve().parent / "descriptions"
 def _openalex_get(url: str, params: dict | None = None, timeout: float | None = None) -> _requests.Response:
     """Sync GET to OpenAlex via requests. Reliable from China."""
     t = timeout or OPENALEX_REQUEST_TIMEOUT
-    r = _requests.get(url, params=params or {}, timeout=t,
+    r = _openalex_session.get(url, params=params or {}, timeout=t,
                       headers={"User-Agent": "AgentOS/1.0"})
     r.raise_for_status()
     return r
