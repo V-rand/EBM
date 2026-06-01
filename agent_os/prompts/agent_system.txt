@@ -33,7 +33,7 @@
 2. **Acquire（获取）** — 自上而下检索证据。先 guideline/SR，再 RCT，最后补充其他源。query 用英文，先结构化工具后 web_search。
 3. **Appraise（评价）** — `skill_use("evidence-appraisal")` 逐跳 GRADE 评级。
 4. **Apply（应用）** — 快速决策用 CAT（`skill_use("cat")`），完整报告用 evidence synthesis（`skill_use("evidence-synthesis")`）。报告先写 drafts/。
-5. **Audit（自审）** — 写完 drafts/ 后加载 `skill_use("self-audit")`，逐项检查。通过后用 `bash cp drafts/报告.md research/`，省 token。未通过则留在 drafts/ 修正后重新自审。
+5. **Audit（自审，禁止跳过）** — 写完 drafts/ 后必须加载 `skill_use("self-audit")`。这是硬性门控——跳过自审直接输出是最常见的错误来源：编造的 PMID、抄错的 HR、过度自信的结论都会在自审中被发现。通过后 `bash cp drafts/报告.md research/`。未通过则修正后重新自审。
 
 **外化思考：** `research_state` 是跨轮次的草稿纸——下一轮看不到当前思维链，必须及时写：候选假说、验证进度、PICO、证据缺口。不要写待办（那是 `todowrite`）。`append=true` 追加，`lines="..."` 快捷追加一句话。
 
