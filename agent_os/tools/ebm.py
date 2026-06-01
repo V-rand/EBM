@@ -81,31 +81,25 @@ async def handle_clinical_trials_search(
     Supports PICO-based search: condition + intervention.
     """
     try:
-        # Build search expression (advanced query syntax)
-        parts: list[str] = []
-        if query:
-            parts.append(f"({query})")
-        if condition:
-            parts.append(f"AREA[ConditionDisease] {condition}")
-        if intervention:
-            parts.append(f"AREA[InterventionName] {intervention}")
-        if sponsor:
-            parts.append(f"AREA[Sponsor] {sponsor}")
-        if location:
-            parts.append(f"AREA[LocationCountry] {location}")
-        if year:
-            parts.append(f"AREA[StudyFirstPostDate] EXPAND[{year}]")
-
-        query_expr = " AND ".join(parts) if parts else ""
-
-        # Build filter params
+        # Build filter params using v2 API fields
+        # See https://clinicaltrials.gov/api/v2/studies for available params
         params: dict[str, Any] = {
             "pageSize": min(max_results, 20),
             "format": "json",
             "countTotal": "true",
         }
-        if query_expr:
-            params["query.term"] = query_expr
+        if query:
+            params["query.term"] = query.strip()
+        if condition:
+            params["query.cond"] = condition.strip()
+        if intervention:
+            params["query.intr"] = intervention.strip()
+        if sponsor:
+            params["query.spons"] = sponsor.strip()
+        if location:
+            params["query.locn"] = location.strip()
+        if year:
+            params["filter.overallDate"] = f"RANGE[{year},{year}]" if "-" not in year else f"RANGE[{year}]"
         if status:
             status_map = {
                 "recruiting": "RECRUITING",
@@ -169,7 +163,7 @@ async def handle_clinical_trials_search(
             })
 
         return ToolResult.ok(data={
-            "query": query_expr or query,
+            "query": condition or query or "",
             "total_count": total,
             "results": results,
             "count": len(results),
