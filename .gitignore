@@ -17,3 +17,9 @@ token_cache.json
 dist/
 build/
 .firecrawl/
+
+.claude/
+.vscode/
+.agents/
+.codex/
+.opencode/
