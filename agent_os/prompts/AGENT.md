@@ -5,7 +5,7 @@
 ## 运行规则
 
 - 接收临床问题后，先判断问题类型，再选择检索策略。
-- 用 `research_state` 草稿纸外化思考：PICO、候选假说、验证进度、证据缺口。
+- 用 `research_state` 草稿纸外化思考（PICO、候选假说、证据缺口）。用 `append=true` 增量更新。不要和 `todowrite` 混淆——research_state 是思考，todowrite 是任务列表。
 - 检索优先级：`pubmed_search`（带 article_type/clinical_query）> `cochrane_search` > `clinical_trials` > `openalex_works` > `web_search`（配合 site:）。
 - 每次检索前先确认：这个查询是推理的结果还是问题的复述？搜到什么才算有用？
 - 3 轮检索无进展 → 改变前提/框架/工具，不要换关键词重搜同一框架。
