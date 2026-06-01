@@ -577,7 +577,12 @@ async def handle_pico_analysis(
 # ============================================================================
 
 def register_ebm_tools(r) -> None:
-    """Register all EBM-specific tools."""
+    """Register EBM-specific retrieval tools.
+
+    Only tools that call external APIs are registered here.
+    Reasoning helpers (GRADE, PICO) live in the corresponding SKILL files
+    as model-level instructions — they don't need a dedicated tool.
+    """
     r.register("clinical_trials", "retrieval", {
         "name": "clinical_trials",
         "description": "搜索 ClinicalTrials.gov 临床试验注册库。支持按疾病、干预、状态、分期筛选。用于查找临床试验证据。",
@@ -612,38 +617,3 @@ def register_ebm_tools(r) -> None:
             "required": ["query"],
         },
     }, handle_cochrane_search, concurrency_safe=True, read_only=True)
-
-    r.register("evidence_level", "reasoning", {
-        "name": "evidence_level",
-        "description": "评估临床研究证据等级（GRADE 框架 + Oxford CEBM 分级）。输入研究类型和局限性信息，返回证据质量评级和理由。",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "study_type": {
-                    "type": "string",
-                    "description": "研究类型：rct, cohort, case-control, case series, systematic review, meta-analysis, guideline, expert opinion",
-                },
-                "design": {
-                    "type": "string",
-                    "description": "设计描述（如 'randomized double-blind', 'prospective cohort'）",
-                },
-                "limitations": {
-                    "type": "string",
-                    "description": "局限性描述，包含关键词如 'risk of bias', 'inconsistency', 'heterogeneity', 'indirectness', 'imprecision', 'publication bias', 'large effect', 'dose response'",
-                },
-            },
-            "required": ["study_type"],
-        },
-    }, handle_evidence_level, concurrency_safe=True, read_only=True)
-
-    r.register("pico_analysis", "reasoning", {
-        "name": "pico_analysis",
-        "description": "PICO 临床问题框架构建。输入临床问题，自动解析为 P（患者/问题）、I（干预）、C（对照）、O（结局）四个要素。帮助规划循证医学检索策略。",
-        "parameters": {
-            "type": "object",
-            "properties": {
-                "clinical_question": {"type": "string", "description": "临床问题描述。留空则返回 PICO 框架说明和示例。"},
-            },
-            "required": [],
-        },
-    }, handle_pico_analysis, concurrency_safe=True, read_only=True)

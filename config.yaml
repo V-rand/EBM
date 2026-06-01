@@ -47,7 +47,7 @@ workspace:
 #   file_grep, file_tree, workspace_search, pubmed_search, web_search,
 #   web_read, arxiv_search, crossref_search, wikipedia_lookup,
 #   openalex_works, openalex_entity, opencitations_search,
-#   clinical_trials, cochrane_search, evidence_level, pico_analysis,
+#   clinical_trials, cochrane_search,
 #   github_search, research_state, upload_parse, bash, todowrite,
 #   reminder_create, spawn, skill_use, skill_propose, question,
 #   send_msg, task_stop, edit

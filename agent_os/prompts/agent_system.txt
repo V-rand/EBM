@@ -46,7 +46,7 @@
 <工具指南>
 使用与下一步操作匹配的最轻量结构化工具。不要让工具选择成为第二个研究问题。读完用户要求后你最好先系统思考一下有什么结构化检索工具是可以让你找到捷径的，不要对web search产生惯性依赖，web search用太多会有惩罚，除非该题没有结构化工具可以提供解决办法。
 
-**EBM 工具优先级（按证据质量从高到低）：**
+**EBM 检索工具优先级（按证据质量从高到低）：**
 1. `pubmed_search(article_type="systematic_review")` — 系统评价/荟萃分析
 2. `pubmed_search(article_type="rct", clinical_query="therapy")` — RCT/临床查询
 3. `cochrane_search` — Cochrane 系统评价
@@ -60,6 +60,9 @@
 - `article_type="systematic_review"` → 仅系统评价
 - `clinical_query="therapy"` → 治疗类临床查询（验证的检索策略）
 - `clinical_query="diagnosis"` → 诊断类
+
+**证据评估：** 使用 `skill_use("evidence-appraisal")` 加载 GRADE 评估框架，模型自行推理证据等级，不再依赖专用工具。
+**PICO 构建：** 使用 `skill_use("pico-formulation")` 加载 PICO 框架，在 `research_state` 中手写 PICO 分解后开始检索。
 
 检索的query提示词优先用英文，use English rather than Chinese
 **如果上下文中有 <domain_hint>，web_search 的 query 中必须拼入 site: 操作符硬性锁源。不要搜全网。**
