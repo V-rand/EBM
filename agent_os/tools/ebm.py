@@ -433,7 +433,7 @@ def register_ebm_tools(r) -> None:
     """
     r.register("clinical_trials", "retrieval", {
         "name": "clinical_trials",
-        "description": '搜索 ClinicalTrials.gov 临床试验。如 clinical_trials(condition=type 2 diabetes, intervention=empagliflozin), clinical_trials(query=CAR-T, status=recruiting, phase=2)。',
+        "description": "搜索 ClinicalTrials.gov 临床试验注册库",
         "parameters": {
             "type": "object",
             "properties": {
@@ -453,14 +453,14 @@ def register_ebm_tools(r) -> None:
 
     r.register("cochrane_search", "retrieval", {
         "name": "cochrane_search",
-        "description": '搜索 Cochrane 系统评价数据库 (CDSR)。通过 Cochrane API 和 PubMed 双重检索。',
+        "description": "搜索 Cochrane 系统评价数据库，PubMed 回退",
         "parameters": {
             "type": "object",
             "properties": {
-                "query": {"type": "string", "description": "搜索关键词"},
-                "topic": {"type": "string", "description": "主题分类"},
+                "query": {"type": "string", "description": "搜索词"},
+                "topic": {"type": "string", "description": "主题"},
                 "year": {"type": "string", "description": "年份"},
-                "max_results": {"type": "integer", "description": "最大结果数（默认 10）"},
+                "max_results": {"type": "integer", "description": "默认 10"},
             },
             "required": ["query"],
         },
@@ -468,7 +468,7 @@ def register_ebm_tools(r) -> None:
 
     r.register("medrxiv_search", "retrieval", {
         "name": "medrxiv_search",
-        "description": '搜索 medRxiv 预印本（临床/公卫/流行病学最新研究）。未同行评议。如 medrxiv_search(query=SGLT-2 inhibitor cardiovascular), medrxiv_search(query=long COVID, category=epidemiology)。',
+        "description": "搜索 medRxiv 健康科学预印本（未经同行评议）",
         "parameters": {
             "type": "object",
             "properties": {

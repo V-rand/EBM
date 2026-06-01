@@ -11,50 +11,54 @@ description: Use when the task requires multi-step retrieval (finding specific p
 
 **当你可以锁定到权威域名时，永远不要搜索整个网络。当你有结构化字段时，永远不要使用关键词。当你可以从约束推理得出结论时，永远不要再次搜索。**
 
-## 先选节点，后选工具
+## EBM 工具选择：按证据层级
 
-不要问"下一个关键词是什么？"而要问"问题图中哪个节点最窄且可搜索？"
+不要问"用什么关键词搜"——先问"这个问题在证据金字塔的哪一层？"
 
-| 节点 | 宽度 | 工具形态 |
-|---|---|---|
-| 写了后来评论的评论家 | 宽 | 避免作为第一条路径 |
-| 某一年数字专题奖项的获奖者 | 中 | 域名锁定的 web 搜索 |
-| 专家出版物集群 | 窄节点 | `openalex_works` / `crossref_search` |
-| 某一年学会工作坊演讲者 | 窄节点 | 域名锁定的 web 搜索 / 官方 PDF |
+| 要找到什么 | 工具 | 怎么用 |
+|-----------|------|--------|
+| 临床指南 | `pubmed_search` | `article_type="guideline"` |
+| Cochrane 系统评价 | `cochrane_search` | 直接搜，PubMed 自动回退 |
+| 系统评价/Meta分析 | `pubmed_search` | `article_type="systematic_review"` |
+| 随机对照试验 | `pubmed_search` | `article_type="rct"`, 加 `clinical_query="therapy"` |
+| 正在进行的试验 | `clinical_trials` | `condition` + `intervention`, `status="recruiting"` |
+| 最新预印本 | `medrxiv_search` | 查 PubMed 还没收录的新研究 |
+| 特定 PMID | `pubmed_search` | `pmid="34101387"` 返回完整元数据 |
+| 扩展文献/引用链 | `openalex_works` | `indexed_in="pubmed"` |
+| 灰色文献/补充 | `web_search` | 配合 `site:域名` 锁定权威源 |
 
-仅在宽节点是唯一可用入口时使用。如果存在窄节点，先选它，再选工具。
+**自上而下检索**：先搜 guideline → 搜到就用其引用的系统评价 → 再查底层 RCT。不要跳过中间层。
 
 ## 可复制的检索轨迹
 
-从复制以下某一形态开始，然后替换具体事实。
-
-**从独特线索中查找未知论文**
+**自上而下检索某疗法的证据（EBM 标准路径）**
 ```
-openalex_works(query="\"42,137 households\" \"ordinal probit\"", year="2010-2019")
-web_search(query="\"42,137 households\" \"survey wave\"  site:candidate-journal.org")
-web_read(url="candidate PDF or article page")
-openalex_works(query="candidate title", year="2015")
-```
-
-**已知作者/来源，未知论文**
-```
-openalex_entity(entity_type="author", search="Author Name")
-openalex_works(author="Author Name", year="2015", query="distinctive topic phrase")
-web_read(url="best candidate page")
+pubmed_search(query="SGLT-2 inhibitor cardiovascular", article_type="guideline")
+    → 找到指南后，查看其引用的系统评价
+pubmed_search(query="SGLT-2 inhibitor MACE", article_type="systematic_review")
+    → 找到系统评价后，查看其纳入的 RCT
+pubmed_search(query="empagliflozin cardiovascular", article_type="rct", year="2015-2024")
+    → 验证关键 RCT 的方法学和效应量
+clinical_trials(condition="type 2 diabetes", intervention="empagliflozin", status="completed")
+    → 查看已完成但未发表的试验
 ```
 
-**通用网络来源发现**
+**探索最新证据**
 ```
-web_search(query="\"rare phrase\" uncommon_number domain_noun")
-web_search(query="\"rare phrase\" filetype:pdf site:best-returned-domain.org")
-web_read(url="best returned page")
+medrxiv_search(query="long COVID treatment", category="infectious")
+    → 预印本最快，但未经同行评议
+pubmed_search(pmid="34101387")
+    → 已知 PMID，快速获取完整元数据 + grade_readiness
 ```
 
-**生物医学文献**
+**引文链追踪**
 ```
-pubmed_search(query="condition intervention outcome", year="2015")
-openalex_works(indexed_in="pubmed", query="candidate title")
-crossref_search(query="candidate title")
+openalex_works(query="key paper title", indexed_in="pubmed")
+    → 找到目标论文的 OpenAlex ID
+opencitations_search(doi="10.1000/xxx", mode="citations")
+    → 谁引用了这篇（前向追踪）
+opencitations_search(doi="10.1000/xxx", mode="references")
+    → 这篇引用了什么（后向追踪）
 ```
 
 ## 第一阶段：选择正确的工具
