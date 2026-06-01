@@ -35,10 +35,35 @@ workspace:
   folders:                         # 预创建的文件夹
     - uploads                      # 用户原始材料（只读）
     - research                     # 研究笔记与报告
+    - research/memory              # 跨 session 持久化记忆
     - drafts                       # 草稿文档
     - raw_search                   # 外部检索原始归档
     - logs                         # 运行日志
-  files: {}                        # 预创建的文件（支持 {{session_name}} 占位符）；动态入口使用 MEMORY.md
+  files:                           # 预创建的文件（支持 {{session_name}} 占位符）
+    MEMORY.md: |-
+      # MEMORY.md — Session 工作区文件树
+
+      ## 工作区结构
+
+      ```
+      {{session_name}}/
+      ├── uploads/          ← 用户上传的原始材料（只读）
+      ├── research/         ← 研究笔记、报告和输出
+      │   └── memory/       ← 跨 session 持久化记忆文件
+      ├── drafts/           ← 草稿文档（引用验证通过后移入 research/）
+      ├── raw_search/       ← 自动归档的外部检索结果
+      └── logs/             ← 运行日志
+      ```
+
+      ## 记忆索引
+
+      此文件是记忆系统的索引。每行列出一个记忆文件：
+
+      ```
+      - [记忆名称](research/memory/xxx.md) — 一句话描述
+      ```
+
+      添加新记忆后，在此文件追加一行索引（≤150 字符）。内容写到 `research/memory/*.md`，索引只保留标题和链接。
 
 # ---------------------------------------------------------------------------
 # 禁用工具
