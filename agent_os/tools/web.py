@@ -184,7 +184,7 @@ async def _try_firecrawl(url: str) -> dict[str, Any]:
         return {"status": "skipped", "detail": "FIRECRAWL_API_KEY missing"}
     try:
         import aiohttp
-        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=max(_timeout(), 30)), trust_env=True) as s:
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=max(_timeout(), 30))) as s:
             async with s.post("https://api.firecrawl.dev/v2/scrape", headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"}, json={"url": url, "formats": ["markdown"], "onlyMainContent": True}) as r:
                 p = await r.json()
                 if r.status >= 400:

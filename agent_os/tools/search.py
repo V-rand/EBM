@@ -99,7 +99,7 @@ async def _try_tavily(*, query: str, max_results: int, timeout: float, extra: di
             payload["topic"] = extra["topic"]
         if extra.get("exact_match"):
             payload["exact_match"] = True
-        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=timeout), trust_env=True) as s:
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=timeout)) as s:
             async with s.post("https://api.tavily.com/search", json=payload) as r:
                 p = await r.json()
                 if r.status >= 400:
@@ -125,7 +125,7 @@ async def _try_serper(*, query: str, max_results: int, timeout: float, extra: di
         payload: dict[str, Any] = {"q": query, "num": max_results}
         if extra.get("tbs"):
             payload["tbs"] = extra["tbs"]
-        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=timeout), trust_env=True) as s:
+        async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=timeout)) as s:
             async with s.post(ep, headers={"X-API-KEY": key}, json=payload) as r:
                 p = await r.json()
                 if r.status >= 400:

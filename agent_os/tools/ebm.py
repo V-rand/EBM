@@ -433,19 +433,19 @@ def register_ebm_tools(r) -> None:
     """
     r.register("clinical_trials", "retrieval", {
         "name": "clinical_trials",
-        "description": "搜索 ClinicalTrials.gov 临床试验注册库。支持按疾病、干预、状态、分期筛选。用于查找临床试验证据。",
+        "description": "搜索 ClinicalTrials.gov 临床试验注册库。常用：condition + intervention 做 PICO 检索，status=completed 只看已完成试验。",
         "parameters": {
             "type": "object",
             "properties": {
                 "query": {"type": "string", "description": "通用搜索词"},
-                "condition": {"type": "string", "description": "疾病/状况名称（如 'diabetes type 2', 'breast cancer'）"},
-                "intervention": {"type": "string", "description": "干预措施名称（如 'metformin', 'radiation therapy'）"},
-                "status": {"type": "string", "description": "试验状态: recruiting, active, completed, terminated"},
-                "phase": {"type": "string", "description": "试验分期: 1, 2, 3, 4, early1"},
-                "sponsor": {"type": "string", "description": "赞助方"},
-                "location": {"type": "string", "description": "地点/国家"},
-                "year": {"type": "string", "description": "年份（如 '2022' 或 '2020-2024'）"},
-                "max_results": {"type": "integer", "description": "最大结果数（默认 10，最大 20）"},
+                "condition": {"type": "string", "description": "疾病名称，如 'type 2 diabetes'"},
+                "intervention": {"type": "string", "description": "干预名称，如 'metformin'"},
+                "status": {"type": "string", "description": "可选：recruiting, completed, terminated"},
+                "phase": {"type": "string", "description": "可选：1, 2, 3, 4"},
+                "sponsor": {"type": "string", "description": "可选，赞助方"},
+                "location": {"type": "string", "description": "可选，国家"},
+                "year": {"type": "string", "description": "可选，年份"},
+                "max_results": {"type": "integer", "description": "可选，默认 10"},
             },
             "required": [],
         },
@@ -468,15 +468,15 @@ def register_ebm_tools(r) -> None:
 
     r.register("medrxiv_search", "retrieval", {
         "name": "medrxiv_search",
-        "description": "搜索 medRxiv 健康科学预印本。medRxiv 是临床/公卫/流行病学预印本的主要平台。用于查找最新临床研究（尚未经同行评议）。",
+        "description": "搜索 medRxiv 预印本——临床/公卫/流行病学最新研究。比 PubMed 早 3-6 个月，查最新证据时优先用（注意：未经同行评议）。只需 query 即可，其余参数可选。",
         "parameters": {
             "type": "object",
             "properties": {
-                "query": {"type": "string", "description": "搜索关键词（在标题和摘要中查找）"},
-                "date_from": {"type": "string", "description": "起始日期 YYYY-MM-DD（默认 30 天前）"},
-                "date_to": {"type": "string", "description": "截止日期 YYYY-MM-DD（默认今天）"},
-                "category": {"type": "string", "description": "学科分类: cardiovascular, oncology, epidemiology, infectious, public_health, neurology, psychiatry, endocrine, respiratory, surgery, pediatrics, geriatrics, genetics, immunology, pharmacology 等"},
-                "max_results": {"type": "integer", "description": "最大结果数（默认 15）"},
+                "query": {"type": "string", "description": "搜索词，在标题和摘要中查找"},
+                "category": {"type": "string", "description": "可选，学科过滤。如 cardiovascular, oncology, epidemiology, infectious, public_health"},
+                "date_from": {"type": "string", "description": "可选，起始日期 YYYY-MM-DD"},
+                "date_to": {"type": "string", "description": "可选，截止日期 YYYY-MM-DD"},
+                "max_results": {"type": "integer", "description": "可选，默认 15"},
             },
             "required": [],
         },
