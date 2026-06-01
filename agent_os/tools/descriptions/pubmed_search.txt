@@ -1,4 +1,8 @@
-搜索 PubMed 生物医学文献（MEDLINE + PubMed Central）。作为 EBM 研究的核心工具，支持 Clinical Queries 和文章类型过滤。
+搜索 PubMed 生物医学文献（MEDLINE + PubMed Central）。作为 EBM 研究的核心工具，支持 PMID 精确查找、Clinical Queries 和文章类型过滤。
+
+### PMID 精确查找
+- `pubmed_search(pmid="34101387")` — 返回详细结构化数据：标题、作者、期刊、DOI、PMCID、摘要、MeSH 词、publication_type、grade_readiness 分类
+- `pubmed_search(pmids="34101387 37937763")` — 批量查找多个 PMID
 
 ### EBM 专用参数
 - `article_type="rct"` — 仅随机对照试验
@@ -12,11 +16,8 @@
 
 ### 快速模板
 - `pubmed_search(query="metformin diabetes cardiovascular", article_type="rct", year="2020")`
+- `pubmed_search(pmid="34101387")` — PMID 速查
 - `pubmed_search(query="breast cancer screening", clinical_query="diagnosis")`
 - `pubmed_search(query="COVID-19 vaccine", article_type="systematic_review")`
-- `pubmed_search(author="Fauci AS", year="2020")`
-- `pubmed_search(mesh="Diabetes Mellitus, Type 2", article_type="meta_analysis")`
 
-对于生物医学论文，优先于 `web_search`。需要更广泛的元数据或作者/期刊过滤时，用 `openalex_works(indexed_in="pubmed", query=...)`。查找临床试验时结合 `clinical_trials` 工具。
-
-返回 `{total_count, results:[{pmid,title,authors,journal,pubdate,doi,url}], count, filters_applied}`。最多 20 条。
+返回 `{total_count, results:[{pmid,title,authors,journal,pubdate,doi,url}], count, filters_applied}`。PMID 模式额外返回 abstract、mesh_terms、publication_types、grade_readiness。

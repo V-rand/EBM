@@ -416,6 +416,16 @@ async def handle_evidence_level(
         }
         matching_levels = [type_level_map.get(study_type, "—")]
 
+    # Grade readiness classification
+    grade_readiness = "grade_ready"
+    grade_readiness_label = "可作为 GRADE 评估素材"
+    if final_grade in ("very_low",):
+        grade_readiness = "proxy_only"
+        grade_readiness_label = "仅作为背景参考"
+    elif study_type in {"case series", "case report", "expert opinion"}:
+        grade_readiness = "proxy_only"
+        grade_readiness_label = "仅作为背景参考"
+
     return ToolResult.ok(data={
         "grade_quality": _GRADE_TABLE[final_grade]["label"],
         "grade_description": _GRADE_TABLE[final_grade]["description"],
@@ -423,6 +433,12 @@ async def handle_evidence_level(
         "downgrades": downgrades,
         "upgrades": upgrades,
         "oxford_cebm_level": matching_levels[0] if matching_levels else "—",
+        "grade_readiness": {
+            "status": grade_readiness,
+            "label": grade_readiness_label,
+            "note": "基于研究类型和 GRADE 降级/升级因素的自动评估。需人工复核确认。",
+            "needs_human_review": True,
+        },
         "grade_table": _GRADE_TABLE,
         "oxford_table": _OXFORD_CEBM_LEVELS,
         "study_type": study_type,

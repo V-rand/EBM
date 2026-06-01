@@ -88,6 +88,251 @@ _ARTICLE_TYPE_FILTERS = {
 }
 
 
+# PMID efetch helpers — detailed structured metadata lookup
+_PUBMED_PUBTYPES_USABLE_FOR_GRADE = frozenset({
+    "practice guideline", "guideline", "consensus development conference",
+    "systematic review", "meta-analysis", "randomized controlled trial",
+    "controlled clinical trial", "clinical trial, phase iii",
+})
+
+_PUBMED_PUBTYPES_PROXY_ONLY = frozenset({
+    "case reports", "observational study", "cohort study", "case-control study",
+    "narrative review", "review", "comment", "editorial", "letter",
+    "historical article", "news", "newspaper article", "twin study",
+})
+
+
+async def _fetch_by_pmid(pmid: str) -> ToolResult:
+    """Fetch detailed structured metadata for a single PMID via efetch XML."""
+    global _last_pubmed_call
+    try:
+        async with _pubmed_lock:
+            elapsed = time.time() - _last_pubmed_call
+            rate = 0.34 if NCBI_KEY else 0.35
+            if elapsed < rate:
+                await asyncio.sleep(rate - elapsed)
+            _last_pubmed_call = time.time()
+
+        loop = asyncio.get_running_loop()
+        r = await loop.run_in_executor(
+            None,
+            lambda: _pubmed_api(f"{NCBI_BASE}/efetch.fcgi", {
+                "db": "pubmed", "id": pmid, "retmode": "xml",
+            }),
+        )
+        root = ET.fromstring(r.text)
+        ns = {"ns": "http://www.w3.org/2005/Atom"}
+
+        # Try PubmedArticle direct (standard PubMed XML)
+        article = root.find(".//PubmedArticle")
+        if article is None:
+            return ToolResult.fail(f"PMID {pmid}: not found in PubMed")
+
+        return ToolResult.ok(data=_parse_pubmed_article(article, pmid))
+    except Exception as e:
+        return ToolResult.fail(f"PMID {pmid} lookup failed: {e}")
+
+
+async def _fetch_by_pmid_list(pmids: list[str]) -> ToolResult:
+    """Fetch summaries for multiple PMIDs and assign grade_readiness per article."""
+    global _last_pubmed_call
+    try:
+        async with _pubmed_lock:
+            elapsed = time.time() - _last_pubmed_call
+            rate = 0.34 if NCBI_KEY else 0.35
+            if elapsed < rate:
+                await asyncio.sleep(rate - elapsed)
+            _last_pubmed_call = time.time()
+
+        ids = ",".join(pmids)
+        loop = asyncio.get_running_loop()
+        r = await loop.run_in_executor(
+            None,
+            lambda: _pubmed_api(f"{NCBI_BASE}/esummary.fcgi", {
+                "db": "pubmed", "id": ids, "retmode": "json",
+            }),
+        )
+        data = r.json()
+        results = data.get("result", {})
+        uid_list = data.get("result", {}).get("uids", [])
+
+        items = []
+        for uid in uid_list:
+            info = results.get(uid, {})
+            pubtypes_raw = [pt.strip().lower() for pt in info.get("pubtype", [])]
+            grade_status = _classify_grade_readiness(pubtypes_raw)
+            items.append({
+                "pmid": uid,
+                "title": info.get("title", ""),
+                "authors": [a.get("name", "") for a in info.get("authors", []) if a.get("name")],
+                "journal": info.get("source", ""),
+                "pubdate": info.get("pubdate", ""),
+                "doi": info.get("elocationid", "").replace("doi: ", "") if "doi:" in str(info.get("elocationid", "")) else "",
+                "publication_types": pubtypes_raw,
+                "grade_readiness": grade_status,
+                "url": f"https://pubmed.ncbi.nlm.nih.gov/{uid}/",
+            })
+
+        return ToolResult.ok(data={
+            "results": items,
+            "count": len(items),
+            "mode": "pmid_lookup",
+        })
+    except Exception as e:
+        return ToolResult.fail(f"PMID batch lookup failed: {e}")
+
+
+def _parse_pubmed_article(article: ET.Element, pmid: str) -> dict:
+    """Parse a PubmedArticle XML element into structured dict."""
+    medline = article.find(".//MedlineCitation")
+    art = article.find(".//Article")
+    pubmed_data = article.find(".//PubmedData")
+
+    # Title
+    title_el = art.find(".//ArticleTitle") if art is not None else None
+    title = ""
+    if title_el is not None:
+        title = "".join(title_el.itertext()).strip()
+
+    # Authors
+    authors = []
+    author_list = art.find(".//AuthorList") if art is not None else None
+    if author_list is not None:
+        for au in author_list.findall("Author"):
+            last = au.find("LastName")
+            fore = au.find("ForeName")
+            if last is not None:
+                name = f"{last.text or ''} {(fore.text or '') if fore is not None else ''}".strip()
+                if name:
+                    authors.append(name)
+
+    # Journal
+    journal_el = art.find(".//Journal/Title") if art is not None else None
+    journal = journal_el.text.strip() if journal_el is not None and journal_el.text else ""
+
+    # PubDate
+    pubdate_el = art.find(".//Journal/JournalIssue/PubDate") if art is not None else None
+    pubdate = ""
+    if pubdate_el is not None:
+        year_el = pubdate_el.find("Year")
+        if year_el is not None:
+            pubdate = year_el.text or ""
+        else:
+            medline_date = pubdate_el.find("MedlineDate")
+            if medline_date is not None:
+                pubdate = (medline_date.text or "")[:4]
+
+    # DOI
+    doi = ""
+    for eid in (art.findall(".//ELocationID") if art is not None else []):
+        if eid.get("EIdType") == "doi":
+            doi = (eid.text or "").strip()
+            break
+    if not doi:
+        # Check ArticleIdList
+        for aid in (pubmed_data.findall(".//ArticleId") if pubmed_data is not None else []):
+            if aid.get("IdType") == "doi":
+                doi = (aid.text or "").strip()
+                break
+
+    # PMCID
+    pmcid = ""
+    for aid in (pubmed_data.findall(".//ArticleId") if pubmed_data is not None else []):
+        if aid.get("IdType") == "pmc":
+            pmcid = (aid.text or "").strip()
+
+    # Publication Types
+    pubtypes_raw = []
+    for pt in (art.findall(".//PublicationTypeList/PublicationType") if art is not None else []):
+        if pt.text:
+            pubtypes_raw.append(pt.text.strip().lower())
+
+    # Abstract
+    abstract_parts = []
+    abstract_el = art.find(".//Abstract") if art is not None else None
+    if abstract_el is not None:
+        for child in abstract_el:
+            txt = "".join(child.itertext()).strip()
+            label = child.get("Label", "")
+            if label:
+                abstract_parts.append(f"{label}: {txt}")
+            else:
+                abstract_parts.append(txt)
+    abstract = "\n".join(abstract_parts)
+
+    # MeSH Terms
+    mesh_terms = []
+    mesh_list = medline.find(".//MeshHeadingList") if medline is not None else None
+    if mesh_list is not None:
+        for mh in mesh_list.findall("MeshHeading"):
+            desc = mh.find("DescriptorName")
+            if desc is not None and desc.text:
+                mesh_terms.append(desc.text.strip())
+
+    # Full text availability
+    has_pmcid = bool(pmcid)
+
+    # Grade readiness
+    grade_status = _classify_grade_readiness(pubtypes_raw)
+
+    return {
+        "pmid": pmid,
+        "title": title,
+        "authors": authors,
+        "author_count": len(authors),
+        "journal": journal,
+        "pubdate": pubdate,
+        "doi": doi,
+        "pmcid": pmcid if has_pmcid else None,
+        "full_text_available": has_pmcid,
+        "publication_types": pubtypes_raw,
+        "abstract": abstract,
+        "mesh_terms": mesh_terms,
+        "grade_readiness": grade_status,
+        "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/",
+    }
+
+
+def _classify_grade_readiness(pubtypes: list[str]) -> dict:
+    """Classify a publication into grade_ready / proxy_only / not_applicable
+    based on PubMed publication types.
+
+    This is a conservative metadata-level heuristic — it does NOT substitute
+    for formal GRADE assessment.
+    """
+    pubtypes_lower = [pt.strip().lower() for pt in pubtypes]
+
+    # Check for grade_ready candidates
+    for pt in pubtypes_lower:
+        for usable in _PUBMED_PUBTYPES_USABLE_FOR_GRADE:
+            if usable in pt:
+                return {
+                    "status": "grade_ready",
+                    "label": "可作为 GRADE 评估素材",
+                    "note": "PubMed publication_type 表明该文献类型可支持 GRADE 评估。需人工审核全文确认。",
+                    "needs_human_review": True,
+                }
+
+    # Check for proxy_only
+    for pt in pubtypes_lower:
+        for proxy in _PUBMED_PUBTYPES_PROXY_ONLY:
+            if proxy in pt:
+                return {
+                    "status": "proxy_only",
+                    "label": "仅作为背景参考",
+                    "note": "该文献类型不适合直接用于 GRADE 评估，但可作为背景或间接证据。",
+                    "needs_human_review": False,
+                }
+
+    # Default
+    return {
+        "status": "not_applicable",
+        "label": "不直接映射 GRADE",
+        "note": "基于 PubMed 元数据无法确定该文献的证据分级适用性。",
+        "needs_human_review": True,
+    }
+
+
 async def handle_pubmed_search(
     query: str = "",
     author: str = "",
@@ -95,6 +340,8 @@ async def handle_pubmed_search(
     journal: str = "",
     year: str = "",
     mesh: str = "",
+    pmid: str = "",
+    pmids: str = "",
     article_type: str = "",
     clinical_query: str = "",
     clinical_query_sensitivity: str = "broad",
@@ -104,13 +351,23 @@ async def handle_pubmed_search(
     """Search PubMed for biomedical literature with EBM-specific filters.
 
     Supports:
+    - pmid / pmids: direct PMID lookup for detailed structured metadata
     - article_type: rct, systematic_review, meta_analysis, guideline, etc.
     - clinical_query: therapy, diagnosis, prognosis, etiology (PubMed Clinical Queries)
     - clinical_query_sensitivity: broad (more results) or narrow (higher precision)
     """
     global _last_pubmed_call
 
-    # Build query using PubMed field tags
+    # ---- PMID quick lookup (direct efetch) ----
+    if pmid:
+        return await _fetch_by_pmid(pmid.strip())
+    if pmids:
+        pmid_list = [p.strip() for p in pmids.replace(",", " ").split() if p.strip()]
+        if not pmid_list:
+            return ToolResult.fail("No valid PMIDs provided.")
+        return await _fetch_by_pmid_list(pmid_list)
+
+    # ---- Normal search ----
     parts: list[str] = []
     if author:
         parts.append(f"{author}[Author]")
@@ -230,6 +487,14 @@ def register_pubmed_tools(r) -> None:
                 "journal": {"type": "string", "description": "期刊名（如 \"Nature\"、\"Lancet\"、\"BMJ\"）"},
                 "year": {"type": "string", "description": "发表年份（如 \"2023\"）"},
                 "mesh": {"type": "string", "description": "MeSH 主题词（如 \"Diabetes Mellitus\"）"},
+                "pmid": {
+                    "type": "string",
+                    "description": "PubMed ID 精确查找。输入 PMID 返回详细结构化元数据（含 publication_type、abstract、MeSH、PMCID、grade_readiness）。",
+                },
+                "pmids": {
+                    "type": "string",
+                    "description": "批量 PubMed ID 查找。空格或逗号分隔多个 PMID，返回摘要信息和 grade_readiness 分类。",
+                },
                 "article_type": {
                     "type": "string",
                     "description": "文章类型过滤: rct（随机对照试验）, systematic_review（系统评价）, meta_analysis（荟萃分析）, guideline（临床指南）, controlled_clinical_trial（对照临床试验）, review（综述）, observational（观察性研究）, case_report（病例报告）",
