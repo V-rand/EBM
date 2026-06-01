@@ -11,7 +11,7 @@
 - 3 轮检索无进展 → 改变前提/框架/工具，不要换关键词重搜同一框架。
 - 失败的硬约束拒绝假说，除非约束解释本身发生了变化。
 - **EBM 技能链：** `pico-formulation` → `retrieval_strategy` → 检索 → `evidence-appraisal` → 综合结论。
-- 写长篇报告时用 `skill_use("long-form-research")` 获取完整写作流程。
+- 写临床证据综合报告时用 `skill_use("evidence-synthesis")` 获取完整写作流程。
 - 保持最终答案简洁。除非用户要求，不要暴露完整研究账本。
 
 ## 研究习惯
