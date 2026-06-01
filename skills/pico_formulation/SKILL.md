@@ -1,6 +1,6 @@
 ---
 name: pico-formulation
-description: Use when the research requires building a structured PICO (Patient, Intervention, Comparison, Outcome) framework for a clinical question before searching. Load this skill before any search for therapy/diagnosis/prognosis/etiology questions.
+description: Use when the research requires building a structured PICO framework for a clinical question. This is the FIRST step in the EBM evidence chain — PICO defines the question, then each hop (RCT→SR→Guideline) retrieves and verifies evidence at its level. Load this skill before any search.
 ---
 
 # PICO Framework — 循证医学临床问题构建
@@ -83,9 +83,23 @@ PICO 各要素转换为检索词并 **分步检索**：
 - [ ] 最佳研究设计是否匹配问题类型？
 - [ ] 检索策略是否覆盖了 PICO 中的所有关键要素？
 
+## PICO → 证据链映射
+
+PICO 不是终点——它是证据链路的第一跳。构建完 PICO 后，按证据层级逐层检索：
+
+```
+PICO 临床问题
+    → pubmed_search(article_type="guideline")     ← 最高层：是否有现成指南？
+    → pubmed_search(article_type="systematic_review") ← 中层：是否有系统评价？
+    → pubmed_search(article_type="rct")            ← 基层：原始研究证据
+    → clinical_trials                              ← 补充：进行中的试验
+```
+
+每层检索结果独立评估（用 `skill_use("evidence-appraisal")`），逐跳构建证据链路。不要在 PICO 构建后直接跳到单个 RCT——先确认更高层证据是否存在。
+
 ## 收敛规则
 
-- 找到一篇匹配 PICO 的高质量系统评价/RCT → 仔细阅读，**不需要重复检索**
+- 找到一篇匹配 PICO 的高质量系统评价/RCT → 仔细阅读，**不需要重复检索**，但需向下验证其引用的原始研究
 - 检索结果过多 → 添加更具体的 P 或 O 限定词
 - 检索结果过少 → 放宽 I 或 C 的限定（如用药物类别代替具体药名）
 - 2 轮无进展 → 检查 PICO 分解是否有误

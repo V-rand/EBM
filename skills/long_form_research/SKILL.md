@@ -1,6 +1,6 @@
 ---
 name: long-form-research
-description: Use when the user needs a comprehensive clinical evidence synthesis, systematic review report, structured analysis, comparison, guideline appraisal, or decision support document. Load this skill BEFORE any search for long-form EBM tasks.
+description: Use when the user needs a comprehensive clinical evidence synthesis report — systematic review, guideline appraisal, treatment comparison, or clinical decision support. Load this skill BEFORE any search. Core differentiator from generic deep research: every clinical claim must trace up the evidence hierarchy (RCT→SR→Guideline→Recommendation).
 ---
 
 # 临床证据综合报告规范

@@ -1,6 +1,6 @@
 ---
 name: systematic-review-methodology
-description: Use when the task requires conducting a systematic literature review or meta-analysis in the biomedical domain — defining inclusion/exclusion criteria, search strategy, data extraction, quality assessment, and evidence synthesis.
+description: Use when the task requires conducting a systematic literature review or meta-analysis in the biomedical domain — building a complete evidence chain from primary studies through to clinical recommendations. Load after pico-formulation has defined the question scope.
 ---
 
 # Systematic Review Methodology — 系统评价方法学
