@@ -93,7 +93,7 @@ tool_timeouts:
 tool_output_limits:
   bash_stdout_max_chars: 100000    # bash 标准输出最大字符数
   bash_stderr_max_chars: 20000     # bash 标准错误最大字符数
-  result_filter_threshold: 5000    # 检索结果超过此字符数时触发 LLM 摘要压缩
+  result_filter_threshold: 12000   # 检索结果超过此字符数时触发 LLM 摘要压缩。EBM 需要更高阈值以保留效应量/CI 细节
 
 # ---------------------------------------------------------------------------
 # web_read 提供商优先级

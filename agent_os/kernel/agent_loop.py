@@ -1742,8 +1742,8 @@ class AgentLoop:
                 full = work_dir / file_path
                 try:
                     text = full.read_text("utf-8")
-                    if len(text) > 3000:
-                        text = text[:2000] + "\n...[truncated]...\n" + text[-1000:]
+                    if len(text) > 12000:
+                        text = text[:8000] + "\n...[truncated]...\n" + text[-4000:]
                     parts.append(f"\n### {file_path}")
                     parts.append(f"<content>\n{text}\n</content>")
                     has_content = True
@@ -2311,7 +2311,7 @@ class AgentLoop:
         for key in self._EBM_DOMAIN_KEYS:
             dom_list = all_sites.get(key, [])
             if dom_list:
-                site_parts = [f"site:{d}" for d in dom_list[:12]]  # top 12 per category
+                site_parts = [f"site:{d}" for d in dom_list]  # all domains
                 lines.append(f"- {key}: {' OR '.join(site_parts)}")
         if len(lines) == 2:
             return None  # no domains loaded
