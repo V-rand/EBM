@@ -1,176 +1,198 @@
-# EBM — Evidence-Based Medicine AI Agent 操作系统
+# EBM Agent OS — 循证医学深度研究系统
 
-EBM Agent OS 是一个**通用循证医学深度 AI Agent 运行时**，为临床医生、医学研究人员和公卫从业者提供自主规划、多源检索、结构化研究的智能工作伙伴。
+基于 Agent OS 内核的循证医学 AI 研究助手。自动构建 PICO 框架、按证据层级检索（指南→系统评价→RCT）、逐跳 GRADE 评级、输出 Clinical Bottom Line。
 
-## 设计哲学
+## 快速开始（5 分钟）
 
-- **内核通用，业务外挂**：kernel 只管理 ReAct 循环、工具调度、上下文编排；EBM 知识和流程通过 skill 和 tool 注入
-- **Session 即研究工作区**：每个 session 对应一项临床问题/研究主题，独立文件系统 + SQLite 状态持久化
-- **事件驱动**：所有状态变化通过结构化事件流上报，CLI 完全解耦
-- **溯源优先**：每个结论要求可回溯到原始证据来源（PubMed ID / DOI / 指南原文）
+### 1. 环境要求
+- Python 3.11+
+- Git
+- 一个 DeepSeek API Key（[platform.deepseek.com](https://platform.deepseek.com) 注册即送额度）
 
-## 快速开始
-
+### 2. 克隆并安装
 ```bash
-# 安装依赖
+git clone git@github.com:V-rand/EBM.git
+cd EBM
 uv sync
+```
 
-# 配置 API key
+### 3. 配置 API Key
+```bash
 cp .env.example .env
-# 编辑 .env 填入 DEEPSEEK_API_KEY（DeepSeek 原生）
+```
+编辑 `.env`，填入你的 DeepSeek API Key：
+```bash
+DEEPSEEK_API_KEY=sk-your-deepseek-key-here
+```
 
-# 运行 CLI
+### 4. 启动
+```bash
 uv run python cli.py
 ```
 
-## 架构
+看到 `EBM 未选择>` 提示符就成功了。输入自然语言开始。
 
+### 5. 跑一个测试问题
 ```
-┌──────────────────────────────────────────────────────┐
-│                    CLI (cli.py)                      │
-├──────────────────────────────────────────────────────┤
-│                   AgentOS 组装层                      │
-│  SessionManager  Config  SkillLoader  ToolRegistry   │
-├──────────────────────────────────────────────────────┤
-│                   Kernel (核心引擎)                    │
-│  AgentLoop (ReAct)  SubAgent (spawn)  ResultFilter   │
-├──────────────────────────────────────────────────────┤
-│                   Memory (记忆系统)                    │
-│  ContextCompiler  WorkspaceMemory  SessionRetriever   │
-├──────────────────────────────────────────────────────┤
-│                   Storage (持久化)                     │
-│  SQLite (FTS5 + Embedding)                           │
-└──────────────────────────────────────────────────────┘
+EGFR突变晚期NSCLC中osimertinib一线治疗证据如何？请用循证医学方法回答。
 ```
 
-## 核心模块
+系统会自动：加载 PICO 技能 → 检索 Cochrane/PubMed 指南和系统评价 → 读取关键 RCT → GRADE 评估 → 输出 Clinical Bottom Line。
 
-| 模块 | 路径 | 职责 |
+## 它是什么
+
+EBM Agent OS 不是聊天机器人——它是一个**自主研究 Agent**。给定一个临床问题，它会：
+
+1. **构建 PICO** — 把问题分解为患者/干预/对照/结局
+2. **自上而下检索** — 先找指南和系统评价，再验证底层 RCT
+3. **逐跳 GRADE 评级** — 证据链路中每一层独立评估质量
+4. **构建证据链路** — 每条结论标注「指南←SR←RCT」的完整追溯路径
+5. **输出 Clinical Bottom Line** — 临床医生可直接用的操作结论
+
+与 ChatGPT/通用 AI 的关键区别：
+- 不靠训练记忆编造引用——每条引用对应本次会话实际检索到的来源
+- 证据链可追溯——你知道结论是从哪篇指南、哪项 RCT 来的
+- 断链诚实标注——找不到证据就说找不到，不硬编
+
+## 工具体系
+
+| 工具 | 用途 | 示例 |
 |------|------|------|
-| AgentLoop | `agent_os/kernel/agent_loop.py` | ReAct 主循环：模型调用 → 流式解析 → 工具执行 |
-| SubAgent | `agent_os/kernel/sub_agent.py` | 独立子 Agent：上下文隔离、并行执行、可中断 |
-| ContextCompiler | `agent_os/memory/context_compiler.py` | 编译 system prompt：注入 skills 索引、profile、工作区文件 |
-| WorkspaceMemory | `agent_os/memory/workspace.py` | 文件→artifact 同步、分块索引、embedding 后台任务 |
-| ToolRegistry | `agent_os/tools/registry.py` | 工具注册、schema 生成、contextvars 会话注入 |
-| SkillLoader | `agent_os/skills/loader.py` | skills/ 目录自动发现、frontmatter 解析、XML 索引生成 |
-| SessionManager | `agent_os/core/session.py` | Session CRUD、workspace 模板、沙盒路径校验 |
-| SQLiteStore | `agent_os/storage/sqlite_store.py` | 6 表 + 2 FTS5 虚拟表、embedding JSON 列 |
+| `pubmed_search` | PubMed 生物医学文献，支持 EBM 过滤 | `pubmed_search(article_type="systematic_review")` |
+| `cochrane_search` | Cochrane 系统评价 | `cochrane_search(query="SGLT-2 inhibitor MACE")` |
+| `clinical_trials` | ClinicalTrials.gov 临床试验 | `clinical_trials(condition="diabetes", intervention="metformin")` |
+| `medrxiv_search` | medRxiv 预印本（未评议最新研究） | `medrxiv_search(query="long COVID treatment")` |
+| `openalex_works` | 扩展学术检索/引用链追踪 | `openalex_works(indexed_in="pubmed")` |
 
-## Provider
+## 技能管线
 
-```yaml
-# config.yaml
-provider: "deepseek"    # DeepSeek 原生（KV cache 稳定 90%+，支持 reasoning_effort）
+系统有 8 个可加载的技能，模型会根据任务自动选择：
+
+| 技能 | 触发时机 | 作用 |
+|------|---------|------|
+| `pico-formulation` | 检索前 | 构建 PICO 框架，确定最佳研究设计 |
+| `retrieval_strategy` | PICO 后 | 规划检索策略，按证据层级选工具 |
+| `evidence-appraisal` | 检索后 | GRADE 逐跳评估证据质量 |
+| `cat` | 快速决策 | 1-2 页 Critically Appraised Topic + Clinical Bottom Line |
+| `evidence-synthesis` | 深度报告 | 完整 IMRaD 报告 + GRADE 证据概览表 |
+| `systematic-review` | 系统评价 | PRISMA 标准全流程 |
+| `self-audit` | 输出前 | 自审引用真实性/数字一致性/结论强度 |
+| `domain_sites` | 需要额外领域 | 补充特定领域权威网站 |
+
+## 测试用例
+
+以下问题覆盖了 EBM 的不同场景，用于评估系统表现：
+
+### 治疗类（Therapy）
 ```
-
-| 特性 | DeepSeek |
-|------|----------|
-| KV Cache | 显式前缀，稳定 (90%-98%+) |
-| 推理模式 | `reasoning_effort: high/max` |
-| 并行工具调用 | 完整支持 |
-| API Key | `DEEPSEEK_API_KEY` |
-
-## 事件流
-
-AgentLoop.process() 产出 10 种结构化事件，CLI 消费这些事件渲染 UI：
-
-| 事件 | type | 含义 |
-|------|------|------|
-| ActivityEvent | `activity` | 进度标记（context compiled, run started, model completed 等） |
-| ThinkingStreamEvent | `thinking_stream` | 模型思维链输出 |
-| ContentStreamEvent | `content_stream` | 模型最终回答输出 |
-| ToolCallEvent | `tool_call` | 工具调用开始 |
-| ToolResultEvent | `tool_result` | 工具调用结果 |
-| ContentEvent | `content` | 最终回答 |
-| ErrorEvent | `error` | 运行失败 |
-| InterventionEvent | `intervention` | 人工干预 |
-| QuestionEvent | `question` | 问题类型干预 |
-| SessionCompressedEvent | `session.compressed` | Token 预算触发压缩 |
-
-完整类型定义见 `agent_os/kernel/event_types.py`，可直接映射为 TypeScript 的 `interface`。
-
-## 工具系统
-
-| 分类 | 工具 | 用途 |
-|------|------|------|
-| 文件 | `file_read` `file_write` `file_append` `file_delete` `file_list` `file_grep` `file_tree` `edit` | 工作区文件 CRUD + 浏览 + 编辑 |
-| 检索 | `workspace_search` `pubmed_search` `web_search` `web_read` `openalex_works` `openalex_entity` `opencitations_search` | FTS5+Embedding 混合检索 / 法规 / 案例 / 网络 |
-| 任务 | `todowrite` `reminder_create` | 任务管理 / 提醒 |
-| 子 Agent | `spawn` `send_message` `task_stop` | 子 Agent 派发 / 通信 / 终止 |
-| 执行 | `bash` `upload_parse` | Shell / 文档解析 |
-| Skills | `skill_use` `skill_propose` | 加载 skill / 主动推荐 |
-| 交互 | `question` | 向用户提问 |
-
-### 工具插件
-
-`agent_os/tools/plugins/` 目录下 `.py` 文件自动发现。每个插件需暴露 `register(tool_registry)` 函数。
-
-> **注意**：skills 目录不支持 `.py` 工具脚本，工具统一走 `tools/plugins/` 注册。
-
-## Skills 系统
-
-Skills 是**零代码工作流定义**（纯 Markdown），位于 `skills/` 目录：
+在2型糖尿病合并CVD患者中，SGLT-2抑制剂能否降低MACE风险？用循证医学方法回答。
+```
+> 预期：自上而下检索（guideline→SR→RCT），输出 FLAURA/EMPA-REG 等 landmark trial 的 HR+CI，构建完整证据链路。
 
 ```
-skills/
-├── pico_formulation/       # PICO 临床问题构建
-├── evidence_appraisal/     # 证据质量评估 (GRADE)
-├── systematic_review/      # 系统评价方法论
-├── long_form_research/     # 深度研究报告
-├── short_answer_research/  # 快速事实问答
-└── retrieval_strategy/     # 检索策略
+对于75岁以上老年人，他汀类药物一级预防能否降低全因死亡？获益是否大于风险？
+```
+> 预期：识别证据链路断点（USPSTF I 声明、ALLHAT-LLT 趋势危害），诚实地标注"证据不足，不能推荐"而非强行给结论。
+
+```
+EGFR突变晚期NSCLC中osimertinib一线治疗证据如何？
+```
+> 预期：检索 NCCN/ESMO 指南 + FLAURA RCT，对比单药 vs 联合化疗，给出分层 Clinical Bottom Line。
+
+### 诊断类（Diagnosis）
+```
+低剂量CT筛查肺癌在高危人群中的敏感性和特异性如何？是否有过度诊断的证据？
 ```
 
-每个 SKILL.md 包含 YAML frontmatter（`description`、`allowed-tools` 等）和 Markdown 正文。
+### 预后类（Prognosis）
+```
+急性心肌梗死后射血分数保留（HFpEF）患者的5年生存率及主要预后因素？
+```
 
-**工作流**：system prompt 的 `<available_skills>` 索引展示所有 skill 的 name+description+path → 模型调用 `skill_use(name="...")` → ` 返回 <skill_content>` 正文 → 模型按照 skill 指令工作。skill 内容作为 tool result 进入对话历史，不修改 system prompt，不影响 KV cache。
+### 病因/危害类（Etiology/Harm）
+```
+长期使用质子泵抑制剂（PPI）是否与胃癌风险增加相关？证据强度如何？
+```
 
-## 目录结构
+### 预防类（Prevention）
+```
+维生素D补充在社区老年人中预防跌倒的效果如何？不同剂量和人群的效应差异？
+```
 
+### 快速 CAT
+```
+用CAT格式快速回答：缺血性卒中急性期，替奈普酶（tenecteplase）相比阿替普酶（alteplase）的疗效和安全性？
+```
+> 预期：自动加载 CAT skill，输出 1-2 页结构化快评。
+
+## 评估指标
+
+测试时关注以下几点：
+
+| 维度 | 检查项 |
+|------|--------|
+| **证据层级** | 是否先搜 guideline/SR，再搜 RCT？ |
+| **引用真实性** | 是否有 "PMID: TBD" 或记忆编造的引用？ |
+| **效应量完整性** | 是否附带 95% CI？是否标注 GRADE？ |
+| **证据链** | 是否标注了从指南到 RCT 的追溯路径？ |
+| **断链标注** | 证据不足时是否诚实标注而非硬编？ |
+| **Clinical Bottom Line** | 结论是否可直接用于临床决策？ |
+| **自审** | 报告写入后是否加载 self-audit 检查？ |
+
+## 常见问题
+
+**Q: 需要什么 API Key？**
+DeepSeek API Key 即可（[platform.deepseek.com](https://platform.deepseek.com)），新用户有免费额度。可选配置：NCBI_API_KEY（提升 PubMed 速率限制）、TAVILY_API_KEY（提升网页搜索质量）。
+
+**Q: 一次完整研究要多久？**
+快速 CAT 约 1-2 分钟。深度证据综合报告约 3-5 分钟。取决于证据量和网络速度。
+
+**Q: 为什么有时候报错？**
+PubMed 有速率限制（3 次/秒无 key，10 次/秒有 key）。系统会自动重试。如果频繁 429 错误，去 [NCBI](https://www.ncbi.nlm.nih.gov/account/) 注册免费 API key 填入 `.env`。
+
+**Q: 我能问个人健康问题吗？**
+系统会回答，但不会启动完整研究管线（不搜 PubMed、不写 CAT）。这类问题得到的是轻量常识分析 + 免责声明。它是个研究工具，不是医生。
+
+## 项目结构
 ```
 EBM/
-├── cli.py                   # CLI 入口
-├── config.yaml              # 运行配置（带中文注释）
-├── pyproject.toml           # 依赖声明
-├── agent_os/                # 核心运行时
-│   ├── agent_os.py          # DI 组装器
-│   ├── config.py            # 配置解析
-│   ├── core/                # Session / Event / FileSystem
-│   ├── kernel/              # AgentLoop / SubAgent / Helpers / event_types
-│   ├── memory/              # ContextCompiler / Workspace / Retriever
-│   ├── storage/             # SQLiteStore (FTS5 + Embedding)
-│   ├── tools/               # ToolRegistry + 内置工具 + plugins/
-│   ├── scheduler/           # InterruptScheduler
-│   ├── ingest/              # MinerU 文档解析
-│   ├── skills/              # SkillLoader (Markdown 工作流)
-│   └── prompts/             # System prompt 模板
-├── skills/                  # 零代码 workflow 定义
-└── docs/                    # 技术文档
+├── cli.py                    # CLI 入口
+├── config.yaml               # 运行配置
+├── agent_os/                 # 核心运行时
+│   ├── kernel/               # AgentLoop (ReAct) + 守护机制
+│   ├── tools/                # 检索工具（pubmed/cochrane/ebm...）
+│   ├── memory/               # 上下文编译/工作区记忆
+│   ├── prompts/              # 系统提示词（agent_system.txt 等）
+│   └── skills/               # Skill 加载器
+├── skills/                   # 零代码工作流（Markdown）
+│   ├── pico_formulation/     # PICO 框架
+│   ├── retrieval_strategy/   # 检索策略
+│   ├── evidence_appraisal/   # GRADE 评估
+│   ├── cat/                  # Critically Appraised Topic
+│   ├── evidence_synthesis/   # 证据综合报告
+│   ├── systematic_review/    # 系统评价方法
+│   ├── self_audit/           # 输出前自审
+│   └── domain_sites/         # 领域站点
+└── data/                     # 会话数据（工作区/归档）
 ```
 
-## 技术文档
+## 运行示例
 
-- [总体架构](docs/ARCHITECTURE.md)
-- [项目规划](docs/PROJECT.md)
+```
+EBM> EGFR突变晚期NSCLC中osimertinib一线治疗证据如何？
+
+系统自动执行：
+ ✓ 加载 pico-formulation → 构建 PICO 框架
+ ✓ 加载 retrieval_strategy → 规划检索策略
+ ✓ pubmed_search(article_type="guideline") → 检索 NCCN/ESMO/CSCO 指南
+ ✓ cochrane_search + pubmed_search(article_type="systematic_review") → SR
+ ✓ pubmed_search(article_type="rct") → 验证 FLAURA 关键 RCT
+ ✓ 加载 evidence-appraisal → GRADE 逐跳评级
+ ✓ 加载 cat → 写 CAT 报告
+ ✓ 加载 self-audit → 自审引用和数字
+ → 输出 Clinical Bottom Line
+```
 
 ## 技术栈
 
-| 层 | 技术 |
-|:---|:---|
-| 语言 | Python 3.11+ |
-| 异步 | asyncio (AsyncGenerator, ContextVar, asyncio.Lock/gather/Event) |
-| 模型 | DeepSeek v4 (OpenAI 兼容 API) |
-| 数据库 | SQLite (FTS5 + embedding_json) |
-| 向量 | text-embedding-v4 (1024 维) |
-| 终端 | Rich + prompt_toolkit + readline |
-| 包管理 | uv |
-| 配置 | YAML (config.yaml) + .env |
-
-## 设计原则
-
-1. **Kernel 无业务** — 只管理 session、工具、检索、文件、提醒、中断；业务通过 skill + tool 注入
-2. **Session 隔离** — 每个 session 独立 work_dir，法律保密性要求 session 间不共享状态
-3. **ReAct Loop** — Plan → Act → Observe → Reflect → 循环
-4. **KV-cache 安全** — 系统 prompt 编译冻结，动态内容追加在消息尾部
-5. **显式失败** — 不用 `except: pass`，外部 API 失败不伪造成功
-6. **溯源优先** — 每个论断可回溯到来源文件路径或证据出处
+Python 3.11+ · asyncio · DeepSeek API (OpenAI 兼容) · SQLite (FTS5) · Rich TUI · uv 包管理
