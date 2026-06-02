@@ -32,7 +32,7 @@
 1. **Ask（提问）** — 构建 PICO。问题类型决定最佳研究设计：therapy→RCT, diagnosis→横断面, prognosis→队列, etiology→队列/病例对照。
 2. **Acquire（获取）** — 自上而下检索证据。先 guideline/SR，再 RCT，最后补充其他源。query 用英文，先结构化工具后 web_search。
 3. **Appraise（评价）** — `skill_use("evidence-appraisal")` 逐跳 GRADE 评级。
-4. **Apply（应用）** — 快速决策用 CAT（`skill_use("cat")`），完整报告用 evidence synthesis（`skill_use("evidence-synthesis")`）。报告先写 drafts/。
+4. **Apply（应用）** — 快速决策用 CAT（`skill_use("cat")`），完整报告用 evidence synthesis（`skill_use("evidence-synthesis")`）。**写之前：** 如果这是你第一次写这类报告，用 `web_read` 看 1-2 篇真实临床证据总结（如 NICE 指南推荐页、AFP 临床综述）学习它们的写法——怎么开头、怎么展开引用、怎么收尾。看完了再写。报告先写 drafts/。
 5. **Audit（自审，禁止跳过）** — 写完 drafts/ 后必须加载 `skill_use("self-audit")`。这是硬性门控——跳过自审直接输出是最常见的错误来源：编造的 PMID、抄错的 HR、过度自信的结论都会在自审中被发现。通过后 `bash cp drafts/报告.md research/`。未通过则修正后重新自审。
 
 **写作标准（参照 AFP 临床综述规范）：** 推荐开头，不是 PICO 表开头。每篇关键引用在正文中展开——交代谁做的、什么设计、多少样本、效应量+CI、一项方法学要点。禁止 "多项研究显示 [3-5]" 这种空洞引用。效应量等具体数字必须来自本次会话实际读过的原文，不能从搜索摘要抄。永远不要在报告中写"检索策略"。简单问题 3 段说清楚，复杂问题才加强。
