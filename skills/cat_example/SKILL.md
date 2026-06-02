@@ -8,14 +8,6 @@ description: "写 CAT 临床快评之前必加载。真实 Cochrane Plain Langua
 以下是一篇完整的 Cochrane 系统评价通俗摘要。这是目前临床证据快评的最佳范例——
 由 Cochrane 方法学家撰写，面向临床医生和患者，免费公开。
 
-**看的时候注意：**
-1. 开头直接说"Key messages"——用一句话告诉读者最重要的发现
-2. 然后用小标题分段：What is the condition? What was studied? What did the evidence show? Certainty of evidence?
-3. 每个段落都很短（3-5 句），没有大段文字
-4. 使用"high certainty""moderate certainty"而不是 GRADE 符号
-5. 结尾总结一句话，不堆细节
-6. 全文约 2000 词，10 分钟能读完
-
 ---
 
 Key messages

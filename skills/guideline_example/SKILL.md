@@ -1,86 +1,115 @@
 ---
 name: guideline-example
-description: "需要评估或引用临床指南时加载。真实 CDC MMWR 推荐范例全文嵌入——展示美国公共卫生指南的推荐格式：编号推荐+证据类型+实施指导。"
+description: "需要评估或引用临床指南时加载。NICE 推荐页完整原文（5,791 字）——英国国家临床指南的推荐格式：推荐优先、动词区分强度、证据链接嵌入。"
 ---
 
-# 指南推荐写作范例——CDC MMWR Recommendations（完整真实范例）
+# 指南推荐写作范例——NICE Guideline Recommendations（完整原文，无删节）
 
-以下是 CDC MMWR 2024 年梅毒检测实验室推荐的真实原文。
-重点是看**推荐怎么编号、怎么分级、怎么把证据类型嵌入推荐语句**。
+以下是 NICE NG28（成人 2 型糖尿病管理）推荐页的真实原文。
+**无删节、无改写。** 看 NICE 怎么用 "Offer..." "Consider..." "Do not offer..." 区分推荐强度，
+怎么把证据链接嵌入推荐语句后面。
 
 ---
 
-## Summary
+# Type 2 diabetes in adults: management
 
-This report provides new CDC recommendations for tests that can support a diagnosis of syphilis, including serologic testing and methods for the identification of the causative agent Treponema pallidum. These comprehensive recommendations are the first published by CDC on laboratory testing for syphilis, which has traditionally been based on serologic algorithms to detect a humoral immune response to T. pallidum. These tests can be divided into nontreponemal and treponemal tests depending on whether they detect antibodies that are broadly reactive to lipoidal antigens shared by both host and T. pallidum or antibodies specific to T. pallidum, respectively. Both types of tests must be used in conjunction to help distinguish between an untreated infection or a past infection that has been successfully treated. Newer serologic tests allow for laboratory automation but must be used in an algorithm, which also can involve older manual serologic tests. Direct detection of T. pallidum continues to evolve from microscopic examination of material from lesions for visualization of T. pallidum to molecular detection of the organism. Limited point-of-care tests for syphilis are available in the United States; increased availability of point-of-care tests that are sensitive and specific could facilitate expansion of screening programs and reduce the time from test result to treatment. These recommendations are intended for use by clinical laboratory directors, laboratory staff, clinicians, and disease control personnel who must choose among the multiple available testing methods, establish standard operating procedures for collecting and processing specimens, interpret test results for laboratory reporting, and counsel and treat patients. Future revisions to these recommendations will be based on new research or technologic advancements for syphilis clinical laboratory science.
+- NICE guideline
+- Reference number: NG28
+- Published:
+
+02 December 2015
+
+- Last updated:
+
+18 February 2026
 
 
+[Download guidance (PDF)](https://www.nice.org.uk/guidance/ng28/resources/type-2-diabetes-in-adults-management-pdf-1837338615493)
 
-Recommendations for Syphilis Testing, United States, 2024
+## Recommendations for research
 
-Recommendations and Reports / February 8, 2024 / 73(1);1–32
+The guideline committee has made the following recommendations for research.
 
-John R. Papp, PhD<sup>1</sup>; Ina U. Park, MD<sup>1</sup><sup>,2</sup>; Yetunde Fakile, PhD<sup>1</sup>; Lara Pereira, PhD<sup>3</sup>; Allan Pillay, PhD<sup>1</sup>; Gail A. Bolan, MD<sup>1</sup> (View author affiliations)
+### Key recommendations for research
 
-On This Page
+#### 1 Treatment strategy for people with type 2 diabetes and frailty
 
-- Introduction
-- Methods
-- Updating Syphilis Serologic Laboratory Terminology
-- Principles for Syphilis Diagnosis
-- Recommendations for Syphilis Testing in the United States
-- Opportunities for Additional Research on the Laboratory Detection of T. pallidum Infections
+For people with type 2 diabetes and frailty, what is the clinical and cost effectiveness of different treatment strategies compared with usual care? **\[2026\]**
 
-Box
+For a short explanation of why the committee made the 2026 recommendation for research, see the [rationale section on initial medicines for people with type 2 diabetes and frailty](https://www.nice.org.uk/guidance/ng28/chapter/rationale-and-impact#initial-medicines-people-with-frailty).
 
-Figures
+Full details of the evidence and the committee's discussion are in:
 
-Figure 1
+- [evidence review E: initial management](https://www.nice.org.uk/guidance/ng28/evidence)
 
-Figure 2
+- [evidence review F: subsequent management](https://www.nice.org.uk/guidance/ng28/evidence).
 
-Figure 3
 
-Tables
+#### 2 Access to SGLT-2 inhibitors
 
-Table 1
+How can prescribing and access to SGLT-2 inhibitors be improved for people with type 2 diabetes from the most deprived groups?
 
-Table 2
+- What factors influence healthcare professionals' decisions about prescribing SGLT-2 inhibitors to adults with and without early onset type 2 diabetes?
 
-## Summary
+- What are the most effective and cost-effective methods to increase access and uptake of SGLT-2 inhibitors for people with and without early onset type 2 diabetes who are underserved in the current service? **\[2026\]**
 
-This report provides new CDC recommendations for tests that can support a diagnosis of syphilis, including serologic testing and methods for the identification of the causative agent Treponema pallidum. These comprehensive recommendations are the first published by CDC on laboratory testing for syphilis, which has traditionally been based on serologic algorithms to detect a humoral immune response to T. pallidum. These tests can be divided into nontreponemal and treponemal tests depending on whether they detect antibodies that are broadly reactive to lipoidal antigens shared by both host and T. pallidum or antibodies specific to T. pallidum, respectively. Both types of tests must be used in conjunction to help distinguish between an untreated infection or a past infection that has been successfully treated. Newer serologic tests allow for laboratory automation but must be used in an algorithm, which also can involve older manual serologic tests. Direct detection of T. pallidum continues to evolve from microscopic examination of material from lesions for visualization of T. pallidum to molecular detection of the organism. Limited point-of-care tests for syphilis are available in the United States; increased availability of point-of-care tests that are sensitive and specific could facilitate expansion of screening programs and reduce the time from test result to treatment. These recommendations are intended for use by clinical laboratory directors, laboratory staff, clinicians, and disease control personnel who must choose among the multiple available testing methods, establish standard operating procedures for collecting and processing specimens, interpret test results for laboratory reporting, and counsel and treat patients. Future revisions to these recommendations will be based on new research or technologic advancements for syphilis clinical laboratory science.
 
-## Introduction
+For a short explanation of why the committee made the 2026 recommendation for research, see the [rationale section on initial medicines](https://www.nice.org.uk/guidance/ng28/chapter/rationale-and-impact#initial-medicines-people-with-type-2-diabetes-and-no-relevant-comorbidities).
 
-### Background
+Full details of the evidence and the committee's discussion are in:
 
-Treponema pallidum subsp. pallidum, primarily transmitted through sexual contact, is among four pathogenic species in the genus Treponema, which is in the family Treponemataceae (1). The other three pathogenic Treponema species cause skin diseases mostly transmitted by direct skin-to-skin contact. Yaws is caused by T. pallidum subsp. pertenue and is found in tropical areas in Africa, Asia, and Latin America (2). Treponema carateum infection results in pinta which, although rare, is found in tropical areas of Latin America (3). Endemic syphilis or bejel, caused by T. pallidum subsp. endemicum, occurs mostly in children and is mainly found in the eastern Mediterranean, West Africa, and Cuba (4, 5). However, phylogenic analysis of lesion specimens from certain patients outside of areas where bejel is endemic who had received a diagnosis of syphilis revealed that T. pallidum subsp. endemicum might be sexually transmitted. These patients have a clinical course similar to syphilis (5– 8). For this report, T. pallidum subsp. pallidum will be abbreviated to T. pallidum unless further distinction between the subspecies is necessary.
+- [evidence review E: initial management](https://www.nice.org.uk/guidance/ng28/evidence)
 
-T. pallidum causes a systemic infection and might lead to serious sequalae in multiple organ systems, including the central nervous system (CNS) and the ocular and otic systems. Vertical transmission can cause congenital syphilis, which might result in spontaneous abortions, miscarriages, or stillbirths; infants with congenital syphilis can have clinical signs of infection at birth or months to years after birth. Clinical features in adults progress through different stages beginning with primary syphilis, which often appears about 3 weeks after exposure, with an incubation period of 10–90 days (9). Primary syphilis is characterized by single or multiple ulcerative-like lesions (chancres) that often are painless and therefore might be unnoticed when they occur inside the mouth, vagina, or rectum. Chancres can persist for 2–6 weeks before healing spontaneously. Secondary syphilis typically begins 2–24 weeks after most primary lesions heal and is commonly characterized by a mucocutaneous rash appearing on the trunk, palms, and soles; mucous patches in the mouth or condylomata lata on the genitals or rectum occur in approximately one fourth of patients. Primary and secondary syphilis symptoms can occur concurrently, which is more likely in persons with HIV infection. Moist primary and secondary syphilis lesions contain infectious T. pallidum that can be transmitted through sexual contact to susceptible persons. Secondary clinical manifestations also can consist of lymphadenopathy, alopecia, and occasionally neurologic and ocular manifestations. Signs and symptoms of secondary syphilis typically resolve in approximately 3 months, with a range of 1–12 months (10, 11) but can periodically recur for the first several years of infection in ≤25% of untreated persons (12).
+- [evidence review F: subsequent management](https://www.nice.org.uk/guidance/ng28/evidence).
 
-The interval between primary to secondary and secondary to tertiary syphilis is known as latency when no symptoms or signs of syphilis are present. The interval from secondary to tertiary syphilis can last for years or decades before symptoms appear. In up to two thirds of patients, the disease can remain latent for life and never progress to tertiary syphilis (13– 15). Latent asymptomatic syphilis is divided into three categories: early latent infections thought to have been acquired within the past year; late latent infections thought to be longer than 1 year duration; and latent syphilis of unknown duration where the timing of acquisition cannot be determined based on available clinical, historical, or laboratory data. Clinical signs of tertiary syphilis, a rare condition, include cardiovascular syphilis, with aneurysms or stenosis resulting from multiplication of treponemal spirochetes in the thoracic aorta or coronary arteries; syphilitic gummas, with soft granulomatous growths that can cause tissue destruction in any organ system including bones and cartilage; and neurosyphilis, with late neurologic manifestations including tabes dorsalis and general paresis. Neurosyphilis can occur during any stage of syphilis and can be asymptomatic or symptomatic during any stage of infection.
 
-### Rationale for New CDC Recommendations
+#### 3 Treatments for people with early onset type 2 diabetes
 
-Syphilis, a nationally notifiable disease with approximately 176,000 cases in the United States reported to the CDC in 2021 (16) and approximately 6 million new cases occurring worldwide (17), is caused by T. pallidum. A syphilis epidemic is occurring in the United States, with sustained increases in primary and secondary syphilis from 5,979 cases reported in 2000 to 133,945 cases reported in 2020, a 2,140% increase (16, 18). The epidemic is characterized by health disparities, particularly among sexual and gender minority populations, intersections with the HIV and substance use epidemics, and increased morbidity and mortality attributable to congenital syphilis infections (16).
+What is the clinical and cost effectiveness of GLP-1 receptor agonists or tirzepatide with SGLT-2 inhibitors compared to SGLT-2 inhibitors alone and to placebo alone for people with early onset type 2 diabetes who are taking metformin? **\[2026\]**
 
-Laboratories have a critical role in the public health response to the syphilis epidemic. The responsibility of the laboratory is to test specimens and report results in a timely manner, allowing clinicians to efficiently make clinical diagnoses for patient management. Public health reporting by laboratories also allows local health departments and CDC to conduct surveillance and monitor disease trends. This report details CDC’s new recommendations for syphilis testing, including laboratory-based tests, point-of-care (POC) tests, processing of samples, and reporting of test results to aid laboratorians and clinicians in the diagnosis of syphilis. Future revisions to these recommendations will be based on new research or technologic advancements for syphilis clinical laboratory science.
+For a short explanation of why the committee made the 2026 recommendation for research, see the [rationale section on initial medicines for people with early onset type 2 diabetes](https://www.nice.org.uk/guidance/ng28/chapter/rationale-and-impact#initial-medicines-people-with-early-onset-type-2-diabetes).
 
-## Methods
+Full details of the evidence and the committee's discussion are in:
 
-These recommendations were developed by CDC staff members on the basis of evidence published in peer-reviewed scientific journals. Data available in Food and Drug Administration (FDA)-cleared syphilis diagnostic test inserts were reviewed and assessed for consistency with published findings. In 2017, the Association of Public Health Laboratories (APHL) assisted with the literature review through an independent work group formed to evaluate the scientific literature for CDC to consider in the development of evidence-based recommendations for syphilis testing in the United States. APHL work group members were selected based on expertise in the field of syphilis and represented public health and commercial laboratory directors, public- and private-sector providers, and academic researchers. The work group leads were experienced in conducting systematic reviews of the literature. Potential conflicts of interest were disclosed to APHL and are listed at the end of the work group (Supplementary Appendix 1, https://stacks.cdc.gov/view/cdc/138288). APHL staff members reviewed potential conflicts and concluded that no work group members had a financial interest or ongoing relationships that might bias the literature review and subsequent discussions. The APHL work group did not rank the evidence and did not make any recommendations based on the scientific literature review. CDC staff members involved in ranking the evidence and drafting recommendations based on the scientific literature certified that they did not have a perceived or actual competing interest with respect to this activity.
+- [evidence review E: initial management](https://www.nice.org.uk/guidance/ng28/evidence)
 
-CDC identified key questions regarding syphilis t
+- [evidence review F: subsequent management](https://www.nice.org.uk/guidance/ng28/evidence).
 
-...(完整推荐见原文 CDC MMWR 2024;73(1):1-32)...
+
+#### 4 The effects of stopping or switching medicines to control blood glucose levels
+
+In adults with type 2 diabetes, what are the effects of stopping and/or switching medicines to control blood glucose levels, and what criteria should inform the decision? **\[2015\]**
+
+##### Why this is important
+
+There is a lack of evidence on the effects of stopping and/or switching medicines to control blood glucose levels. The current practice of 'stopping rules' is typically motivated by either inadequate blood glucose control (rising HbA1c levels) or intolerable side effects. There is limited understanding of the short- and long‑term effects of stopping a therapy and switching to another in terms of diabetes control (HbA1c levels), hypoglycaemic risk, weight gain, and cardiovascular morbidity and mortality. In addition, there is limited understanding of how quickly consideration should be given to stopping and switching to another medicine and, if stopping and switching may be needed, what the optimal sequencing is of medicines. Randomised controlled trials examining these different issues would help to improve diabetes care.
+
+#### 5 Self-monitoring of blood glucose levels
+
+What is the optimal frequency for self‑monitoring of blood glucose in adults with type 2 diabetes? **\[2015\]**
+
+##### Why this is important
+
+There is limited evidence in relation to the long-term effects (at least 5 years) of blood glucose lowering therapies, particularly newer agents in terms of efficacy and adverse events (for example, cardiovascular outcomes). Randomised controlled trials and prospective longitudinal studies are needed to better understand the long-term efficacy and safety issues surrounding these medicines.
+
+### Other recommendations for research
+
+#### 6 Using routinely collected real-world data to assess the effectiveness of continuous glucose monitoring
+
+Based on routinely collected real-world data, what is the effectiveness and cost effectiveness of CGM devices to improve glycaemic control in adults with type 2 diabetes? **\[2022\]**
+
+For a short explanation of why the committee made the 2022 recommendation for research and how it might affect practice, see the [rationale section on continuous glucose monitoring](https://www.nice.org.uk/guidance/ng28/chapter/rationale-and-impact#continuous-glucose-monitoring-3).
+
+Full details of the evidence and the committee's discussion are in [evidence review C: continuous glucose monitoring in adults with type 2 diabetes](https://www.nice.org.uk/guidance/ng28/evidence/c-continuous-glucose-monitoring-in-adults-with-type-2-diabetes-pdf-11013297805).
+
+* * *
 
 ---
 
 ## 从范例中学什么
 
-1. **推荐在前，方法在后**——Summary 在最上面，然后才是详细推荐
-2. **推荐是可操作的动词**——"Clinicians should...""Laboratories should..."
-3. **证据强度嵌入推荐**——不需要单独的 GRADE 章节，直接标注证据类型
-4. **每条推荐后有讨论**——解释为什么这样推荐，引用了什么证据
-5. **编号清晰**——每条推荐可以独立引用
+1. **推荐动词区分强度**——"Offer" = 强推荐, "Consider" = 弱推荐, "Do not offer" = 否定推荐
+2. **推荐后有证据链接**——每条推荐后面跟着 evidence review 的链接，读者可以深挖
+3. **推荐按临床场景分组**——不是按证据层级，是按"什么时候做什么"
+4. **推荐语句可独立引用**——每条推荐是一句话，可以脱离上下文理解
+5. **全文 ~6,000 字**——够短，临床医生 5 分钟能读完
