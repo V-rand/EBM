@@ -5,18 +5,18 @@ description: "需要评估或引用临床指南时加载。真实 CDC MMWR 推�
 
 # 指南推荐写作范例——CDC MMWR Recommendations（完整真实范例）
 
-以下是一篇真实 CDC 临床指南的推荐部分。CDC MMWR (Morbidity and Mortality Weekly Report)
-是美国疾控中心发布临床指南的标准渠道——免费、结构化、面向临床实施。
-
-**看的时候注意：**
-1. 推荐怎么编号和分级
-2. 每条推荐后面的证据支撑怎么写的
-3. 推荐语言是否可操作（"should test" vs "is recommended"）
-4. 指南不列 GRADE 表——证据类型直接标在推荐句子里
+以下是 CDC MMWR 2024 年梅毒检测实验室推荐的真实原文。
+重点是看**推荐怎么编号、怎么分级、怎么把证据类型嵌入推荐语句**。
 
 ---
 
-# CDC Laboratory Recommendations for Syphilis Testing, United States, 2024
+## Summary
+
+This report provides new CDC recommendations for tests that can support a diagnosis of syphilis, including serologic testing and methods for the identification of the causative agent Treponema pallidum. These comprehensive recommendations are the first published by CDC on laboratory testing for syphilis, which has traditionally been based on serologic algorithms to detect a humoral immune response to T. pallidum. These tests can be divided into nontreponemal and treponemal tests depending on whether they detect antibodies that are broadly reactive to lipoidal antigens shared by both host and T. pallidum or antibodies specific to T. pallidum, respectively. Both types of tests must be used in conjunction to help distinguish between an untreated infection or a past infection that has been successfully treated. Newer serologic tests allow for laboratory automation but must be used in an algorithm, which also can involve older manual serologic tests. Direct detection of T. pallidum continues to evolve from microscopic examination of material from lesions for visualization of T. pallidum to molecular detection of the organism. Limited point-of-care tests for syphilis are available in the United States; increased availability of point-of-care tests that are sensitive and specific could facilitate expansion of screening programs and reduce the time from test result to treatment. These recommendations are intended for use by clinical laboratory directors, laboratory staff, clinicians, and disease control personnel who must choose among the multiple available testing methods, establish standard operating procedures for collecting and processing specimens, interpret test results for laboratory reporting, and counsel and treat patients. Future revisions to these recommendations will be based on new research or technologic advancements for syphilis clinical laboratory science.
+
+
+
+Recommendations for Syphilis Testing, United States, 2024
 
 Recommendations and Reports / February 8, 2024 / 73(1);1–32
 
@@ -65,7 +65,13 @@ The interval between primary to secondary and secondary to tertiary syphilis is 
 
 Syphilis, a nationally notifiable disease with approximately 176,000 cases in the United States reported to the CDC in 2021 (16) and approximately 6 million new cases occurring worldwide (17), is caused by T. pallidum. A syphilis epidemic is occurring in the United States, with sustained increases in primary and secondary syphilis from 5,979 cases reported in 2000 to 133,945 cases reported in 2020, a 2,140% increase (16, 18). The epidemic is characterized by health disparities, particularly among sexual and gender minority populations, intersections with the HIV and substance use epidemics, and increased morbidity and mortality attributable to congenital syphilis infections (16).
 
-Laboratories have a critical role in the public health response to the syphilis epidemic. The responsibility of the laboratory is to test specimens and report results in a timely manner, allowing clinicians to efficiently make clinical diagnoses for patient management. Public health reporting by laboratories also allows local health departments and CDC to cond
+Laboratories have a critical role in the public health response to the syphilis epidemic. The responsibility of the laboratory is to test specimens and report results in a timely manner, allowing clinicians to efficiently make clinical diagnoses for patient management. Public health reporting by laboratories also allows local health departments and CDC to conduct surveillance and monitor disease trends. This report details CDC’s new recommendations for syphilis testing, including laboratory-based tests, point-of-care (POC) tests, processing of samples, and reporting of test results to aid laboratorians and clinicians in the diagnosis of syphilis. Future revisions to these recommendations will be based on new research or technologic advancements for syphilis clinical laboratory science.
+
+## Methods
+
+These recommendations were developed by CDC staff members on the basis of evidence published in peer-reviewed scientific journals. Data available in Food and Drug Administration (FDA)-cleared syphilis diagnostic test inserts were reviewed and assessed for consistency with published findings. In 2017, the Association of Public Health Laboratories (APHL) assisted with the literature review through an independent work group formed to evaluate the scientific literature for CDC to consider in the development of evidence-based recommendations for syphilis testing in the United States. APHL work group members were selected based on expertise in the field of syphilis and represented public health and commercial laboratory directors, public- and private-sector providers, and academic researchers. The work group leads were experienced in conducting systematic reviews of the literature. Potential conflicts of interest were disclosed to APHL and are listed at the end of the work group (Supplementary Appendix 1, https://stacks.cdc.gov/view/cdc/138288). APHL staff members reviewed potential conflicts and concluded that no work group members had a financial interest or ongoing relationships that might bias the literature review and subsequent discussions. The APHL work group did not rank the evidence and did not make any recommendations based on the scientific literature review. CDC staff members involved in ranking the evidence and drafting recommendations based on the scientific literature certified that they did not have a perceived or actual competing interest with respect to this activity.
+
+CDC identified key questions regarding syphilis t
 
 ...(完整推荐见原文 CDC MMWR 2024;73(1):1-32)...
 
@@ -73,7 +79,8 @@ Laboratories have a critical role in the public health response to the syphilis 
 
 ## 从范例中学什么
 
-1. **推荐在前，方法在后**——读者先看到"应该做什么"，方法学是附录
+1. **推荐在前，方法在后**——Summary 在最上面，然后才是详细推荐
 2. **推荐是可操作的动词**——"Clinicians should...""Laboratories should..."
-3. **证据强度嵌入推荐**——不需要单独的 GRADE 章节
-4. **每节不长**——即使是指南，推荐语句也很简洁
+3. **证据强度嵌入推荐**——不需要单独的 GRADE 章节，直接标注证据类型
+4. **每条推荐后有讨论**——解释为什么这样推荐，引用了什么证据
+5. **编号清晰**——每条推荐可以独立引用
