@@ -1,115 +1,186 @@
 ---
 name: guideline-example
-description: "需要评估或引用临床指南时加载。NICE 推荐页完整原文（5,791 字）——英国国家临床指南的推荐格式：推荐优先、动词区分强度、证据链接嵌入。"
+description: "需要评估或引用临床指南时加载。Cochrane Clinical Answer 完整原文（9,270 字）——结构化临床问答：问题→答案→证据→GRADE确定性。"
 ---
 
-# 指南推荐写作范例——NICE Guideline Recommendations（完整原文，无删节）
+# 指南推荐写作范例——Cochrane Clinical Answer（完整原文，无删节）
 
-以下是 NICE NG28（成人 2 型糖尿病管理）推荐页的真实原文。
-**无删节、无改写。** 看 NICE 怎么用 "Offer..." "Consider..." "Do not offer..." 区分推荐强度，
-怎么把证据链接嵌入推荐语句后面。
+以下是 Cochrane Clinical Answer 的真实原文：galantamine 用于轻度认知障碍。
+**无删节、无改写。** 看 Cochrane 怎么用 "Clinical question → Answer → Evidence → Certainty" 四段式结构。
 
 ---
 
-# Type 2 diabetes in adults: management
+For adults with mild cognitive impairment (MCI), what are the effects of galantamine (8 to 12 mg orally twice daily)? - Antonio‐Santos, Aileen A - 2025 \| Cochrane Library
 
-- NICE guideline
-- Reference number: NG28
-- Published:
+(https://www.cochranelibrary.com/cca/doi/10.1002/cca.4546/full#)
 
-02 December 2015
+Cookies
 
-- Last updated:
+Our site uses cookies to improve your experience. You can find out more about our use of cookies in About Cookies, including instructions on how to turn off cookies if you wish to do so. By continuing to browse this site you agree to us using cookies as described in [About Cookies](http://olabout.wiley.com/WileyCDA/Section/id-813473.html).
 
-18 February 2026
+[I accept](https://www.cochranelibrary.com/cca/doi/10.1002/cca.4546/full#)
 
+- ### Related
 
-[Download guidance (PDF)](https://www.nice.org.uk/guidance/ng28/resources/type-2-diabetes-in-adults-management-pdf-1837338615493)
+- Clinical Answer derived from
 
-## Recommendations for research
+[_Cochrane_ Clinical Answers](https://www.cochranelibrary.com/en/cca/about)
 
-The guideline committee has made the following recommendations for research.
+## PICOs from original review
 
-### Key recommendations for research
+### PICOs
 
-#### 1 Treatment strategy for people with type 2 diabetes and frailty
+###### Population (4)
 
-For people with type 2 diabetes and frailty, what is the clinical and cost effectiveness of different treatment strategies compared with usual care? **\[2026\]**
+- [Adult](https://www.cochranelibrary.com/advanced-search/pico?p_p_id=scolarissearchresultsportlet_WAR_scolarissearchresults&p_p_lifecycle=0&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchType=basic&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchBy=9&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchText=10.1002/14651858.CD001747.pub4#p=http%3A%2F%2Fdata.cochrane.org%2Fconcepts%2Fpwhpjmwdbgkg)
+- [Aged](https://www.cochranelibrary.com/advanced-search/pico?p_p_id=scolarissearchresultsportlet_WAR_scolarissearchresults&p_p_lifecycle=0&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchType=basic&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchBy=9&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchText=10.1002/14651858.CD001747.pub4#p=http%3A%2F%2Fdata.cochrane.org%2Fconcepts%2Fpwhpjmwdbgkf)
+- [Mild Cognitive Impairment](https://www.cochranelibrary.com/advanced-search/pico?p_p_id=scolarissearchresultsportlet_WAR_scolarissearchresults&p_p_lifecycle=0&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchType=basic&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchBy=9&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchText=10.1002/14651858.CD001747.pub4#p=http%3A%2F%2Fdata.cochrane.org%2Fconcepts%2Fr4hp38czy3vg)
+- [Dementia Due To Alzheimer's Disease](https://www.cochranelibrary.com/advanced-search/pico?p_p_id=scolarissearchresultsportlet_WAR_scolarissearchresults&p_p_lifecycle=0&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchType=basic&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchBy=9&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchText=10.1002/14651858.CD001747.pub4#p=http%3A%2F%2Fdata.cochrane.org%2Fconcepts%2Fr4hp3825n3xp)
 
-For a short explanation of why the committee made the 2026 recommendation for research, see the [rationale section on initial medicines for people with type 2 diabetes and frailty](https://www.nice.org.uk/guidance/ng28/chapter/rationale-and-impact#initial-medicines-people-with-frailty).
+###### Intervention (2)
 
-Full details of the evidence and the committee's discussion are in:
+- [Galantamine](https://www.cochranelibrary.com/advanced-search/pico?p_p_id=scolarissearchresultsportlet_WAR_scolarissearchresults&p_p_lifecycle=0&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchType=basic&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchBy=9&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchText=10.1002/14651858.CD001747.pub4#i=http%3A%2F%2Fdata.cochrane.org%2Fconcepts%2Fr4hp13nhgb0x)
+- [Oral](https://www.cochranelibrary.com/advanced-search/pico?p_p_id=scolarissearchresultsportlet_WAR_scolarissearchresults&p_p_lifecycle=0&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchType=basic&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchBy=9&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchText=10.1002/14651858.CD001747.pub4#i=http%3A%2F%2Fdata.cochrane.org%2Fconcepts%2F11g43clqdpk96)
 
-- [evidence review E: initial management](https://www.nice.org.uk/guidance/ng28/evidence)
+###### Comparison (1)
 
-- [evidence review F: subsequent management](https://www.nice.org.uk/guidance/ng28/evidence).
+- [Placebo](https://www.cochranelibrary.com/advanced-search/pico?p_p_id=scolarissearchresultsportlet_WAR_scolarissearchresults&p_p_lifecycle=0&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchType=basic&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchBy=9&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchText=10.1002/14651858.CD001747.pub4#c=http%3A%2F%2Fdata.cochrane.org%2Fconcepts%2Fr4hp0r2dwmn5)
 
+###### Outcome (2)
 
-#### 2 Access to SGLT-2 inhibitors
+- [Disability](https://www.cochranelibrary.com/advanced-search/pico?p_p_id=scolarissearchresultsportlet_WAR_scolarissearchresults&p_p_lifecycle=0&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchType=basic&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchBy=9&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchText=10.1002/14651858.CD001747.pub4#o=http%3A%2F%2Fdata.cochrane.org%2Fconcepts%2Fr4hp3qdnzym3)
+- [Functional Performance And Activity](https://www.cochranelibrary.com/advanced-search/pico?p_p_id=scolarissearchresultsportlet_WAR_scolarissearchresults&p_p_lifecycle=0&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchType=basic&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchBy=9&_scolarissearchresultsportlet_WAR_scolarissearchresults_searchText=10.1002/14651858.CD001747.pub4#o=http%3A%2F%2Fdata.cochrane.org%2Fconcepts%2Fr4hp38wct5fc)
 
-How can prescribing and access to SGLT-2 inhibitors be improved for people with type 2 diabetes from the most deprived groups?
+PICOs for the Cochrane review from which this Answer is derived. The PICO model is widely used and taught in evidence-based health care as a strategy for formulating questions and search strategies and for characterizing clinical studies or meta-analyses. PICO stands for four different potential components of a clinical question: Patient, Population or Problem; Intervention; Comparison; Outcome.
 
-- What factors influence healthcare professionals' decisions about prescribing SGLT-2 inhibitors to adults with and without early onset type 2 diabetes?
+See more on using PICO in the [Cochrane Handbook](https://training.cochrane.org/handbook/current/chapter-02#section-2-3).
 
-- What are the most effective and cost-effective methods to increase access and uptake of SGLT-2 inhibitors for people with and without early onset type 2 diabetes who are underserved in the current service? **\[2026\]**
+[Unlock the full Cochrane Clinical Answer](https://www.cochranelibrary.com/cca/doi/10.1002/cca.4546/full)
 
+#### Copy or download citation
 
-For a short explanation of why the committee made the 2026 recommendation for research, see the [rationale section on initial medicines](https://www.nice.org.uk/guidance/ng28/chapter/rationale-and-impact#initial-medicines-people-with-type-2-diabetes-and-no-relevant-comorbidities).
+[Export help](https://www.cochranelibrary.com/en/help/exporting-search-results)
 
-Full details of the evidence and the committee's discussion are in:
+```
 
-- [evidence review E: initial management](https://www.nice.org.uk/guidance/ng28/evidence)
+```
 
-- [evidence review F: subsequent management](https://www.nice.org.uk/guidance/ng28/evidence).
+Download
 
+**All sections are selected by default**, please select the sections you do not wish to print or use the select or deselect all button to add or remove sections.
 
-#### 3 Treatments for people with early onset type 2 diabetes
+Select/deselect all
 
-What is the clinical and cost effectiveness of GLP-1 receptor agonists or tirzepatide with SGLT-2 inhibitors compared to SGLT-2 inhibitors alone and to placebo alone for people with early onset type 2 diabetes who are taking metformin? **\[2026\]**
+Print
 
-For a short explanation of why the committee made the 2026 recommendation for research, see the [rationale section on initial medicines for people with early onset type 2 diabetes](https://www.nice.org.uk/guidance/ng28/chapter/rationale-and-impact#initial-medicines-people-with-early-onset-type-2-diabetes).
+[Hide thumbnails](https://www.cochranelibrary.com/cca/doi/10.1002/cca.4546/full#) [zoom in](https://www.cochranelibrary.com/cca/doi/10.1002/cca.4546/full#) [zoom out](https://www.cochranelibrary.com/cca/doi/10.1002/cca.4546/full#)
 
-Full details of the evidence and the committee's discussion are in:
+[left](https://www.cochranelibrary.com/cca/doi/10.1002/cca.4546/full#) [right](https://www.cochranelibrary.com/cca/doi/10.1002/cca.4546/full#)
 
-- [evidence review E: initial management](https://www.nice.org.uk/guidance/ng28/evidence)
+FiguresTables
 
-- [evidence review F: subsequent management](https://www.nice.org.uk/guidance/ng28/evidence).
+[close](https://www.cochranelibrary.com/cca/doi/10.1002/cca.4546/full#)
 
+[Facebook](https://www.cochranelibrary.com/#facebook) [X(Twitter)](https://www.cochranelibrary.com/#x) [WhatsApp](https://www.cochranelibrary.com/#whatsapp) [View more](https://www.addtoany.com/share#url=https%3A%2F%2Fwww.cochranelibrary.com%2Fcca%2Fdoi%2F10.1002%2Fcca.4546%2Ffull&title=For%20adults%20with%20mild%20cognitive%20impairment%20(MCI)%2C%20what%20are%20the%20effects%20of%20galantamine%20(8%20to%2012%20mg%20orally%20twice%20daily)%3F%20-%20Antonio%E2%80%90Santos%2C%20Aileen%20A%20-%202025%20%7C%20Cochrane%20Library)
 
-#### 4 The effects of stopping or switching medicines to control blood glucose levels
+OKCancel
 
-In adults with type 2 diabetes, what are the effects of stopping and/or switching medicines to control blood glucose levels, and what criteria should inform the decision? **\[2015\]**
+[Review tools & navigation](https://www.cochranelibrary.com/cca/doi/10.1002/cca.4546/full#)
 
-##### Why this is important
+Cochrane Login
 
-There is a lack of evidence on the effects of stopping and/or switching medicines to control blood glucose levels. The current practice of 'stopping rules' is typically motivated by either inadequate blood glucose control (rising HbA1c levels) or intolerable side effects. There is limited understanding of the short- and long‑term effects of stopping a therapy and switching to another in terms of diabetes control (HbA1c levels), hypoglycaemic risk, weight gain, and cardiovascular morbidity and mortality. In addition, there is limited understanding of how quickly consideration should be given to stopping and switching to another medicine and, if stopping and switching may be needed, what the optimal sequencing is of medicines. Randomised controlled trials examining these different issues would help to improve diabetes care.
+Email Address
 
-#### 5 Self-monitoring of blood glucose levels
+Password
 
-What is the optimal frequency for self‑monitoring of blood glucose in adults with type 2 diabetes? **\[2015\]**
+Caps Lock is on.
 
-##### Why this is important
+Remember Me
 
-There is limited evidence in relation to the long-term effects (at least 5 years) of blood glucose lowering therapies, particularly newer agents in terms of efficacy and adverse events (for example, cardiovascular outcomes). Randomised controlled trials and prospective longitudinal studies are needed to better understand the long-term efficacy and safety issues surrounding these medicines.
+[Forgotten password?](https://onlinelibrary.wiley.com/user/forgottenpassword)
 
-### Other recommendations for research
+Sign in [Register](https://onlinelibrary.wiley.com/user-registration)
 
-#### 6 Using routinely collected real-world data to assess the effectiveness of continuous glucose monitoring
+[Institutional login](https://www.cochranelibrary.com/en/content?p_p_id=scolariscontentdisplay_WAR_scolariscontentdisplay&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&_scolariscontentdisplay_WAR_scolariscontentdisplay_action=institution-access)
 
-Based on routinely collected real-world data, what is the effectiveness and cost effectiveness of CGM devices to improve glycaemic control in adults with type 2 diabetes? **\[2022\]**
+Search for your institution's name below to login via Shibboleth
 
-For a short explanation of why the committee made the 2022 recommendation for research and how it might affect practice, see the [rationale section on continuous glucose monitoring](https://www.nice.org.uk/guidance/ng28/chapter/rationale-and-impact#continuous-glucose-monitoring-3).
+Institution name
 
-Full details of the evidence and the committee's discussion are in [evidence review C: continuous glucose monitoring in adults with type 2 diabetes](https://www.nice.org.uk/guidance/ng28/evidence/c-continuous-glucose-monitoring-in-adults-with-type-2-diabetes-pdf-11013297805).
+Go
 
-* * *
+'' is not set up for this type of access on Wiley Online Library. Please contact your institution's administrator to ask about access.
+
+#### Previously accessed institutions
+
+- (none)
+
+Login using [OpenAthens](https://www.cochranelibrary.com/openathens)
+
+If you have a **Wiley Online Library** institutional username and password, enter them here.
+
+Cochrane Login
+
+Username
+
+Password
+
+Caps Lock is on.
+
+Sign in
+
+Login to keep reading.
+
+Don't have Cochrane Library access? Learn more about [how to order.](https://www.cochranelibrary.com/help/how-to-order)
+
+Still deciding? [Sign up to our newsletter to learn more](https://m.info.wiley.com/webApp/cochranenewsletter)
+
+### Institutional users
+
+Search for your institution's name below to login via Shibboleth
+
+Institution name
+
+Go
+
+'' is not set up for this type of access on Wiley Online Library. Please contact your institution's administrator to ask about access.
+
+#### Previously accessed institutions
+
+- (none)
+
+Login using [OpenAthens](https://www.cochranelibrary.com/openathens)
+
+### Other access options
+
+- [Individual access - via Wiley Online Library](https://www.cochranelibrary.com/c/portal/login)
+
+#### Interested in accessing this content?
+
+[Tell us more](http://wiley.qualtrics.com/jfe/form/SV_5529on8YpCbyTUa?utm_source=extweb&utm_medium=referral&utm_campaign=cca_ppv_ptnr)
+
+Copy link
+
+✓
+
+Thanks for sharing!
+
+Find any service
+
+[AddToAny](https://www.addtoany.com/ "Share Buttons")
+
+[More…](https://www.cochranelibrary.com/cca/doi/10.1002/cca.4546/full#addtoany "Show all")
+
+A2A
+
+Twitter Widget Iframe
 
 ---
 
 ## 从范例中学什么
 
-1. **推荐动词区分强度**——"Offer" = 强推荐, "Consider" = 弱推荐, "Do not offer" = 否定推荐
-2. **推荐后有证据链接**——每条推荐后面跟着 evidence review 的链接，读者可以深挖
-3. **推荐按临床场景分组**——不是按证据层级，是按"什么时候做什么"
-4. **推荐语句可独立引用**——每条推荐是一句话，可以脱离上下文理解
-5. **全文 ~6,000 字**——够短，临床医生 5 分钟能读完
+1. **问题开头**——"For adults with MCI, what are the effects of galantamine?"——一句话说清 PICO
+2. **答案直接**——不用读完就知道结论
+3. **证据一段讲完**——什么设计、多少人、效应量、CI
+4. **GRADE 确定性单独标注**——"Moderate-certainty evidence"
+5. **全文 ~9,000 字**——一个临床问题的完整证据快照
