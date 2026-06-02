@@ -1,6 +1,6 @@
 ---
 name: cat
-description: "**证据评估完成后、输出结论前必加载。** 快速临床决策格式：PICO→检索策略→证据概要→批判性评价→Clinical Bottom Line。1-2页，床旁决策用。比 evidence-synthesis 轻量，比裸搜严谨。"
+description: "**证据评估完成后、输出结论前必加载。** 临床快评：推荐开头、自然段落、引用正文展开、不写检索策略。比 evidence-synthesis 轻量，比裸搜严谨。"
 ---
 
 # Critically Appraised Topic (CAT) — 临床证据快评
