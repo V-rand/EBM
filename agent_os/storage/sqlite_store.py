@@ -294,6 +294,24 @@ class SQLiteStore:
                     "DELETE FROM messages_fts WHERE rowid IN (SELECT rowid FROM messages WHERE session_id = ?)",
                     (session_id,),
                 )
+            # Delete child sessions (compaction forks) before deleting parent.
+            # parent_session_id FK has no ON DELETE CASCADE, and children share
+            # the parent's work_dir — leaving orphans would block directory cleanup.
+            children = self._conn.execute(
+                "SELECT id FROM sessions WHERE parent_session_id = ?",
+                (session_id,),
+            ).fetchall()
+            for (child_id,) in children:
+                if self._fts_enabled:
+                    self._conn.execute(
+                        "DELETE FROM artifact_chunks_fts WHERE rowid IN (SELECT rowid FROM artifact_chunks WHERE session_id = ?)",
+                        (child_id,),
+                    )
+                    self._conn.execute(
+                        "DELETE FROM messages_fts WHERE rowid IN (SELECT rowid FROM messages WHERE session_id = ?)",
+                        (child_id,),
+                    )
+                self._conn.execute("DELETE FROM sessions WHERE id = ?", (child_id,))
             self._conn.execute("DELETE FROM sessions WHERE id = ?", (session_id,))
             self._conn.commit()
 
