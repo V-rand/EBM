@@ -101,6 +101,74 @@ def _supporting_files(skill: dict[str, Any]) -> list[str]:
     return files[:80]
 
 
+async def handle_skill_file_grep(skill_name, pattern, file_path=None, **kw) -> ToolResult:
+    """Search within a skill's supporting files for a pattern."""
+    sl = _skill_loader()
+    if sl is None:
+        return ToolResult.fail("Skill loader not available")
+    skill = sl.resolve_skill(skill_name)
+    if skill is None:
+        return ToolResult.fail(f"Skill not found: {skill_name}")
+    base = Path(str(skill.get("path", ""))).resolve()
+    search_dirs = ("references", "templates", "scripts", "assets")
+    pattern_lower = str(pattern).lower()
+    matches: list[dict[str, Any]] = []
+
+    def _search_file(f: Path) -> None:
+        """Search a single file for pattern matches."""
+        try:
+            content = f.read_text(encoding="utf-8")
+        except Exception:
+            return
+        rel = str(f.relative_to(base))
+        for i, line in enumerate(content.splitlines(), 1):
+            if pattern_lower in line.lower():
+                matches.append({
+                    "file": rel,
+                    "line": i,
+                    "content": line.strip()[:200],
+                })
+
+    for sub in search_dirs:
+        d = base / sub
+        if not d.exists():
+            continue
+        if file_path:
+            search_target = d / str(file_path).lstrip("/")
+            if not search_target.exists():
+                continue
+            if search_target.is_file():
+                _search_file(search_target)
+            else:
+                for item in sorted(search_target.rglob("*")):
+                    if item.is_file() and not item.is_symlink():
+                        _search_file(item)
+        else:
+            for item in sorted(d.rglob("*")):
+                if item.is_file() and not item.is_symlink():
+                    _search_file(item)
+
+    return ToolResult.ok(data={
+        "skill_name": skill.get("name", skill_name),
+        "pattern": pattern,
+        "matches": matches[:50],
+        "total_matches": len(matches),
+        "truncated": len(matches) > 50,
+    })
+
+
+async def handle_skill_file_read(skill_name, file_path, **kw) -> ToolResult:
+    """Read a supporting file from a skill's directory (references, templates, etc.)."""
+    sl = _skill_loader()
+    if sl is None:
+        return ToolResult.fail("Skill loader not available")
+    try:
+        result = sl.read_skill_file(skill_name, file_path)
+        return ToolResult.ok(data=result)
+    except (ValueError, FileNotFoundError) as e:
+        return ToolResult.fail(str(e))
+
+
 def register_skill_tools(r) -> None:
     r.register("skill_use", "skills", {
         "name": "skill_use",
@@ -126,3 +194,30 @@ def register_skill_tools(r) -> None:
             "required": ["name", "content"],
         },
     }, handle_skill_propose)
+
+    r.register("skill_file_read", "skills", {
+        "name": "skill_file_read",
+        "description": _load_desc("skill_file_read"),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "skill_name": {"type": "string", "description": "Skill 名称"},
+                "file_path": {"type": "string", "description": "相对 skill 目录的文件路径"},
+            },
+            "required": ["skill_name", "file_path"],
+        },
+    }, handle_skill_file_read, concurrency_safe=True, read_only=True)
+
+    r.register("skill_file_grep", "skills", {
+        "name": "skill_file_grep",
+        "description": _load_desc("skill_file_grep"),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "skill_name": {"type": "string", "description": "Skill 名称"},
+                "pattern": {"type": "string", "description": "搜索模式（子字符串，大小写不敏感）"},
+                "file_path": {"type": "string", "description": "可选，限定搜索范围到特定文件或子目录"},
+            },
+            "required": ["skill_name", "pattern"],
+        },
+    }, handle_skill_file_grep, concurrency_safe=True, read_only=True)
