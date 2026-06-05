@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+import re
 import time
 from pathlib import Path
 from typing import Any
@@ -111,7 +112,7 @@ async def _fetch_by_pmid(pmid: str) -> ToolResult:
     try:
         async with _pubmed_lock:
             elapsed = time.time() - _last_pubmed_call
-            rate = 0.34 if NCBI_KEY else 0.35
+            rate = 0.12 if NCBI_KEY else 1.10
             if elapsed < rate:
                 await asyncio.sleep(rate - elapsed)
             _last_pubmed_call = time.time()
@@ -142,7 +143,7 @@ async def _fetch_by_pmid_list(pmids: list[str]) -> ToolResult:
     try:
         async with _pubmed_lock:
             elapsed = time.time() - _last_pubmed_call
-            rate = 0.34 if NCBI_KEY else 0.35
+            rate = 0.12 if NCBI_KEY else 1.10
             if elapsed < rate:
                 await asyncio.sleep(rate - elapsed)
             _last_pubmed_call = time.time()
@@ -164,15 +165,27 @@ async def _fetch_by_pmid_list(pmids: list[str]) -> ToolResult:
             info = results.get(uid, {})
             pubtypes_raw = [pt.strip().lower() for pt in info.get("pubtype", [])]
             grade_status = _classify_grade_readiness(pubtypes_raw)
+            title = info.get("title", "")
+            journal = info.get("source", "")
+            pubdate = info.get("pubdate", "")
+            doi = info.get("elocationid", "").replace("doi: ", "") if "doi:" in str(info.get("elocationid", "")) else ""
             items.append({
                 "pmid": uid,
-                "title": info.get("title", ""),
+                "title": title,
                 "authors": [a.get("name", "") for a in info.get("authors", []) if a.get("name")],
-                "journal": info.get("source", ""),
-                "pubdate": info.get("pubdate", ""),
-                "doi": info.get("elocationid", "").replace("doi: ", "") if "doi:" in str(info.get("elocationid", "")) else "",
+                "journal": journal,
+                "pubdate": pubdate,
+                "doi": doi,
                 "publication_types": pubtypes_raw,
                 "grade_readiness": grade_status,
+                "reliability": _score_pubmed_reliability(
+                    pmid=uid,
+                    title=title,
+                    journal=journal,
+                    date=pubdate,
+                    doi=doi,
+                    publication_types=pubtypes_raw,
+                ),
                 "url": f"https://pubmed.ncbi.nlm.nih.gov/{uid}/",
             })
 
@@ -180,6 +193,8 @@ async def _fetch_by_pmid_list(pmids: list[str]) -> ToolResult:
             "results": items,
             "count": len(items),
             "mode": "pmid_lookup",
+            "source_database": "PubMed / MEDLINE via NCBI E-utilities",
+            "reliability_scope": "metadata-level screening; not official GRADE",
         })
     except Exception as e:
         return ToolResult.fail(f"PMID batch lookup failed: {e}")
@@ -277,6 +292,16 @@ def _parse_pubmed_article(article: ET.Element, pmid: str) -> dict:
 
     # Grade readiness
     grade_status = _classify_grade_readiness(pubtypes_raw)
+    reliability = _score_pubmed_reliability(
+        pmid=pmid,
+        title=title,
+        journal=journal,
+        date=pubdate,
+        doi=doi,
+        publication_types=pubtypes_raw,
+        abstract=abstract,
+        full_text_available=has_pmcid,
+    )
 
     return {
         "pmid": pmid,
@@ -292,6 +317,9 @@ def _parse_pubmed_article(article: ET.Element, pmid: str) -> dict:
         "abstract": abstract,
         "mesh_terms": mesh_terms,
         "grade_readiness": grade_status,
+        "reliability": reliability,
+        "source_database": "PubMed / MEDLINE via NCBI E-utilities",
+        "reliability_scope": "metadata/abstract-level screening; not official GRADE",
         "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/",
     }
 
@@ -333,6 +361,137 @@ def _classify_grade_readiness(pubtypes: list[str]) -> dict:
         "label": "不直接映射 GRADE",
         "note": "基于 PubMed 元数据无法确定该文献的证据分级适用性。",
         "needs_human_review": True,
+    }
+
+
+def _extract_publication_year(value: str) -> int | None:
+    match = re.search(r"\b(19|20)\d{2}\b", str(value or ""))
+    return int(match.group(0)) if match else None
+
+
+def _score_pubmed_reliability(
+    *,
+    pmid: str,
+    title: str,
+    journal: str,
+    date: str,
+    doi: str,
+    publication_types: list[str],
+    abstract: str = "",
+    full_text_available: bool = False,
+) -> dict[str, Any]:
+    """Metadata-level reliability screen for DP循医 compatibility.
+
+    This is not official GRADE. It gives the frontend/model explicit reasons for
+    treating a PubMed item as a high-priority candidate, moderate candidate, or
+    early screening clue.
+    """
+    pubtypes = [str(item or "").strip().lower() for item in publication_types]
+    score = 25
+    reasons: list[str] = ["来源为 PubMed / MEDLINE，具备可追溯入口。"]
+    indicators: dict[str, int] = {
+        "source_score": 70,
+        "design_score": 30,
+        "recency_score": 30,
+        "identifier_score": 0,
+        "text_availability_score": 20,
+    }
+
+    if pmid:
+        score += 10
+        indicators["identifier_score"] += 50
+        reasons.append(f"已返回 PMID {pmid}，可定位到 PubMed 原始记录。")
+    if doi:
+        score += 4
+        indicators["identifier_score"] += 25
+        reasons.append("包含 DOI，可辅助跨库核验。")
+    if title and journal:
+        score += 5
+        reasons.append("标题与期刊元数据完整。")
+    if abstract:
+        score += 4
+        indicators["text_availability_score"] += 25
+        reasons.append("包含摘要，可进行初步 PICO/结局线索核对。")
+    if full_text_available:
+        score += 8
+        indicators["text_availability_score"] += 35
+        reasons.append("检测到 PMC 全文入口，更适合抽取 citation span / effect size。")
+
+    if any("guideline" in item or "practice guideline" in item for item in pubtypes):
+        score += 35
+        indicators["design_score"] = 90
+        reasons.append("文献类型包含 guideline / practice guideline，属于高优先级指南候选。")
+    elif any("meta-analysis" in item or "systematic review" in item for item in pubtypes):
+        score += 32
+        indicators["design_score"] = 86
+        reasons.append("文献类型包含 meta-analysis / systematic review，适合作为循证综合候选。")
+    elif any("randomized controlled trial" in item for item in pubtypes):
+        score += 28
+        indicators["design_score"] = 82
+        reasons.append("文献类型包含 randomized controlled trial，适合作为干预效果证据候选。")
+    elif any("clinical trial" in item for item in pubtypes):
+        score += 22
+        indicators["design_score"] = 72
+        reasons.append("文献类型包含 clinical trial，但仍需核对随机化、盲法、样本量和偏倚风险。")
+    elif any("observational" in item or "cohort" in item or "case-control" in item for item in pubtypes):
+        score += 18
+        indicators["design_score"] = 58
+        reasons.append("文献类型提示观察性研究，需要谨慎处理混杂因素和因果表述。")
+    elif any("review" in item for item in pubtypes):
+        score += 12
+        indicators["design_score"] = 48
+        reasons.append("文献类型包含 review，可用于背景综述，但不等同于正式 GRADE 证据表。")
+    elif any("case" in item for item in pubtypes):
+        score += 4
+        indicators["design_score"] = 25
+        reasons.append("病例类证据仅适合作为低级别线索。")
+    else:
+        reasons.append("PubMed 文献类型未显示高优先级循证标签。")
+
+    year = _extract_publication_year(date)
+    if year:
+        if year >= 2024:
+            score += 10
+            indicators["recency_score"] = 90
+            reasons.append(f"{year} 年发表，时效性较好。")
+        elif year >= 2021:
+            score += 6
+            indicators["recency_score"] = 72
+            reasons.append(f"{year} 年发表，仍在当前循证检索窗口内。")
+        else:
+            score += 2
+            indicators["recency_score"] = 45
+            reasons.append(f"{year} 年发表，需要结合最新指南或更新研究复核。")
+
+    score = max(0, min(score, 95))
+    indicators = {key: max(0, min(value, 100)) for key, value in indicators.items()}
+    if score >= 78:
+        level = "high"
+        label = "高可信候选"
+    elif score >= 58:
+        level = "moderate"
+        label = "中等可信候选"
+    else:
+        level = "screening"
+        label = "初筛线索"
+
+    return {
+        "score": score,
+        "level": level,
+        "label": label,
+        "reasons": reasons,
+        "indicators": indicators,
+        "scope": "PubMed metadata/abstract-level screening; not official GRADE",
+        "human_review_required": True,
+        "weakest_links": [
+            item
+            for item, missing in [
+                ("未完成全文 citation span 核验", not full_text_available),
+                ("未完成正式 risk-of-bias / GRADE 评估", True),
+                ("尚未与指南或系统综述交叉验证", True),
+            ]
+            if missing
+        ],
     }
 
 
@@ -424,7 +583,7 @@ async def handle_pubmed_search(
     try:
         async with _pubmed_lock:
             elapsed = time.time() - _last_pubmed_call
-            rate = 0.34 if NCBI_KEY else 0.35  # ~3 req/sec
+            rate = 0.12 if NCBI_KEY else 1.10
             if elapsed < rate:
                 await asyncio.sleep(rate - elapsed)
             _last_pubmed_call = time.time()
@@ -446,6 +605,12 @@ async def handle_pubmed_search(
         summary_params: dict[str, Any] = {
             "db": "pubmed", "id": ids, "retmode": "json",
         }
+        async with _pubmed_lock:
+            elapsed = time.time() - _last_pubmed_call
+            rate = 0.12 if NCBI_KEY else 1.10
+            if elapsed < rate:
+                await asyncio.sleep(rate - elapsed)
+            _last_pubmed_call = time.time()
         r2 = await loop.run_in_executor(None, _pubmed_api, f"{NCBI_BASE}/esummary.fcgi", summary_params)
         summary_data = r2.json()
         summaries = summary_data.get("result", {})
@@ -455,14 +620,31 @@ async def handle_pubmed_search(
             info = summaries.get(pmid, {})
             authors_raw = info.get("authors", [])
             authors = [a.get("name", "") for a in authors_raw if a.get("name")]
+            pubtypes_raw = [pt.strip().lower() for pt in info.get("pubtype", [])]
+            grade_status = _classify_grade_readiness(pubtypes_raw)
+            title_value = info.get("title", "")
+            journal_value = info.get("source", "")
+            pubdate_value = info.get("pubdate", "")
+            doi_value = info.get("elocationid", "").replace("doi: ", "") if "doi:" in str(info.get("elocationid", "")) else ""
             results.append({
                 "pmid": pmid,
-                "title": info.get("title", ""),
+                "title": title_value,
                 "authors": authors,
                 "author_count": len(authors),
-                "journal": info.get("source", ""),
-                "pubdate": info.get("pubdate", ""),
-                "doi": info.get("elocationid", "").replace("doi: ", "") if "doi:" in str(info.get("elocationid", "")) else "",
+                "journal": journal_value,
+                "pubdate": pubdate_value,
+                "doi": doi_value,
+                "publication_types": pubtypes_raw,
+                "grade_readiness": grade_status,
+                "reliability": _score_pubmed_reliability(
+                    pmid=pmid,
+                    title=title_value,
+                    journal=journal_value,
+                    date=pubdate_value,
+                    doi=doi_value,
+                    publication_types=pubtypes_raw,
+                ),
+                "source_database": "PubMed / MEDLINE",
                 "url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/",
             })
 
@@ -472,6 +654,8 @@ async def handle_pubmed_search(
             "results": results,
             "count": len(results),
             "filters_applied": applied_filters,
+            "source_database": "PubMed / MEDLINE via NCBI E-utilities",
+            "reliability_scope": "metadata-level screening; not official GRADE",
         })
     except Exception as e:
         return ToolResult.fail(f"PubMed API error: {e}")
