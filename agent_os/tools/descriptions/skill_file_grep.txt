@@ -1,0 +1,8 @@
+在指定 skill 的辅助文件（references/、templates/ 等）中搜索匹配模式。返回匹配行及所在文件。用于在 skill 的参考文档中快速定位相关内容。
+
+参数：
+- skill_name: Skill 名称
+- pattern: 搜索模式（子字符串匹配，大小写不敏感）
+- file_path: 可选，限定搜索范围到特定文件或子目录（如 "references/project-types/"）
+
+典型用法：在 skill 的多个参考文件中搜索特定术语或概念，定位相关内容。

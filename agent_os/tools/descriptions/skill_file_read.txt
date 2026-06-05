@@ -1,0 +1,7 @@
+读取指定 skill 目录下的辅助文件（如 references/、templates/ 下的文档）。文件路径相对于 skill 根目录。仅限读取 skill 自有文件，禁止访问 skill 目录外的路径。
+
+参数：
+- skill_name: Skill 名称（与 <available_skills> 中的 name 一致）
+- file_path: 文件相对于 skill 目录的路径，如 "references/project-types/pathway-reconstitution.md"
+
+典型用法：skill_use 加载 skill 后，按 skill 指令中的路由表，用 skill_file_read 读取相关的深度参考文件。
