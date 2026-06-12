@@ -1,6 +1,6 @@
 ---
 name: systematic-review-methodology
-description: "正式 PRISMA 系统评价/Meta分析全流程：方案注册→检索策略→文献筛选→质量评估→数据提取→Meta分析→证据综合。需要发表级严谨性时使用。加载前需已完成 evidence-synthesis 基础报告。"
+description: "正式 PRISMA 系统评价/Meta分析全流程。需要发表级严谨性时使用。加载前需已完成 evidence-synthesis 基础报告。"
 ---
 
 # Systematic Review Methodology — 系统评价方法学

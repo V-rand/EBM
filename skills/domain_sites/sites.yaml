@@ -1,511 +1,415 @@
-# Authoritative site directory for domain-locked web_search.
-# Format: domain_key: [list of domains (no https://, no path)]
-# Order = priority. Add domains by appending to list.
-#
-# Usage: call domain_sites(domain="key") to get site_operators + include_domains.
-# For multi-domain questions, call domain_sites() once per relevant domain.
-#
-# ═══════════════════════════════════════════════════════════════════
-# TIER 1: ELITE MULTIDISCIPLINARY — used across many fields
-# ═══════════════════════════════════════════════════════════════════
-
-elite_multidisciplinary:
-  - nature.com            # Nature (all sciences)
-  - science.org           # Science (AAAS, all sciences)
-  - pnas.org              # PNAS (broad)
-  - cell.com              # Cell Press (life sciences)
-  - nejm.org              # New England Journal of Medicine (top clinical)
-  - thelancet.com         # The Lancet (top medical)
-  - bmj.com               # British Medical Journal
-  - springer.com          # Springer Nature (all fields)
-  - ieeexplore.ieee.org   # IEEE (engineering/CS/EE)
-  - dl.acm.org            # ACM Digital Library (CS)
-  - jstor.org             # JSTOR (humanities/social sciences)
-  - plos.org              # PLOS (open access, all fields)
-  - wiley.com             # Wiley (all fields)
-  - tandfonline.com       # Taylor & Francis (all fields)
-  - elsevier.com          # Elsevier (all fields)
-  - sagepub.com           # SAGE (social sciences)
-
-# ═══════════════════════════════════════════════════════════════════
-# TIER 2: FIELD-SPECIFIC AUTHORITATIVE SOURCES
-# ═══════════════════════════════════════════════════════════════════
-
-# --- Computer Science / AI 计算机·人工智能 ---
-cs_conferences:
-  # 国际源
-  - dblp.org              # CS bibliography (all venues)
-  - arxiv.org             # Preprints (CS, math, physics)
-  - openreview.net        # ML conference peer review
-  - usenix.org            # Systems/security conferences
-  - acm.org               # ACM (SIGCOMM, SIGMOD, SIGGRAPH, etc.)
-  - ieee.org              # IEEE (INFOCOM, CVPR, etc.)
-  - nips.cc               # NeurIPS proceedings
-  - icml.cc               # ICML proceedings
-  - aclanthology.org      # ACL (NLP conferences)
-  - sigcomm.org           # SIGCOMM
-  - sigmod.org            # SIGMOD (databases)
-  - cv-foundation.org     # CVPR/ICCV
-  - isoc.org              # IETF/IRTF proceedings
-  - vldb.org              # VLDB (databases)
-  # 国内源
-  - ccf.org.cn            # 中国计算机学会
-  - caai.cn               # 中国人工智能学会
-  - caa.org.cn            # 中国自动化学会
-  - cis.org.cn            # 中国图象图形学学会
-  - csia.org.cn           # 中国软件行业协会
-  - cifnews.com           # 中国信息通信研究院（CAICT）
-  - cnki.net              # 中国知网
-
-# --- Biology 生物 ---
-biology:
-  - ncbi.nlm.nih.gov      # NCBI (GenBank, BLAST, PubMed)
-  - ebi.ac.uk             # European Bioinformatics Institute
-  - uniprot.org           # UniProt protein database
-  - genome.gov            # NHGRI
-  - gbif.org              # Global Biodiversity Information Facility
-  - iucnredlist.org       # IUCN Red List (species)
-  - tolweb.org            # Tree of Life Web Project
-  - wormbase.org          # C. elegans model organism
-  - flybase.org           # Drosophila
-  - arabidopsis.org       # TAIR (plant biology)
-  - rcsb.org              # Protein Data Bank
-  - pfam.xfam.org         # Pfam protein families
-  - reactome.org          # Pathway database
-  - string-db.org         # Protein interaction networks
-
-# --- Materials Science 材料 ---
-materials:
-  - nature.com/materials   # Nature Materials (and family)
-  - aip.org               # American Institute of Physics
-  - iop.org               # Institute of Physics
-  - materialsproject.org  # Materials Project (computational)
-  - rsc.org               # Royal Society of Chemistry
-  - acs.org               # American Chemical Society
-  - mrs.org               # Materials Research Society
-  - tms.org               # The Minerals, Metals & Materials Society
-  - aip.scitation.org     # AIP Publishing
-  - aps.org               # American Physical Society
-  - sciencedirect.com     # Elsevier materials journals
-
-# --- Chemistry 化学 ---
-chemistry:
-  - pubchem.ncbi.nlm.nih.gov  # PubChem
-  - cas.org               # Chemical Abstracts Service
-  - rsc.org               # Royal Society of Chemistry
-  - acs.org               # American Chemical Society
-  - chemspider.com        # ChemSpider
-  - commonchemistry.cas.org  # CAS Common Chemistry
-  - ebi.ac.uk/chebi       # ChEBI chemical entities
-  - chemrxiv.org          # Chemistry preprint server
-  - iupac.org             # International Union of Pure and Applied Chemistry
-
-# --- Environmental Science 环境 ---
-environment:
-  - ipcc.ch               # IPCC climate reports
-  - epa.gov               # US Environmental Protection Agency
-  - noaa.gov              # NOAA (ocean/atmosphere data)
-  - nasa.gov/climate      # NASA climate
-  - unep.org              # UN Environment Programme
-  - wmo.int               # World Meteorological Organization
-  - eea.europa.eu         # European Environment Agency
-  - carbonbrief.org       # Carbon Brief (climate science)
-  - sciencedirect.com     # Elsevier environmental journals
-  - ourworldindata.org    # Environmental data
-  - worldbank.org         # World Bank environment data
-  - fao.org               # UN Food & Agriculture (land/water)
-
-# --- Mathematics 数学 ---
-mathematics:
-  - ams.org               # American Mathematical Society
-  - mathscinet.ams.org    # MathSciNet (reviews)
-  - arxiv.org             # arXiv math
-  - projecteuclid.org     # Project Euclid (math/statistics)
-  - zbmath.org            # zbMATH Open
-  - emis.de               # European Mathematical Information Service
-  - msp.org               # Mathematical Sciences Publishers
-  - imstat.org            # Institute of Mathematical Statistics
-  - siam.org              # SIAM (applied math)
-  - maa.org               # Mathematical Association of America
-
-# --- Physics 物理 ---
-physics:
-  - aps.org               # American Physical Society (PRL, PRB, PRD, etc.)
-  - iop.org               # Institute of Physics
-  - aip.org               # American Institute of Physics
-  - arxiv.org             # arXiv (physics, astro-ph, hep-th, etc.)
-  - cern.ch               # CERN
-  - inspirehep.net        # High-energy physics database
-  - adsabs.harvard.edu    # Astrophysics Data System
-  - iaea.org              # International Atomic Energy Agency
-  - slac.stanford.edu     # SLAC
-  - phys.org              # Physics news
-
-# --- Law / 法律 ---
-# 法院·检察·公安
-legal_cn_judicial:
-  - court.gov.cn          # 最高人民法院
-  - wenshu.court.gov.cn   # 中国裁判文书网
-  - splcgk.court.gov.cn   # 审判流程公开
-  - tingshen.court.gov.cn # 中国庭审公开网
-  - zxgk.court.gov.cn     # 失信被执行人
-  - zhixing.court.gov.cn  # 全国法院被执行人信息
-  - spp.gov.cn            # 最高人民检察院
-  - 12309.gov.cn          # 12309中国检察网
-  - mps.gov.cn            # 公安部
-
-# 立法·法规
-legal_cn_legislative:
-  - npc.gov.cn            # 全国人大
-  - flk.npc.gov.cn        # 国家法律法规数据库
-  - gov.cn                # 中国政府网（行政法规/国务院公报）
-
-# 经营合规：企业·金融·税务·知识产权
-legal_cn_business:
-  - gsxt.gov.cn           # 国家企业信用信息公示系统
-  - creditchina.gov.cn    # 信用中国
-  - samr.gov.cn           # 国家市场监督管理总局
-  - sasac.gov.cn          # 国务院国资委
-  - csrc.gov.cn           # 中国证监会
-  - nfra.gov.cn           # 国家金融监督管理总局
-  - pbc.gov.cn            # 中国人民银行
-  - chinatax.gov.cn       # 国家税务总局
-  - cnipa.gov.cn          # 国家知识产权局
-  - ctipa.org.cn          # 中华全国专利代理师协会
-
-# 劳动·社保·土地·房产·民政
-legal_cn_labor:
-  - mohrss.gov.cn         # 人力资源和社会保障部
-  - mnr.gov.cn            # 自然资源部（土地/矿产）
-  - mohurd.gov.cn         # 住房和城乡建设部
-  - mca.gov.cn            # 民政部（婚姻/继承/收养）
-  - mva.gov.cn            # 退役军人事务部
-  - scs.gov.cn            # 国家公务员局
-
-# 律师·公证·仲裁·法律数据库
-legal_cn_professional:
-  - acla.org.cn           # 中华全国律师协会
-  - chinanotary.org       # 中国公证网
-  - cietac.org            # 中国国际经济贸易仲裁委员会
-  - bac.org.cn            # 北京仲裁委员会
-  - pkulaw.com            # 北大法宝
-  - chinalaw.org.cn       # 中国法学会
-
-# 司法行政·信访·档案·审计·应急
-legal_cn_admin:
-  - moj.gov.cn            # 司法部
-  - chinalaw.gov.cn       # 中国法律服务网
-  - gjxfj.gov.cn          # 国家信访局
-  - saac.gov.cn           # 国家档案局
-  - audit.gov.cn          # 审计署
-  - mem.gov.cn            # 应急管理部
-
-# 行业监管：网络·新闻·教育·环保·出入境·港澳台·外汇·宗教
-legal_cn_regulatory:
-  - cac.gov.cn            # 国家互联网信息办公室
-  - nppa.gov.cn           # 国家新闻出版署
-  - nrta.gov.cn           # 国家广播电视总局
-  - moe.gov.cn            # 教育部
-  - mee.gov.cn            # 生态环境部
-  - nia.gov.cn            # 国家移民管理局（出入境）
-  - fmprc.gov.cn          # 外交部（领事/条约）
-  - hmo.gov.cn            # 国务院港澳事务办公室
-  - safe.gov.cn           # 国家外汇管理局
-  - sara.gov.cn           # 国家宗教事务局
-
-legal_en:
-  - law.cornell.edu
-  - legislation.gov.uk
-  - eur-lex.europa.eu
-  - austlii.edu.au
-  - canlii.org
-  - supremecourt.gov
-  - congress.gov
-
-legal_historical:
-  - flk.npc.gov.cn
-  - pkulaw.com
-  - npc.gov.cn
-  - loc.gov
-
-# --- Medicine / 医学 ---
-medical:
-  # 国际
-  - who.int
-  - nih.gov
-  - pubmed.ncbi.nlm.nih.gov
-  - cdc.gov
-  - cochrane.org
-  - nhs.uk
-  - fda.gov
-  - uptodate.com
-  - mayoclinic.org
-  - thelancet.com
-  - nejm.org
-  - bmj.com
-  - annals.org            # Annals of Internal Medicine
-  - jamnetwork.com        # JAMA Network
-  - nice.org.uk           # NICE guidelines
-  - guidelines.gov        # NGC guideline clearinghouse
-  - ebm.bmj.com           # BMJ Evidence-Based Medicine
-  - ebmh.bmj.com          # BMJ Evidence-Based Mental Health
-  - ebn.bmj.com           # BMJ Evidence-Based Nursing
-  - ebp.bmj.com           # BMJ Evidence-Based Practice
-
-# --- EBM Clinical Guideline / 循证医学临床指南 ---
-ebm_chinese:
-  - cebm.bjmu.edu.cn       # 中国循证医学中心
-  - cma.org.cn             # 中华医学会
-  - csco.org.cn            # 中国临床肿瘤学会
-  - cn-ebm.com             # 中国循证医学杂志
-  - medlive.cn             # 医脉通（指南）
-  - yigle.com              # 医格（临床指南）
-  - nhc.gov.cn             # 国家卫健委（诊疗方案）
-  - nmpa.gov.cn            # 国家药监局（药品说明书）
-
-# --- Clinical Trials / 临床试验 ---
-clinical_trials:
-  - clinicaltrials.gov             # US clinical trials
-  - who.int/ictrp                  # WHO ICTRP
-  - clinicaltrialsregister.eu      # EU Clinical Trials Register
-  - chinaclinicaltrials.org.cn     # 中国临床试验注册中心
-  - anzctr.org.au                  # Australian New Zealand Clinical Trials
-  - isrctn.com                     # ISRCTN registry
-  - umin.ac.jp/ctr                 # Japan clinical trials
-
-# --- Medicine (China) / 中国医疗临床 ---
-medical_cn:
-  - nhc.gov.cn            # 国家卫健委
-  - nhsa.gov.cn           # 国家医保局
-  - nmpa.gov.cn           # 国家药监局
-  - chinacdc.cn           # 中国疾控中心
-  - cma.org.cn            # 中华医学会
-  - cmda.org.cn           # 中国医师协会
-  - cha.org.cn            # 中国医院协会
-  - cnpharm.com           # 中国药学会
-  - cnda.org.cn           # 中国营养学会
-  - medlive.cn            # 医脉通（临床指南）
-  - dxy.cn                # 丁香园
-  - cn-healthcare.com     # 健康界
-
-# --- Biomedical / 生物医药科研 ---
-biomedical:
-  # 国际
-  - ncbi.nlm.nih.gov      # NCBI (GenBank, PubMed, BLAST)
-  - ebi.ac.uk             # EBI
-  - uniprot.org           # UniProt
-  - rcsb.org              # Protein Data Bank
-  - clinicaltrials.gov    # 临床试验注册（美国）
-  - string-db.org         # 蛋白质互作网络
-  - reactome.org          # 通路数据库
-  - genome.gov            # NHGRI
-  - broadinstitute.org    # Broad Institute
-  - sanger.ac.uk          # Wellcome Sanger Institute
-  # 国内
-  - chinaclinicaltrials.org.cn  # 中国临床试验注册中心
-  - nsfc.gov.cn           # 国家自然科学基金委
-  - ncic.ac.cn            # 中国医学科学院
-  - cas.cn                # 中国科学院
-  - most.gov.cn           # 科技部（国家重点研发计划）
-  - cnki.net              # 中国知网（生物医学文献）
-
-# --- Academic general / 学术通用 ---
 academic:
-  - arxiv.org
-  - semanticscholar.org
-  - scholar.google.com
-  - openalex.org
-  - researchgate.net
-  - academia.edu
-
-# --- History / 历史 ---
-historical:
-  - britannica.com
-  - history.com
-  - jstor.org
-  - archives.gov
-  - loc.gov
-  - bl.uk
-  - history.ac.uk
-  - worldhistory.org
-
-# --- Science general / 科学新闻 ---
-scientific:
-  - nature.com
-  - science.org
-  - pnas.org
-  - scientificamerican.com
-  - newscientist.com
-  - phys.org
-  - chemistryworld.com
-  - eurekalert.org
-
-# --- Tech / programming / 技术开发 ---
-tech_programming:
-  - github.com
-  - stackoverflow.com
-  - docs.python.org
-  - developer.mozilla.org
-  - npmjs.com
-  - pypi.org
-  - rust-lang.org
-  - golang.org
-  - kubernetes.io
-  - docker.com
-
-# --- Finance / 金融经济 ---
-finance:
-  - investopedia.com
-  - bloomberg.com
-  - reuters.com
-  - fred.stlouisfed.org
-  - imf.org
-  - worldbank.org
-  - oecd.org
-  - sec.gov
-  - finance.yahoo.com
-  - tradingeconomics.com
-
-# --- Finance (China) / 中国金融 ---
-finance_cn:
-  - pbc.gov.cn            # 中国人民银行
-  - csrc.gov.cn           # 中国证监会
-  - nfra.gov.cn           # 国家金融监督管理总局
-  - safe.gov.cn           # 国家外汇管理局
-  - sse.com.cn            # 上海证券交易所
-  - szse.cn               # 深圳证券交易所
-  - cffex.com.cn          # 中国金融期货交易所
-  - shfe.com.cn           # 上海期货交易所
-  - dce.com.cn            # 大连商品交易所
-  - zce.com.cn            # 郑州商品交易所
-  - chinatax.gov.cn       # 国家税务总局
-  - chinabond.com.cn      # 中国债券信息网
-  - sachina.edu.cn        # 证券业协会
-
-# --- Government / 政府数据 ---
-# 经济统计
-gov_cn_economic:
-  - stats.gov.cn          # 国家统计局
-  - data.stats.gov.cn     # 国家数据
-  - mof.gov.cn            # 财政部
-  - mofcom.gov.cn         # 商务部
-  - customs.gov.cn        # 海关总署
-  - ndrc.gov.cn           # 国家发改委
-  - samr.gov.cn           # 国家市场监督管理总局
-  - chinatax.gov.cn       # 国家税务总局
-
-# 卫生健康
-gov_cn_health:
-  - nhc.gov.cn            # 国家卫生健康委员会
-  - nhsa.gov.cn           # 国家医疗保障局
-  - nmpa.gov.cn           # 国家药品监督管理局
-  - satcm.gov.cn          # 国家中医药管理局
-
-# 科技·工业·基金
-gov_cn_science:
-  - miit.gov.cn           # 工业和信息化部
-  - most.gov.cn           # 科技部
-  - nsfc.gov.cn           # 国家自然科学基金委
-
-# 交通·能源·水利
-gov_cn_infra:
-  - mot.gov.cn            # 交通运输部
-  - caac.gov.cn           # 中国民用航空局
-  - nra.gov.cn            # 国家铁路局
-  - spb.gov.cn            # 国家邮政局
-  - nea.gov.cn            # 国家能源局
-  - mwr.gov.cn            # 水利部
-
-# 农业农村
-gov_cn_rural:
-  - moa.gov.cn            # 农业农村部
-  - forestry.gov.cn       # 国家林业和草原局
-
-# 文化·体育·民族
-gov_cn_culture:
-  - mct.gov.cn            # 文化和旅游部
-  - ncha.gov.cn           # 国家文物局
-  - neac.gov.cn           # 国家民族事务委员会
-  - sport.gov.cn          # 国家体育总局
-
-government_en:
-  - data.gov
-  - data.gov.uk
-  - data.europa.eu
-  - census.gov
-  - bls.gov
-  - europa.eu
-
-# --- Patents / 专利 ---
-patents:
-  - patents.google.com
-  - uspto.gov
-  - cnipa.gov.cn
-  - wipo.int
-  - epo.org
-  - lens.org
-
-# --- News / 新闻事实核查 ---
-news_factcheck:
-  - reuters.com
-  - apnews.com
-  - bbc.com
-  - xinhuanet.com
-  - factcheck.org
-  - politifact.com
-  - snopes.com
-
-# --- Encyclopedia / 百科 ---
-encyclopedia:
-  - en.wikipedia.org
-  - zh.wikipedia.org
-  - britannica.com
-  - baike.baidu.com
-
-# --- Geography / 地理 ---
-geography:
-  - openstreetmap.org
-  - cia.gov/the-world-factbook
-  - britannica.com
-  - worldatlas.com
-  - naturalearthdata.com
-
-# --- Standards / 标准 ---
-standards:
-  - iso.org
-  - ieee.org
-  - itu.int
-  - w3.org
-  - ietf.org
-  - ansi.org
-  - sac.gov.cn
-
-# --- Film / media / 影视 ---
-film_media:
-  - imdb.com
-  - themoviedb.org
-  - rottentomatoes.com
-  - metacritic.com
-  - boxofficemojo.com
-
-# ═══════════════════════════════════════════════════════════════════
-# TIER 3: COMMON KNOWLEDGE / LIFE / 生活常识
-# ═══════════════════════════════════════════════════════════════════
-
+- arxiv.org
+- semanticscholar.org
+- scholar.google.com
+- openalex.org
+- researchgate.net
+- academia.edu
+biology:
+- ncbi.nlm.nih.gov
+- ebi.ac.uk
+- uniprot.org
+- genome.gov
+- gbif.org
+- iucnredlist.org
+- tolweb.org
+- wormbase.org
+- flybase.org
+- arabidopsis.org
+- rcsb.org
+- pfam.xfam.org
+- reactome.org
+- string-db.org
+biomedical:
+- ncbi.nlm.nih.gov
+- ebi.ac.uk
+- uniprot.org
+- rcsb.org
+- clinicaltrials.gov
+- string-db.org
+- reactome.org
+- genome.gov
+- broadinstitute.org
+- sanger.ac.uk
+- chinaclinicaltrials.org.cn
+- nsfc.gov.cn
+- ncic.ac.cn
+- cas.cn
+- most.gov.cn
+- cnki.net
+chemistry:
+- pubchem.ncbi.nlm.nih.gov
+- cas.org
+- rsc.org
+- acs.org
+- chemspider.com
+- commonchemistry.cas.org
+- ebi.ac.uk/chebi
+- chemrxiv.org
+- iupac.org
+clinical_trials:
+- clinicaltrials.gov
+- who.int/ictrp
+- clinicaltrialsregister.eu
+- chinaclinicaltrials.org.cn
+- anzctr.org.au
+- isrctn.com
+- umin.ac.jp/ctr
+clinical_writing:
+- ncbi.nlm.nih.gov/books
+- aafp.org/pubs/afp
+- nice.org.uk/guidance
+- cochranelibrary.com/cdsr
+- jamanetwork.com/journals/jama
+- bmj.com/content
+- nejm.org/doi/full
 common_knowledge:
-  - en.wikipedia.org      # Wikipedia (general reference, first stop)
-  - zh.wikipedia.org      # Chinese Wikipedia
-  - britannica.com        # Britannica
-  - baike.baidu.com       # Baidu Baike
-  - howstuffworks.com     # How things work
-  - thoughtco.com         # Educational reference
-  - nationalgeographic.com  # Geography, nature, culture
-  - history.com           # History
-  - biography.com         # Biographies
-  - worldatlas.com        # Maps, geography facts
-  - timeanddate.com       # Time zones, calendars, holidays
-  - weather.com           # Weather
-  - snopes.com            # Urban legends, fact-check
-  - mentalfloss.com       # Trivia, interesting facts
-  - atlasobscura.com      # Unusual places, facts
-  - worldometers.info     # Real-time world statistics
+- en.wikipedia.org
+- zh.wikipedia.org
+- britannica.com
+- baike.baidu.com
+- howstuffworks.com
+- thoughtco.com
+- nationalgeographic.com
+- history.com
+- biography.com
+- worldatlas.com
+- timeanddate.com
+- weather.com
+- snopes.com
+- mentalfloss.com
+- atlasobscura.com
+- worldometers.info
+cs_conferences:
+- dblp.org
+- arxiv.org
+- openreview.net
+- usenix.org
+- acm.org
+- ieee.org
+- nips.cc
+- icml.cc
+- aclanthology.org
+- sigcomm.org
+- sigmod.org
+- cv-foundation.org
+- isoc.org
+- vldb.org
+- ccf.org.cn
+- caai.cn
+- caa.org.cn
+- cis.org.cn
+- csia.org.cn
+- cifnews.com
+- cnki.net
+ebm_chinese:
+- cebm.bjmu.edu.cn
+- cma.org.cn
+- csco.org.cn
+- cn-ebm.com
+- medlive.cn
+- yigle.com
+- nhc.gov.cn
+- nmpa.gov.cn
+elite_multidisciplinary:
+- nature.com
+- science.org
+- pnas.org
+- cell.com
+- nejm.org
+- thelancet.com
+- bmj.com
+- springer.com
+- ieeexplore.ieee.org
+- dl.acm.org
+- jstor.org
+- plos.org
+- wiley.com
+- tandfonline.com
+- elsevier.com
+- sagepub.com
+encyclopedia:
+- en.wikipedia.org
+- zh.wikipedia.org
+- britannica.com
+- baike.baidu.com
+environment:
+- ipcc.ch
+- epa.gov
+- noaa.gov
+- nasa.gov/climate
+- unep.org
+- wmo.int
+- eea.europa.eu
+- carbonbrief.org
+- sciencedirect.com
+- ourworldindata.org
+- worldbank.org
+- fao.org
+film_media:
+- imdb.com
+- themoviedb.org
+- rottentomatoes.com
+- metacritic.com
+- boxofficemojo.com
+finance:
+- investopedia.com
+- bloomberg.com
+- reuters.com
+- fred.stlouisfed.org
+- imf.org
+- worldbank.org
+- oecd.org
+- sec.gov
+- finance.yahoo.com
+- tradingeconomics.com
+finance_cn:
+- pbc.gov.cn
+- csrc.gov.cn
+- nfra.gov.cn
+- safe.gov.cn
+- sse.com.cn
+- szse.cn
+- cffex.com.cn
+- shfe.com.cn
+- dce.com.cn
+- zce.com.cn
+- chinatax.gov.cn
+- chinabond.com.cn
+- sachina.edu.cn
+geography:
+- openstreetmap.org
+- cia.gov/the-world-factbook
+- britannica.com
+- worldatlas.com
+- naturalearthdata.com
+gov_cn_culture:
+- mct.gov.cn
+- ncha.gov.cn
+- neac.gov.cn
+- sport.gov.cn
+gov_cn_economic:
+- stats.gov.cn
+- data.stats.gov.cn
+- mof.gov.cn
+- mofcom.gov.cn
+- customs.gov.cn
+- ndrc.gov.cn
+- samr.gov.cn
+- chinatax.gov.cn
+gov_cn_health:
+- nhc.gov.cn
+- nhsa.gov.cn
+- nmpa.gov.cn
+- satcm.gov.cn
+gov_cn_infra:
+- mot.gov.cn
+- caac.gov.cn
+- nra.gov.cn
+- spb.gov.cn
+- nea.gov.cn
+- mwr.gov.cn
+gov_cn_rural:
+- moa.gov.cn
+- forestry.gov.cn
+gov_cn_science:
+- miit.gov.cn
+- most.gov.cn
+- nsfc.gov.cn
+government_en:
+- data.gov
+- data.gov.uk
+- data.europa.eu
+- census.gov
+- bls.gov
+- europa.eu
+historical:
+- britannica.com
+- history.com
+- jstor.org
+- archives.gov
+- loc.gov
+- bl.uk
+- history.ac.uk
+- worldhistory.org
+legal_cn_admin:
+- moj.gov.cn
+- chinalaw.gov.cn
+- gjxfj.gov.cn
+- saac.gov.cn
+- audit.gov.cn
+- mem.gov.cn
+legal_cn_business:
+- gsxt.gov.cn
+- creditchina.gov.cn
+- samr.gov.cn
+- sasac.gov.cn
+- csrc.gov.cn
+- nfra.gov.cn
+- pbc.gov.cn
+- chinatax.gov.cn
+- cnipa.gov.cn
+- ctipa.org.cn
+legal_cn_judicial:
+- court.gov.cn
+- wenshu.court.gov.cn
+- splcgk.court.gov.cn
+- tingshen.court.gov.cn
+- zxgk.court.gov.cn
+- zhixing.court.gov.cn
+- spp.gov.cn
+- 12309.gov.cn
+- mps.gov.cn
+legal_cn_labor:
+- mohrss.gov.cn
+- mnr.gov.cn
+- mohurd.gov.cn
+- mca.gov.cn
+- mva.gov.cn
+- scs.gov.cn
+legal_cn_legislative:
+- npc.gov.cn
+- flk.npc.gov.cn
+- gov.cn
+legal_cn_professional:
+- acla.org.cn
+- chinanotary.org
+- cietac.org
+- bac.org.cn
+- pkulaw.com
+- chinalaw.org.cn
+legal_cn_regulatory:
+- cac.gov.cn
+- nppa.gov.cn
+- nrta.gov.cn
+- moe.gov.cn
+- mee.gov.cn
+- nia.gov.cn
+- fmprc.gov.cn
+- hmo.gov.cn
+- safe.gov.cn
+- sara.gov.cn
+legal_en:
+- law.cornell.edu
+- legislation.gov.uk
+- eur-lex.europa.eu
+- austlii.edu.au
+- canlii.org
+- supremecourt.gov
+- congress.gov
+legal_historical:
+- flk.npc.gov.cn
+- pkulaw.com
+- npc.gov.cn
+- loc.gov
+materials:
+- nature.com/materials
+- aip.org
+- iop.org
+- materialsproject.org
+- rsc.org
+- acs.org
+- mrs.org
+- tms.org
+- aip.scitation.org
+- aps.org
+- sciencedirect.com
+mathematics:
+- ams.org
+- mathscinet.ams.org
+- arxiv.org
+- projecteuclid.org
+- zbmath.org
+- emis.de
+- msp.org
+- imstat.org
+- siam.org
+- maa.org
+medical:
+- who.int
+- nih.gov
+- pubmed.ncbi.nlm.nih.gov
+- cdc.gov
+- cochrane.org
+- nhs.uk
+- fda.gov
+- uptodate.com
+- mayoclinic.org
+- thelancet.com
+- nejm.org
+- bmj.com
+- annals.org
+- jamnetwork.com
+- nice.org.uk
+- guidelines.gov
+- ebm.bmj.com
+- ebmh.bmj.com
+- ebn.bmj.com
+- ebp.bmj.com
+medical_cn:
+- nhc.gov.cn
+- nhsa.gov.cn
+- nmpa.gov.cn
+- chinacdc.cn
+- cma.org.cn
+- cmda.org.cn
+- cha.org.cn
+- cnpharm.com
+- cnda.org.cn
+- medlive.cn
+- dxy.cn
+- cn-healthcare.com
+news_factcheck:
+- reuters.com
+- apnews.com
+- bbc.com
+- xinhuanet.com
+- factcheck.org
+- politifact.com
+- snopes.com
+patents:
+- patents.google.com
+- uspto.gov
+- cnipa.gov.cn
+- wipo.int
+- epo.org
+- lens.org
+physics:
+- aps.org
+- iop.org
+- aip.org
+- arxiv.org
+- cern.ch
+- inspirehep.net
+- adsabs.harvard.edu
+- iaea.org
+- slac.stanford.edu
+- phys.org
+scientific:
+- nature.com
+- science.org
+- pnas.org
+- scientificamerican.com
+- newscientist.com
+- phys.org
+- chemistryworld.com
+- eurekalert.org
+standards:
+- iso.org
+- ieee.org
+- itu.int
+- w3.org
+- ietf.org
+- ansi.org
+- sac.gov.cn
+tech_programming:
+- github.com
+- stackoverflow.com
+- docs.python.org
+- developer.mozilla.org
+- npmjs.com
+- pypi.org
+- rust-lang.org
+- golang.org
+- kubernetes.io
+- docker.com
